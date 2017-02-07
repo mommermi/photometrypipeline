@@ -168,7 +168,11 @@ dctlmi_param = {
     'swarp-config-file'    : rootpath+'/setup/dctlmi.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -239,7 +243,11 @@ arc35arctic_param = {
     'swarp-config-file'    : rootpath+'/setup/arc35arctic.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -309,7 +317,11 @@ arc35agile_param = {
     'swarp-config-file'    : rootpath+'/setup/arc35agile.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -392,7 +404,11 @@ magimacs_param = {
     'swarp-config-file'    : rootpath+'/setup/magimacs.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -462,7 +478,11 @@ ca123dlrmkiii_param = {
     'swarp-config-file'    : rootpath+'/setup/ca123dlrmkiii.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -530,7 +550,11 @@ lowell31_param = {
     'swarp-config-file'    : rootpath+'/setup/lowell31.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -601,7 +625,11 @@ lowell42_param = {
     'swarp-config-file'    : rootpath+'/setup/lowell42.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -672,7 +700,11 @@ lowell72_param = {
     'swarp-config-file'    : rootpath+'/setup/lowell72.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -743,7 +775,11 @@ ctio09_param = {
     'swarp-config-file'    : rootpath+'/setup/ctio09.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -812,7 +848,11 @@ ctio10_param = {
     'swarp-config-file'    : rootpath+'/setup/ctio10.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -880,7 +920,11 @@ ctio13ccd_param = {
     'swarp-config-file'    : rootpath+'/setup/andicam.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -951,7 +995,11 @@ uh88snifs_param = {
 >>>>>>> master
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1019,7 +1067,11 @@ wiyn09hdi_param = {
     'swarp-config-file'    : rootpath+'/setup/wiyn09hdi.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1089,7 +1141,11 @@ generic_param = {
     'swarp-config-file'    : rootpath+'/setup/generic.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1158,7 +1214,11 @@ ratir_param = {
     'swarp-config-file'    : rootpath+'/setup/ratir.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1293,7 +1353,11 @@ soargoodman_param = {
     'swarp-config-file'    : rootpath+'/setup/soargoodman.swarp',
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1351,7 +1415,11 @@ ohp120_param = {
 >>>>>>> master
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1408,7 +1476,11 @@ tngdolores_param = {
 >>>>>>> master
 
     # default catalog settings
+<<<<<<< HEAD
     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+=======
+    'astrometry_catalogs'  : ['GAIA'], 
+>>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 

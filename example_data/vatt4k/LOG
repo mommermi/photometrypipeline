@@ -1,0 +1,16 @@
+VATT/VATT4k observations of asteroid 3552
+
+the resulting photometry_3552.dat file should look like this:
+
+#                          filename     julian_dateast_mag ast_sig        ast_ra       ast_dec    [1]   [2]    [3]   [4]    [5]       ZP ZP_sig inst_mag in_sig   [6] [7] [8] [9]
+                  mscience0217.ldac 2457786.9566337   19.4248 0.0308  179.27990133   +0.42829624  -0.00  0.01   0.00  0.00  180.00  29.3772 0.0283  -9.9525 0.0122  SDSS-R9_transformed  V    0  VATT4K
+                  mscience0218.ldac 2457786.9590839   19.4644 0.0311  179.27962720   +0.42829370  -0.03 -0.01   0.00  0.00  180.00  29.5133 0.0290 -10.0489 0.0111  SDSS-R9_transformed  V    0  VATT4K
+#
+# [1]: Horizons_RA - image_RA [arcsec]
+# [2]: Horizons_DDec - image_Dec [arcsec]
+# [3,4]: manual target offsets in RA and DEC [arcsec]
+# [5]: exposure time (s)
+# [6]: photometric catalog
+# [7]: photometric band
+# [8]: Source Extractor flag
+# [9]: telescope/instrument
