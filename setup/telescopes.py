@@ -3,7 +3,7 @@ Photometry Pipeline Configuation File
 2016-03-09, michael.mommert@nau.edu
 """
 
-# Photometry Pipeline
+# Photometry Pipeline 
 # Copyright (C) 2016  Michael Mommert, michael.mommert@nau.edu
 
 # This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ vatt4k_param = {
     'binning'              : ('CCDBIN1', 'CCDBIN2'), # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS|TIME-OBS', # obs date/time
@@ -51,15 +51,10 @@ vatt4k_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
-<<<<<<< HEAD
-    'filter_translations'  : {'TOP 2 BOT 1': 'V', 'TOP 3 BOT 1': 'R',
-                              'TOP 4 BOT 1': None, 'TOP 5 BOT 1': 'B'},
-=======
     'filter_translations'  : {'TOP 2 BOT 1': 'V', 'TOP 3 BOT 1': 'R', 
                               'TOP 4 BOT 1': 'I', 'TOP 5 BOT 1': 'B'},
->>>>>>> master
                              # filtername translation dictionary
     'exptime'              : 'EXPTIME', # exposure time keyword (s)
     'airmass'              : 'AIRMASS', # airmass keyword
@@ -67,36 +62,27 @@ vatt4k_param = {
 
     # source extractor settings
     'source_minarea'       : 12, # default sextractor source minimum N_pixels
-    'aprad_default'        : 5, # default aperture radius in px
+    'aprad_default'        : 5, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/vatt4k.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/vatt4k.scamp',
-
-=======
     'scamp-config-file'    : rootpath+'/setup/vatt4k.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
     
->>>>>>> master
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,FILTER,EXPTIME,OBJECT,' +
                               'DATE-OBS,TIME-OBS,RA,DEC,SECPIX,AIRMASS,' +
                               'TEL_KEYW'),
     #                         keywords to be copied in image
     #                         combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/vatt4k.swarp',
+    'swarp-config-file'    : rootpath+'/setup/vatt4k.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -112,17 +98,17 @@ dctlmi_param = {
 
 
     # image orientation preferences
-    'flipx'                : True,
-    'flipy'                : False,
-    'rotate'               : 0,
+    'flipx'                : True, 
+    'flipy'                : False, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
-    'binning'              : ('CCDSUM_blank0', 'CCDSUM_blank1'),
+    'binning'              : ('CCDSUM_blank0', 'CCDSUM_blank1'), 
                            # binning in x/y, '_blankN' denotes that both axes
                            # are listed in one keyword, sep. by blanks
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -132,12 +118,12 @@ dctlmi_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTERS',  # filter keyword
     'filter_translations'  : {'V': 'V', 'R': 'R', 'B': 'B', 'VR': None,
                               'I': 'I', 'SDSS-U' : 'u', 'SDSS-G' : 'g',
-                              'SDSS-R' : 'r', 'SDSS-I' : 'i',
-                              'SDSS-Z' : 'z'},
+                              'SDSS-R' : 'r', 'SDSS-I' : 'i', 
+                              'SDSS-Z' : 'z'}, 
                              # filtername translation dictionary
     'exptime'              : 'EXPTIME', # exposure time keyword (s)
     'airmass'              : 'AIRMASS', # airmass keyword
@@ -145,34 +131,26 @@ dctlmi_param = {
 
     # source extractor settings
     'source_minarea'       : 9, # default sextractor source minimum N_pixels
-    'aprad_default'        : 4, # default aperture radius in px
+    'aprad_default'        : 4, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/dctlmi.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/dctlmi.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/dctlmi.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('OBSERVAT,INSTRUME,CCDFLTID,EXPTIME,OBJECT,' +
                               'DATE-OBS,RA,DEC,SCALE,AIRMASS,TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/dctlmi.swarp',
+    'swarp-config-file'    : rootpath+'/setup/dctlmi.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -189,17 +167,17 @@ arc35arctic_param = {
 
 
     # image orientation preferences
-    'flipx'                : True,
-    'flipy'                : False,
-    'rotate'               : 0,
+    'flipx'                : True, 
+    'flipy'                : False, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
-    'binning'              : ('CCDBIN1', 'CCDBIN2'),
+    'binning'              : ('CCDBIN1', 'CCDBIN2'), 
                            # binning in x/y, '_blankN' denotes that both axes
                            # are listed in one keyword, sep. by blanks
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -209,7 +187,7 @@ arc35arctic_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJNAME',  # object name keyword
+    'object'               : 'OBJNAME',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
     'filter_translations'  : {'SDSS U':'u', 'SDSS G':'g', 'SDSS R': 'r',
                               'SDSS I': 'i', 'SDSS Z': 'z'},
@@ -220,34 +198,26 @@ arc35arctic_param = {
 
     # source extractor settings
     'source_minarea'       : 10, # default sextractor source minimum N_pixels
-    'aprad_default'        : 4, # default aperture radius in px
+    'aprad_default'        : 4, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/arc35arctic.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/arc35arctic.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/arc35arctic.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('OBSERVAT,INSTRUME,FILTER,EXPTIME,OBJNAME,' +
                               'DATE-OBS,RA,DEC,AIRMASS,SECPIX,TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/arc35arctic.swarp',
+    'swarp-config-file'    : rootpath+'/setup/arc35arctic.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -263,17 +233,17 @@ arc35agile_param = {
 
 
     # image orientation preferences
-    'flipx'                : True,
-    'flipy'                : False,
-    'rotate'               : 0,
+    'flipx'                : True, 
+    'flipy'                : False, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
-    'binning'              : ('BINX', 'BINY'),
+    'binning'              : ('BINX', 'BINY'), 
                            # binning in x/y, '_blankN' denotes that both axes
                            # are listed in one keyword, sep. by blanks
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -283,7 +253,7 @@ arc35agile_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJNAME',  # object name keyword
+    'object'               : 'OBJNAME',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
     'filter_translations'  : {'SDSS u':'u', 'SDSS g':'g', 'SDSS r': 'r',
                               'SDSS i': 'i', 'SDSS z': 'z'},
@@ -294,34 +264,26 @@ arc35agile_param = {
 
     # source extractor settings
     'source_minarea'       : 7, # default sextractor source minimum N_pixels
-    'aprad_default'        : 4, # default aperture radius in px
+    'aprad_default'        : 4, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/arc35agile.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/arc35agile.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/arc35agile.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('OBSERVAT,INSTRUME,FILTER,EXPTIME,OBJNAME,' +
                               'DATE-OBS,RA,DEC,AIRMASS,SECPIX,TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/arc35agile.swarp',
+    'swarp-config-file'    : rootpath+'/setup/arc35agile.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -338,15 +300,15 @@ magimacs_param = {
 
     # image orientation preferences (for each chip)
     'chip_id'              : 'CHIP',        # chip identifier (remove,
-                                            # if not existent)
+                                            # if not existent) 
     # the following keys are dictionaries if 'chip_id' exists, single
     # values otherwise
     'flipx'                : {1:True, 2:True, 3:True, 4:True, 5:True, 6:True,
-                              7:True, 8:True},
+                              7:True, 8:True}, 
     'flipy'                : {1:False, 2:False, 3:False, 4:False, 5:False,
-                              6:False, 7:False, 8:False},
+                              6:False, 7:False, 8:False}, 
     'rotate'               : {1:270, 2:270, 3:270, 4:270, 5:90, 6:90,
-                              7:90, 8:90},
+                              7:90, 8:90}, 
     'chip_offset_fixed'    : {1:(-0.033, -0.099), 2:(-0.033, -0.033),
                               3:(-0.033, 0.033),  4:(-0.033, 0.099),
                               5:(0.033, -0.033),  6:(0.033, -0.099),
@@ -354,12 +316,12 @@ magimacs_param = {
                              # chip offset (ra, dec in degress) [optional]
 
     # instrument-specific FITS header keywords
-    'binning'              : ('BINNING_x1', 'BINNING_x2'),
+    'binning'              : ('BINNING_x1', 'BINNING_x2'), 
                            # binning in x/y, '_blankN' denotes that both axes
                            # are listed in one keyword, sep. by blanks
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS|UT-TIME', # obs date/time
@@ -369,7 +331,7 @@ magimacs_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
     'filter_translations'  : {'Sloan_u': 'u', 'Sloan_g': 'g', 'Sloan_r': 'r',
                               'Sloan_i': 'i', 'Sloan_z': 'z'},
@@ -380,20 +342,16 @@ magimacs_param = {
 
     # source extractor settings
     'source_minarea'       : 20, # default sextractor source minimum N_pixels
-    'aprad_default'        : 8, # default aperture radius in px
+    'aprad_default'        : 8, # default aperture radius in px 
     'aprad_range'          : [5, 25], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/magimacs.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/magimacs.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/magimacs.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,FILTER,EXPTIME,OBJECT,' +
@@ -401,14 +359,10 @@ magimacs_param = {
                               'SECPIX,TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/magimacs.swarp',
+    'swarp-config-file'    : rootpath+'/setup/magimacs.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -424,17 +378,17 @@ ca123dlrmkiii_param = {
 
 
     # image orientation preferences
-    'flipx'                : True,
-    'flipy'                : True,
-    'rotate'               : 0,
+    'flipx'                : True, 
+    'flipy'                : True, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
-    'binning'              : ('CCDBINX', 'CCDBINY'),
+    'binning'              : ('CCDBINX', 'CCDBINY'), 
                            # binning in x/y, '_blankN' denotes that both axes
                            # are listed in one keyword, sep. by blanks
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : 'XXX',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -444,7 +398,7 @@ ca123dlrmkiii_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
     'filter_translations'  : {'V_Johnson': 'V', 'R_Johnson': 'R', 'free': None},
                              # filtername translation dictionary
@@ -454,20 +408,16 @@ ca123dlrmkiii_param = {
 
     # source extractor settings
     'source_minarea'       : 15, # default sextractor source minimum N_pixels
-    'aprad_default'        : 4, # default aperture radius in px
+    'aprad_default'        : 4, # default aperture radius in px 
     'aprad_range'          : [2, 15], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/ca123dlrmkiii.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/ca123dlrmkiii.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/ca123dlrmkiii.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,FILTER,EXPTIME,OBJECT,' +
@@ -475,14 +425,10 @@ ca123dlrmkiii_param = {
                               'SECPIX,TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/ca123dlrmkiii.swarp',
+    'swarp-config-file'    : rootpath+'/setup/ca123dlrmkiii.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -506,7 +452,7 @@ lowell31_param = {
     'binning'              : ('CDELT1', 'CDELT2'), # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'TELRA',  # telescope pointing, RA
-    'dec'                  : 'TELDEC', # telescope pointin, Dec
+    'dec'                  : 'TELDEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS|UT', # obs date/time
@@ -516,7 +462,7 @@ lowell31_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER2',  # filter keyword
     'filter_translations'  : {'V': 'V', 'I': 'I'},
                              # filtername translation dictionary
@@ -526,20 +472,16 @@ lowell31_param = {
 
     # source extractor settings
     'source_minarea'       : 12, # default sextractor source minimum N_pixels
-    'aprad_default'        : 5, # default aperture radius in px
+    'aprad_default'        : 5, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/lowell31.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/lowell31.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/lowell31.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,FILTER1,FILTER2,EXPTIME,OBJECT,' +
@@ -547,14 +489,10 @@ lowell31_param = {
                               'TEL_KEYW'),
     #                         keywords to be copied in image
     #                         combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/lowell31.swarp',
+    'swarp-config-file'    : rootpath+'/setup/lowell31.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -575,12 +513,12 @@ lowell42_param = {
     'rotate'               : 90,
 
     # instrument-specific FITS header keywords
-    'binning'              : ('CCDSUM_blank1', 'CCDSUM_blank2'),
+    'binning'              : ('CCDSUM_blank1', 'CCDSUM_blank2'), 
                            # binning in x/y, '_blankN' denotes that both axes
                            # are listed in one keyword, sep. by blanks
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'TELRA',  # telescope pointing, RA
-    'dec'                  : 'TELDEC', # telescope pointin, Dec
+    'dec'                  : 'TELDEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS|UTC-OBS', # obs date/time
@@ -590,7 +528,7 @@ lowell42_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTNAME',  # filter keyword
     'filter_translations'  : {'V': 'V', 'I': 'I', 'VR': None},
                              # filtername translation dictionary
@@ -600,20 +538,16 @@ lowell42_param = {
 
     # source extractor settings
     'source_minarea'       : 12, # default sextractor source minimum N_pixels
-    'aprad_default'        : 5, # default aperture radius in px
+    'aprad_default'        : 5, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/lowell42.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/lowell42.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/lowell42.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,CCDSUM,FILTNAME,EXPTIME,'+
@@ -622,14 +556,10 @@ lowell42_param = {
                               'TEL_KEYW'),
     #                         keywords to be copied in image
     #                         combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/lowell42.swarp',
+    'swarp-config-file'    : rootpath+'/setup/lowell42.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -650,12 +580,12 @@ lowell72_param = {
     'rotate'               : 0,
 
     # instrument-specific FITS header keywords
-    'binning'              : ('CRDELT1', 'CRDELT2'),
+    'binning'              : ('CRDELT1', 'CRDELT2'), 
                            # binning in x/y, '_blankN' denotes that both axes
                            # are listed in one keyword, sep. by blanks
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'TELRA',  # telescope pointing, RA
-    'dec'                  : 'TELDEC', # telescope pointin, Dec
+    'dec'                  : 'TELDEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -665,7 +595,7 @@ lowell72_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTNME3',  # filter keyword
     'filter_translations'  : {'V': 'V', 'I': 'I', 'R': 'R', 'VR': None},
                              # filtername translation dictionary
@@ -675,20 +605,16 @@ lowell72_param = {
 
     # source extractor settings
     'source_minarea'       : 12, # default sextractor source minimum N_pixels
-    'aprad_default'        : 5, # default aperture radius in px
+    'aprad_default'        : 5, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/lowell72.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/lowell72.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/lowell72.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,CRDELT1, CRDELT2,FILTNME3,' +
@@ -697,14 +623,10 @@ lowell72_param = {
                               'TEL_KEYW'),
     #                         keywords to be copied in image
     #                         combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/lowell72.swarp',
+    'swarp-config-file'    : rootpath+'/setup/lowell72.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -726,11 +648,11 @@ ctio09_param = {
     'rotate'               : 180,
 
     # instrument-specific FITS header keywords
-    'binning'              : ('CCDSUM_blank1', 'CCDSUM_blank2'),
+    'binning'              : ('CCDSUM_blank1', 'CCDSUM_blank2'), 
                              # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -740,7 +662,7 @@ ctio09_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTERS',  # filter keyword
     'filter_translations'  : {'dia v': 'V', 'dia ov': 'V','dia i': 'I',
                               'dia r': 'R'},
@@ -751,20 +673,16 @@ ctio09_param = {
 
     # source extractor settings
     'source_minarea'       : 15, # default sextractor source minimum N_pixels
-    'aprad_default'        : 5, # default aperture radius in px
+    'aprad_default'        : 5, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/ctio09.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/ctio09.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/ctio09.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,FILTERS,EXPTIME,OBJECT,' +
@@ -772,14 +690,10 @@ ctio09_param = {
                               'TEL_KEYW'),
     #                         keywords to be copied in image
     #                         combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/ctio09.swarp',
+    'swarp-config-file'    : rootpath+'/setup/ctio09.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -800,11 +714,11 @@ ctio10_param = {
     'rotate'               : 180,
 
     # instrument-specific FITS header keywords
-    'binning'              : ('CCDSUM_blank1', 'CCDSUM_blank2'),
+    'binning'              : ('CCDSUM_blank1', 'CCDSUM_blank2'), 
                              # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS|TIME-OBS', # obs date/time
@@ -814,7 +728,7 @@ ctio10_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTERID',  # filter keyword
     'filter_translations'  : {'V': 'V', 'I': 'I'},
                              # filtername translation dictionary
@@ -824,20 +738,16 @@ ctio10_param = {
 
     # source extractor settings
     'source_minarea'       : 12, # default sextractor source minimum N_pixels
-    'aprad_default'        : 5, # default aperture radius in px
+    'aprad_default'        : 5, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/ctio10.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/ctio10.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/ctio10.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,FILTER,EXPTIME,OBJECT,' +
@@ -845,14 +755,10 @@ ctio10_param = {
                               'TEL_KEYW'),
     #                         keywords to be copied in image
     #                         combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/ctio10.swarp',
+    'swarp-config-file'    : rootpath+'/setup/ctio10.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -868,15 +774,15 @@ ctio13ccd_param = {
 
 
     # image orientation preferences
-    'flipx'                : True,
-    'flipy'                : False,
-    'rotate'               : 0,
+    'flipx'                : True, 
+    'flipy'                : False, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
     'binning'              : ('CCDXBIN', 'CCDYBIN'), # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS|TIME-OBS', # obs date/time
@@ -886,7 +792,7 @@ ctio13ccd_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'CCDFLTID',  # filter keyword
     'filter_translations'  : {'V': 'V', 'R': 'R', 'B': 'B'},
                              # filtername translation dictionary
@@ -896,20 +802,16 @@ ctio13ccd_param = {
 
     # source extractor settings
     'source_minarea'       : 15, # default sextractor source minimum N_pixels
-    'aprad_default'        : 4, # default aperture radius in px
+    'aprad_default'        : 4, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/andicam.sex',
     'mask_file'            : {'2,2' : rootpath+'/setup/mask_andicam_2x2.fits'},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/andicam.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/andicam.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('OBSERVAT,INSTRUME,CCDFLTID,EXPTIME,OBJECT,' +
@@ -917,14 +819,10 @@ ctio13ccd_param = {
                               'TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/andicam.swarp',
+    'swarp-config-file'    : rootpath+'/setup/andicam.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -940,15 +838,15 @@ uh88snifs_param = {
 
 
     # image orientation preferences
-    'flipx'                : True,
-    'flipy'                : True,
-    'rotate'               : 0,
+    'flipx'                : True, 
+    'flipy'                : True, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
     'binning'              : ('CCDBIN1', 'CCDBIN2'), # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -958,7 +856,7 @@ uh88snifs_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
     'filter_translations'  : {'SDSS u': 'u', 'SDSS g': 'g', 'SDSS r': 'r',
                               'SDSS i': 'i', 'SDSS z': 'z', 'Bessell B': 'B',
@@ -971,14 +869,14 @@ uh88snifs_param = {
 
     # source extractor settings
     'source_minarea'       : 12, # default sextractor source minimum N_pixels
-    'aprad_default'        : 3, # default aperture radius in px
+    'aprad_default'        : 3, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/uh88snifs.sex',
     'mask_file'            : {'2,2' : rootpath+'/setup/mask_snifs_2x2.fits'},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-    'scamp-config-file'    : rootpath+'/setup/uh88snifs.scamp',
+    'scamp-config-file'    : rootpath+'/setup/uh88snifs.scamp', 
 
     # swarp settings
     'copy_keywords'        : ('OBSERVAT,INSTRUME,FILTER,EXPTIME,OBJECT,' +
@@ -986,20 +884,12 @@ uh88snifs_param = {
                               'TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-<<<<<<< HEAD
-    'swarp-config-file'    : rootpath+'/setup/uh88snifs.swarp',
-=======
     'swarp-config-file'    : rootpath+'/setup/uh88snifs.swarp',  
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1014,15 +904,15 @@ wiyn09hdi_param = {
 
 
     # image orientation preferences
-    'flipx'                : False,
-    'flipy'                : False,
-    'rotate'               : 0,
+    'flipx'                : False, 
+    'flipy'                : False, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
     'binning'              : ('CCDBIN1', 'CCDBIN2'), # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RASTRNG',  # telescope pointing, RA
-    'dec'                  : 'DECSTRNG', # telescope pointin, Dec
+    'dec'                  : 'DECSTRNG', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -1032,7 +922,7 @@ wiyn09hdi_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER1',  # filter keyword
     'filter_translations'  : {'u': 'u', 'g': 'g', 'r': 'r',
                               'i': 'i', 'z': 'z'},
@@ -1043,20 +933,16 @@ wiyn09hdi_param = {
 
     # source extractor settings
     'source_minarea'       : 9, # default sextractor source minimum N_pixels
-    'aprad_default'        : 3, # default aperture radius in px
+    'aprad_default'        : 3, # default aperture radius in px 
     'aprad_range'          : [2, 8], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/wiyn09hdi.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/wiyn09hdi.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/wiyn09hdi.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('OBSERVAT,INSTRUME,FILTER1,EXPTIME,OBJECT,' +
@@ -1064,14 +950,10 @@ wiyn09hdi_param = {
                               'TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/wiyn09hdi.swarp',
+    'swarp-config-file'    : rootpath+'/setup/wiyn09hdi.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1088,9 +970,9 @@ generic_param = {
 
 
     # image orientation preferences
-    'flipx'                : False,
-    'flipy'                : False,
-    'rotate'               : 0,
+    'flipx'                : False, 
+    'flipy'                : False, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
     # in this GENERIC setup, all keywords are suggested
@@ -1098,7 +980,7 @@ generic_param = {
     'binning'              : ('BINX', 'BINY'), # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'OBJCTRA',  # telescope pointing, RA
-    'dec'                  : 'OBJCTDEC', # telescope pointin, Dec
+    'dec'                  : 'OBJCTDEC', # telescope pointin, Dec 
     'radec_separator'      : ' ',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -1108,7 +990,7 @@ generic_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
     'filter_translations'  : {'V': 'V', 'R': 'R', 'clear': None, '': None},
                              # filtername translation dictionary
@@ -1118,34 +1000,26 @@ generic_param = {
 
     # source extractor settings
     'source_minarea'       : 8, # default sextractor source minimum N_pixels
-    'aprad_default'        : 3, # default aperture radius in px
+    'aprad_default'        : 3, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/generic.sex',
     'mask_file'            : {}, #'2,2' : rootpath+'/setup/mask_snifs_2x2.fits'},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/generic.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/generic.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('OBSERVAT,INSTRUME,EXPTIME,OBJECT,' +
                               'DATE-OBS,TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/generic.swarp',
+    'swarp-config-file'    : rootpath+'/setup/generic.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1160,16 +1034,16 @@ ratir_param = {
 
 
     # image orientation preferences
-    'flipx'                : True,
-    'flipy'                : False,
-    'rotate'               : 0,
+    'flipx'                : True, 
+    'flipy'                : False, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
     'binning'              : ('SC_CH_DTBN', 'SC_CH_DTBN'), # binning in x/y
                              # _CH_ gets replaced with Channel number
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'STRSTRA',  # telescope pointing, RA
-    'dec'                  : 'STRSTDE', # telescope pointin, Dec
+    'dec'                  : 'STRSTDE', # telescope pointin, Dec 
     'radec_separator'      : 'XXX',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'SSHT', # obs date/time
@@ -1179,9 +1053,9 @@ ratir_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
-    'filter_translations'  : {'g': 'g', 'r': 'r', 'i': 'i', 'z': 'z',
+    'filter_translations'  : {'g': 'g', 'r': 'r', 'i': 'i', 'z': 'z', 
                               'J': 'J', 'H': 'H'},
                              # filtername translation dictionary
     'exptime'              : 'EXPTIME', # exposure time keyword (s)
@@ -1190,20 +1064,16 @@ ratir_param = {
 
     # source extractor settings
     'source_minarea'       : 18, # default sextractor source minimum N_pixels
-    'aprad_default'        : 4, # default aperture radius in px
+    'aprad_default'        : 4, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/ratir.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/ratir.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/ratir.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,FILTER,EXPTIME,OBJECT' +
@@ -1211,14 +1081,10 @@ ratir_param = {
                               'TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/ratir.swarp',
+    'swarp-config-file'    : rootpath+'/setup/ratir.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1234,16 +1100,16 @@ ratir_param = {
 
 
 #     # image orientation preferences
-#     'flipx'                : False,
-#     'flipy'                : False,
-#     'rotate'               : 0,
+#     'flipx'                : False, 
+#     'flipy'                : False, 
+#     'rotate'               : 0, 
 
 #     # instrument-specific FITS header keywords
 #     'binning'              : ('HBIN', 'VBIN'), # binning in x/y
 #                              # _CH_ gets replaced with Channel number
 #     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
 #     'ra'                   : 'TELRA',  # telescope pointing, RA
-#     'dec'                  : 'TELDEC', # telescope pointin, Dec
+#     'dec'                  : 'TELDEC', # telescope pointin, Dec 
 #     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
 #                                     # if already in degrees
 #     'date_keyword'         : 'FRAME', # obs date/time
@@ -1253,7 +1119,7 @@ ratir_param = {
 #     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
 #                                          # (usually provided by
 #                                          # pp_prepare
-#     'object'               : 'OBJECT',  # object name keyword
+#     'object'               : 'OBJECT',  # object name keyword 
 #     'filter'               : 'FILTERA',  # filter keyword
 #     'filter_translations'  : {'V - Green': 'V'},
 #                              # filtername translation dictionary
@@ -1263,14 +1129,14 @@ ratir_param = {
 
 #     # source extractor settings
 #     'source_minarea'       : 12, # default sextractor source minimum N_pixels
-#     'aprad_default'        : 4, # default aperture radius in px
+#     'aprad_default'        : 4, # default aperture radius in px 
 #     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
 #     'sex-config-file'      : rootpath+'/setup/sl74sha.sex',
 #     'mask_file'            : {},
 #     #                        mask files as a function of x,y binning
 
 #     # scamp settings
-#     'scamp-config-file'    : rootpath+'/setup/sl74sha.scamp',
+#     'scamp-config-file'    : rootpath+'/setup/sl74sha.scamp', 
 
 #     # swarp settings
 #     'copy_keywords'        : ('TELESCOP,INSTRUME,FILTERA,EXPOSURE,OBJECT' +
@@ -1278,10 +1144,10 @@ ratir_param = {
 #                               'TEL_KEYW'),
 #     #                        keywords to be copied in image
 #     #                        combination using swarp
-#     'swarp-config-file'    : rootpath+'/setup/sl74sha.swarp',
+#     'swarp-config-file'    : rootpath+'/setup/sl74sha.swarp',  
 
 #     # default catalog settings
-#     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
+#     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'], 
 #     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 # }
 
@@ -1298,15 +1164,15 @@ soargoodman_param = {
 
 
     # image orientation preferences
-    'flipx'                : True,
-    'flipy'                : True,
-    'rotate'               : 0,
+    'flipx'                : True, 
+    'flipy'                : True, 
+    'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
     'binning'              : ('PARAM18', 'PARAM22'), # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointin, Dec
+    'dec'                  : 'DEC', # telescope pointin, Dec 
     'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -1316,10 +1182,10 @@ soargoodman_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
-    'filter_translations'  : {'Rc': 'R', 'V':'V', 'B':'B', 'u':'u',
-                              'g-SDSS': 'g', 'r-SDSS': 'r', 'i-SDSS': 'i',
+    'filter_translations'  : {'Rc': 'R', 'V':'V', 'B':'B', 'u':'u', 
+                              'g-SDSS': 'g', 'r-SDSS': 'r', 'i-SDSS': 'i', 
                               'z-SDSS': 'z'},
                              # filtername translation dictionary
     'exptime'              : 'EXPTIME', # exposure time keyword (s)
@@ -1328,7 +1194,7 @@ soargoodman_param = {
 
     # source extractor settings
     'source_minarea'       : 15, # default sextractor source minimum N_pixels
-    'aprad_default'        : 4, # default aperture radius in px
+    'aprad_default'        : 4, # default aperture radius in px 
     'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/soargoodman.sex',
     'mask_file'            : {'1,1' : rootpath+'/setup/mask_soargoodman_1x1.fits',
@@ -1336,13 +1202,9 @@ soargoodman_param = {
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/soargoodman.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/soargoodman.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # swarp settings
     'copy_keywords'        : ('TELESCOP,INSTRUME,FILTER,EXPTIME,OBJECT,' +
@@ -1350,14 +1212,10 @@ soargoodman_param = {
                               'TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
-    'swarp-config-file'    : rootpath+'/setup/soargoodman.swarp',
+    'swarp-config-file'    : rootpath+'/setup/soargoodman.swarp',  
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1377,7 +1235,7 @@ ohp120_param = {
     'binning'              : ('XBINNING', 'YBINNING'), # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointing, Dec
+    'dec'                  : 'DEC', # telescope pointing, Dec 
     'radec_separator'      : 'XXX',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -1387,7 +1245,7 @@ ohp120_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJECT',  # object name keyword
+    'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTER',  # filter keyword
     'filter_translations'  : {'R_Cousins': 'R', 'V_Cousins': 'V',
                               'B_Cousins': 'B', 'H-alpha': None,
@@ -1399,27 +1257,19 @@ ohp120_param = {
 
     # source extractor settings
     'source_minarea'       : 15, # default sextractor source minimum N_pixels
-    'aprad_default'        : 8, # default aperture radius in px
+    'aprad_default'        : 8, # default aperture radius in px 
     'aprad_range'          : [2, 15], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/ohp120.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/ohp120.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/ohp120.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1440,7 +1290,7 @@ tngdolores_param = {
     'binning'              : ('CRDELT1', 'CRDELT2'), # binning in x/y
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
     'ra'                   : 'RA',  # telescope pointing, RA
-    'dec'                  : 'DEC', # telescope pointing, Dec
+    'dec'                  : 'DEC', # telescope pointing, Dec 
     'radec_separator'      : 'XXX',   # RA/Dec hms separator, use 'XXX'
                                     # if already in degrees
     'date_keyword'         : 'DATE-OBS', # obs date/time
@@ -1450,7 +1300,7 @@ tngdolores_param = {
     'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
                                          # (usually provided by
                                          # pp_prepare
-    'object'               : 'OBJCAT',  # object name keyword
+    'object'               : 'OBJCAT',  # object name keyword 
     'filter'               : 'FLT_ID',  # filter keyword
     'filter_translations'  : {'B_JOHN_10': 'B', 'V_JOHN_11': 'V',
                               'R_JOHN_12': 'R', 'I_JOHN_13': 'I'},
@@ -1460,27 +1310,19 @@ tngdolores_param = {
 
     # source extractor settings
     'source_minarea'       : 15, # default sextractor source minimum N_pixels
-    'aprad_default'        : 8, # default aperture radius in px
+    'aprad_default'        : 8, # default aperture radius in px 
     'aprad_range'          : [2, 15], # [minimum, maximum] aperture radius (px)
     'sex-config-file'      : rootpath+'/setup/tngdolores.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-<<<<<<< HEAD
-    'scamp-config-file'    : rootpath+'/setup/tngdolores.scamp',
-=======
     'scamp-config-file'    : rootpath+'/setup/tngdolores.scamp', 
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg       
->>>>>>> master
 
     # default catalog settings
-<<<<<<< HEAD
-    'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-=======
     'astrometry_catalogs'  : ['GAIA'], 
->>>>>>> master
     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
 }
 
@@ -1501,7 +1343,7 @@ implemented_telescopes = ['VATT4K', 'DCTLMI', 'ARC35ARCTIC',
                           'TNGDOLORES', 'GENERIC']
 
 # translate INSTRUME (or others, see _pp_conf.py) header keyword into
-# PP telescope keyword
+# PP telescope keyword 
 instrument_identifiers = {'= "Vatt4k"':        'VATT4K',
                           'LMI':               'DCTLMI',
                           'arctic':            'ARC35ARCTIC',
@@ -1530,7 +1372,7 @@ instrument_identifiers = {'= "Vatt4k"':        'VATT4K',
                           'LRS':               'TNGDOLORES'}
 
 # translate telescope keyword into parameter set defined here
-telescope_parameters = {'VATT4K':       vatt4k_param,
+telescope_parameters = {'VATT4K' :       vatt4k_param, 
                         'DCTLMI':        dctlmi_param,
                         'ARC35ARCTIC':   arc35arctic_param,
                         'ARC35AGILE':    arc35agile_param,
