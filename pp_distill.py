@@ -248,6 +248,10 @@ def fixed_targets(fixed_targets_file, catalogs, display=True):
                                             ('ra', float),
                                             ('dec', float)])
 
+    # force array shape even for single line fixed_targets_files
+    if len(fixed_targets.shape) == 0:
+        fixed_targets = numpy.array([fixed_targets])
+
     objects = []
     for obj in fixed_targets:
         for cat_idx, cat in enumerate(catalogs):

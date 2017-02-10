@@ -263,7 +263,7 @@ def derive_zeropoints(ref_cat, catalogs, filtername, minstars_external,
             #sigma = numpy.sqrt(var/(len(residuals)-1)) # weighted std of mean
             # weighted std + rms of individual sigmas
             # residuals_sig is already squared!
-            sigma = numpy.sqrt(var + numpy.average(residuals_sig))
+            sigma = numpy.sqrt(var + numpy.mean(residuals_sig))
             #sigma = numpy.std(residuals-zeropoint)
 
             clipping_steps.append([zeropoint, sigma, red_chi2, m_idc,

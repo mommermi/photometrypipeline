@@ -44,6 +44,7 @@ if sys.version_info > (3,0):
 
 # pipeline-specific modules
 import _pp_conf
+import toolbox
 from catalog import *
 
 # setup logging
@@ -196,27 +197,7 @@ def create_index(filenames, directory, obsparam, display=False):
         header = hdulist[0].header
 
         # read out image binning mode
-        if '_' in obsparam['binning'][0]:
-            if '_blank' in obsparam['binning'][0]:
-                binning_x = float(header[obsparam['binning'][0].\
-                                         split('_')[0]].split()[0])
-                binning_y = float(header[obsparam['binning'][1].\
-                                         split('_')[0]].split()[1])
-            elif '_x' in obsparam['binning'][0]:
-                binning_x = float(header[obsparam['binning'][0].\
-                                         split('_')[0]].split('x')[0])
-                binning_y = float(header[obsparam['binning'][1].\
-                                         split('_')[0]].split('x')[1])
-            elif '_CH_' in obsparam['binning'][0]:
-                # only for RATIR
-                channel = header['INSTRUME'].strip()[1]
-                binning_x = float(header[obsparam['binning'][0].
-                                         replace('_CH_', channel)])
-                binning_y = float(header[obsparam['binning'][1].
-                                         replace('_CH_', channel)])
-        else:
-            binning_x = header[obsparam['binning'][0]]
-            binning_y = header[obsparam['binning'][1]]
+        binning = toolbox.get_binning(header, obsparam)
 
         #framefilename = _pp_conf.diagroot + '/' + filename + '.png'
         framefilename = '.diagnostics/' + filename + '.png'
@@ -235,8 +216,8 @@ def create_index(filenames, directory, obsparam, display=False):
              header[obsparam['filter']],
              float(header[obsparam['airmass']]),
              float(header[obsparam['exptime']]),
-             header[obsparam['extent'][0]]*obsparam['secpix'][0]*binning_x/60.,
-             header[obsparam['extent'][1]]*obsparam['secpix'][1]*binning_y/60.)
+             header[obsparam['extent'][0]]*obsparam['secpix'][0]*binning[0]/60.,
+             header[obsparam['extent'][1]]*obsparam['secpix'][1]*binning[1]/60.)
 
 
         ### create frame image
@@ -358,7 +339,8 @@ def add_registration(data, extraction_data):
         # plot reference sources
         if refcat.shape[0] > 0:
             w = wcs.WCS(header)
-            world_coo = numpy.array(list(zip(refcat['X_WORLD'], refcat['Y_WORLD'])))
+            world_coo = numpy.array(list(zip(refcat['ra.deg'], 
+                                             refcat['dec.deg'])))
             img_coo = w.wcs_world2pix(world_coo, True )
             img_coo = [c for c in img_coo if (c[0] > 0 and c[1] > 0 and
                                         c[0] < header[obsparam['extent'][0]]

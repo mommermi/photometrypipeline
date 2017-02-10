@@ -296,43 +296,14 @@ def extract_multiframe(filenames, parameters):
 
 
     #check what the binning is and if there is a mask available
-    if '_' in parameters['obsparam']['binning'][0]:
-        if '_blank' in parameters['obsparam']['binning'][0]:
-            binning_x = float(hdu[0].header[\
-                            parameters['obsparam']['binning'][0].\
-                                     split('_')[0]].split()[0])
-            binning_y = float(hdu[0].header[\
-                            parameters['obsparam']['binning'][1].\
-                                     split('_')[0]].split()[1])
-        if '_x' in parameters['obsparam']['binning'][0]:
-            binning_x = float(\
-                        hdu[0].header[parameters['obsparam']['binning'][0].\
-                                      split('_')[0]].split('x')[0])
-            binning_y = float(\
-                        hdu[0].header[parameters['obsparam']['binning'][1].\
-                                      split('_')[0]].split('x')[1])
-        elif '_CH_' in parameters['obsparam']['binning'][0]:
-            # only for RATIR
-            channel = hdu[0].header['INSTRUME'].strip()[1]
-            binning_x = float(hdu[0].header[parameters['obsparam']
-                                                      ['binning'][0].
-                                     replace('_CH_', channel)])
-            binning_y = float(hdu[0].header[parameters['obsparam']
-                                                      ['binning'][1].
-                                     replace('_CH_', channel)])
-
-    else:
-        binning_x = hdu[0].header[parameters['obsparam']['binning'][0]]
-        binning_y = hdu[0].header[parameters['obsparam']['binning'][1]]
-    bin_string = '%d,%d' % (binning_x, binning_y)
-
-    hdu.close()
+    binning = get_binning(hdu[0].header, parameters['obsparam'])
+    bin_string = '%d,%d' % (binning[0], binning[1])
 
     if bin_string in parameters['obsparam']['mask_file']:
         mask_file = parameters['obsparam']['mask_file'][bin_string]
         parameters['mask_file'] = mask_file
 
-
+    hdu.close()
 
     ### thread and queue handling
 

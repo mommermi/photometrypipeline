@@ -361,6 +361,12 @@ class catalog(object):
             self.data.rename_column('DEJ2000', 'dec.deg')
             self.data.rename_column('e_RAJ2000', 'e_ra.deg')
             self.data.rename_column('e_DEJ2000', 'e_dec.deg')
+            self.data.rename_column('g_mag', 'gmag')
+            self.data.rename_column('e_g_mag', 'e_gmag')
+            self.data.rename_column('r_mag', 'rmag')
+            self.data.rename_column('e_r_mag', 'e_rmag')
+            self.data.rename_column('i_mag', 'imag')
+            self.data.rename_column('e_i_mag', 'i_gmag')
 
         elif self.catalogname == 'SDSS-R9':
             vquery = Vizier(columns=['SDSS9', 'RAJ2000', 'DEJ2000',
@@ -494,9 +500,9 @@ class catalog(object):
         #hdrhdu.header['TDIM1'] = ('(80, 36)') # remove?
 
         ### create data table
-        colname_dic = {'ra.deg': 'X_WORLD', 'dec.deg': 'Y_WORLD',
-                       'e_ra.deg': 'ERRA_WORLD',
-                       'e_dec.deg': 'ERRB_WORLD',
+        colname_dic = {'ra.deg': 'XWIN_WORLD', 'dec.deg': 'YWIN_WORLD',
+                       'e_ra.deg': 'ERRAWIN_WORLD',
+                       'e_dec.deg': 'ERRBWIN_WORLD',
                        'mag': 'MAG'}
         format_dic = {'ra.deg': '1D', 'dec.deg': '1D',
                       'e_ra.deg': '1E',
@@ -836,7 +842,7 @@ class catalog(object):
             return self.shape[0]
 
 
-        ### URAT/APASS to R/I
+        ### APASS to R/I
         # todo: include g magnitudes and account for color
         elif ('URAT' in self.catalogname or
               'APASS' in self.catalogname and
@@ -1112,10 +1118,10 @@ class catalog(object):
 
 ### catalog download and manipulation
 
-# cat1 = catalog('URAT-1')
-# print cat1.download_catalog(80, 0, 0.5, 10000), 'sources grabbed from', cat1.catalogname
-# print cat1.fields
-# print cat1[0]
+# cat1 = catalog('APASS9')
+# print(cat1.download_catalog(80, 0, 0.5, 10000), 'sources grabbed from', cat1.catalogname)
+# print(cat1.fields)
+# print(cat1[0])
 
 # cat2 = catalog('2MASS')
 # print cat2.download_catalog(80, 0, 0.5, 10000), 'sources grabbed from', cat2.catalogname

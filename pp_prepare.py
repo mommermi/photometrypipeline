@@ -235,32 +235,12 @@ def prepare(filenames, obsparam, header_update, flipx=False,
 
 
         # read out image binning mode
-        if '_' in obsparam['binning'][0]:
-            if '_blank' in obsparam['binning'][0]:
-                binning_x = float(header[obsparam['binning'][0].\
-                                         split('_')[0]].split()[0])
-                binning_y = float(header[obsparam['binning'][1].\
-                                         split('_')[0]].split()[1])
-            elif '_x' in obsparam['binning'][0]:
-                binning_x = float(header[obsparam['binning'][0].\
-                                         split('_')[0]].split('x')[0])
-                binning_y = float(header[obsparam['binning'][1].\
-                                         split('_')[0]].split('x')[1])
-            elif '_CH_' in obsparam['binning'][0]:
-                # only for RATIR
-                channel = header['INSTRUME'].strip()[1]
-                binning_x = float(header[obsparam['binning'][0].
-                                         replace('_CH_', channel)])
-                binning_y = float(header[obsparam['binning'][1].
-                                         replace('_CH_', channel)])
-        else:
-            binning_x = header[obsparam['binning'][0]]
-            binning_y = header[obsparam['binning'][1]]
+        binning = toolbox.get_binning(header, obsparam)
 
         # add pixel resolution keyword
-        header['SECPIXX'] = (obsparam['secpix'][0]*binning_x,
+        header['SECPIXX'] = (obsparam['secpix'][0]*binning[0],
                              'PP: x pixscale after binning')
-        header['SECPIXY'] = (obsparam['secpix'][1]*binning_y,
+        header['SECPIXY'] = (obsparam['secpix'][1]*binning[1],
                              'PP: y pixscale after binning')
 
         # create observation midtime jd
@@ -391,16 +371,16 @@ def prepare(filenames, obsparam, header_update, flipx=False,
                             'PP: fake Coordinate reference pixel')
 
         header['CD1_1']  = (xnorm * numpy.cos(this_rotate/180.*numpy.pi) * \
-                obsparam['secpix'][0]*binning_x/3600., \
+                obsparam['secpix'][0]*binning[0]/3600., \
                                              'PP: fake Coordinate matrix')
         header['CD1_2']  = (ynorm * -numpy.sin(this_rotate/180.*numpy.pi) * \
-                obsparam['secpix'][1]*binning_y/3600., \
+                obsparam['secpix'][1]*binning[1]/3600., \
                                              'PP: fake Coordinate matrix')
         header['CD2_1']  = (xnorm * numpy.sin(this_rotate/180.*numpy.pi) * \
-                obsparam['secpix'][0]*binning_x/3600., \
+                obsparam['secpix'][0]*binning[0]/3600., \
                                              'PP: fake Coordinate matrix')
         header['CD2_2']  = (ynorm * numpy.cos(this_rotate/180.*numpy.pi) * \
-                obsparam['secpix'][1]*binning_y/3600., \
+                obsparam['secpix'][1]*binning[1]/3600., \
                                              'PP: fake Coordinate matrix')
 
         #### crop center from LOWELL42 frames

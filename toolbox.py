@@ -36,7 +36,6 @@ if sys.version_info > (3,0):
   from builtins import range
 
 
-
 ##### TIME AND DATE
 
 def jd_to_gregorian(jd, is_mjd=False):
@@ -151,3 +150,36 @@ def read_scamp_output():
       return (headers, data)
 
 
+##### PP tools
+
+def get_binning(header, obsparam):
+    """ derive binning from image header
+        use obsparam['binning'] keywords, unless both keywords are set to 1
+        return: tuple (binning_x, binning_y)"""
+
+    if obsparam['binning'][0] == 1 and obsparam['binning'][1] == 1:
+        binning_x = 1
+        binning_y = 1
+    elif '_' in obsparam['binning'][0]:
+        if '_blank' in obsparam['binning'][0]:
+            binning_x = float(header[obsparam['binning'][0].\
+                                     split('_')[0]].split()[0])
+            binning_y = float(header[obsparam['binning'][1].\
+                                     split('_')[0]].split()[1])
+        elif '_x' in obsparam['binning'][0]:
+            binning_x = float(header[obsparam['binning'][0].\
+                                     split('_')[0]].split('x')[0])
+            binning_y = float(header[obsparam['binning'][1].\
+                                     split('_')[0]].split('x')[1])
+        elif '_CH_' in obsparam['binning'][0]:
+            # only for RATIR
+            channel = header['INSTRUME'].strip()[1]
+            binning_x = float(header[obsparam['binning'][0].
+                                     replace('_CH_', channel)])
+            binning_y = float(header[obsparam['binning'][1].
+                                     replace('_CH_', channel)])
+    else:
+        binning_x = header[obsparam['binning'][0]]
+        binning_y = header[obsparam['binning'][1]]
+
+    return (binning_x, binning_y)
