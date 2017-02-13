@@ -1421,12 +1421,12 @@ saltsalticam_param = {
     'source_minarea': 12,  # default sextractor source minimum N_pixels
     'aprad_default': 5,  # default aperture radius in px
     'aprad_range': [2, 10],  # [minimum, maximum] aperture radius (px)
-    'sex-config-file': rootpath + '/setup/kpno4mos1.sex',
+    'sex-config-file': rootpath + '/setup/saltsalticam.sex',
     'mask_file': {},
     #                        mask files as a function of x,y binning
 
     # scamp settings
-    'scamp-config-file': rootpath + '/setup/kpno4mos1.scamp',
+    'scamp-config-file': rootpath + '/setup/saltsalticam.scamp',
     'reg_max_mag'          : 19,
     'reg_search_radius'    : 0.5, # deg
 
@@ -1445,7 +1445,7 @@ implemented_telescopes = ['VATT4K', 'DCTLMI', 'ARC35ARCTIC',
                           'CTIO09', 'CTIO10', 'CTIO13CCD', 'UH88SNIFS',
                           'WIYN09HDI', 'RATIR', 'SOARGOODMAN', 'OHP120',
                           #'SL74SAH',
-                          'TNGDOLORES', 'GENERIC', 'KPNO4MOS1']
+                          'TNGDOLORES', 'GENERIC', 'KPNO4MOS1', 'SALTSALTICAM']
 
 # translate INSTRUME (or others, see _pp_conf.py) header keyword into
 # PP telescope keyword 
