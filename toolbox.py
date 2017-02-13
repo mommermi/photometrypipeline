@@ -5,7 +5,7 @@ Toolbox for the Photometry Pipeline
 from __future__ import print_function
 from __future__ import division
 
-# Photometry Pipeline 
+# Photometry Pipeline
 # Copyright (C) 2016  Michael Mommert, michael.mommert@nau.edu
 
 # This program is free software: you can redistribute it and/or modify
@@ -39,18 +39,18 @@ if sys.version_info > (3,0):
 ##### TIME AND DATE
 
 def jd_to_gregorian(jd, is_mjd=False):
-  """ convert a julian date into a gregorian data """ 
+  """ convert a julian date into a gregorian data """
   if is_mjd:
       mjd = jd
   else:
       mjd = jd -2400000.5
 
-  MJD0 = 2400000.5 # 1858 November 17, 00:00:00 hours 
+  MJD0 = 2400000.5 # 1858 November 17, 00:00:00 hours
 
   modf = math.modf
   a = int(mjd+MJD0+0.5)
   b = int(old_div((a-1867216.25),36524.25))
-  c = a+ b - int(modf(old_div(b,4))[1]) + 1525 
+  c = a+ b - int(modf(old_div(b,4))[1]) + 1525
 
   d = int(old_div((c-122.1),365.25))
   e = 365*d + int(modf(old_div(d,4))[1])
@@ -86,7 +86,7 @@ def dateobs_to_jd(date):
 
 
 def jd_to_fractionalyear(jd, is_mjd=False):
-  """ convert a julian date into a fractional year, e.g., 2000.123456 """ 
+  """ convert a julian date into a fractional year, e.g., 2000.123456 """
   if is_mjd:
       jd += 2400000.5
   date = jd_to_gregorian(jd)
@@ -95,7 +95,7 @@ def jd_to_fractionalyear(jd, is_mjd=False):
 
 
 def fractionalyear_to_jd(date):
-  """ convert a fractional year into a julian date """ 
+  """ convert a fractional year into a julian date """
   jd_jan1 = dateobs_to_jd('%4d-01-01T00:00:00' % math.floor(date))
   return jd_jan1 + 365*(date-math.floor(date))
 
@@ -126,7 +126,7 @@ def read_scamp_output():
             for item in line:
                 if len(item.strip()) > 0 and item.find('\n') == -1:
                     this_data.append(item)
-        ### control reading 
+        ### control reading
         # activate reading
         if not read_this and \
            raw[idx].find('<TABLE ID="Fields" name="Fields">') > -1:
@@ -135,7 +135,7 @@ def read_scamp_output():
         if read_this and raw[idx].find('</TABLEDATA></DATA>') > -1:
             read_this = False
         idx += 1
-      
+
     # check if data rows have same length as header
     abort = False
     for i in range(len(data)):
