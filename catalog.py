@@ -960,7 +960,7 @@ class catalog(object):
                 else:
                     for mag in list(lbl.keys()):
                         nmags[lbl[mag]][idx] = 99
-
+                        
             # append nmags arrays to catalog
             for key, idx in list(lbl.items()):
                 self.add_field(key, nmags[idx])
@@ -978,7 +978,78 @@ class catalog(object):
 
             return self.shape[0]
 
+        ### 2MASS to Warner BVRI (not accounting for galactic extinction)
+        elif (self.catalogname == '2MASS') and \
+           (targetfilter in {'B', 'V', 'R', 'I'}) and \
+           (self.magsystem == 'Vega'):
 
+            logging.info(('trying to transform %d 2MASS sources to ' \
+                          + 'Warner %s') % (self.shape[0], targetfilter))
+
+            # transformations using the recipe by Warner 2007, MPBu
+            mags  = [self['Jmag'], self['Kmag'], self['e_Jmag']]
+            lbl   = {'_Bmag':0 , '_e_Bmag': 1, '_Vmag': 2, '_e_Vmag': 3, 
+                     '_Rmag': 4, '_e_Rmag': 5, '_Imag': 6, '_e_Imag': 7}
+            nmags = [numpy.zeros(self.shape[0]) for i in range(len(lbl))]
+
+            for idx in range(self.shape[0]):
+                keep = True
+                # remove objects with extreme J-Ks color index
+                cidx = mags[0][idx]-mags[1][idx]
+                if cidx < -0.1 or cidx > 1.0:
+                    keep = False
+                # reject faint stars based on Figure 6 by Hodgkin et
+                # al. 2009, MNRAS
+                if mags[0][idx] > 18 or mags[1][idx] > 17:
+                    keep = False
+
+                if keep:
+                    nmags[lbl['_Bmag']][idx]   = mags[0][idx] + 1.7495*cidx**3 \
+                                                - 2.7785*cidx**2 \
+                                                + 5.215*cidx + 0.1980
+                    nmags[lbl['_e_Bmag']][idx] = numpy.sqrt(0.08*0.08 +
+                                                           mags[2][idx]**2)
+
+                    nmags[lbl['_Vmag']][idx]   = mags[0][idx] + 1.4688*cidx**3 \
+                                                - 2.3250*cidx**2 \
+                                                + 3.5143*cidx + 0.1496
+                    nmags[lbl['_e_Vmag']][idx] = numpy.sqrt(0.05*0.05 + 
+                                                           mags[2][idx]**2)
+
+                    nmags[lbl['_Rmag']][idx]   = mags[0][idx] + 1.1230*cidx**3 \
+                                                - 1.7849*cidx**2 \
+                                                + 2.5105*cidx + 0.1045
+                    nmags[lbl['_e_Rmag']][idx] = numpy.sqrt(0.08*0.08 + 
+                                                           mags[2][idx]**2)
+                
+                    nmags[lbl['_Imag']][idx]   = mags[0][idx] + 0.2963*cidx**3 \
+                                                - 0.4866*cidx**2 \
+                                                + 1.2816*cidx + 0.0724
+                    nmags[lbl['_e_Imag']][idx] = numpy.sqrt(0.03*0.03 + 
+                                                           mags[2][idx]**2)
+                else:
+                    for mag in lbl.keys():
+                        nmags[lbl[mag]][idx] = 99
+
+            # append nmags arrays to catalog
+            for key, idx in lbl.items():
+                self.add_field(key, nmags[idx])
+                
+            # get rid of sources that have not been transformed
+            self.data = self.data[self['_Vmag'] < 99]
+
+            self.catalogname  += '_transformed'
+            self.history += ', %d transformed to Warner %s (Vega)' % \
+                            (self.shape[0], targetfilter)
+            self.magsystem = 'Vega'
+
+            logging.info('%d sources sucessfully transformed to Warner %s' % \
+                         (self.shape[0], targetfilter))
+            
+            return self.shape[0]
+
+
+                        
         ### SDSS to UKIRT Z
         elif (self.catalogname.find('SDSS') > -1) and \
              targetfilter == 'Z_UKIRT' and \

@@ -217,16 +217,23 @@ def prepare(filenames, obsparam, header_update, flipx=False,
                 header.remove(key)
             elif 'PV' in key and '_' in key:
                 header.remove(key)
-            elif key in ['CTYPE1', 'CRPIX1', 'CRVAL1', 'CROTA1', 'CROTA2',
-                       'CFINT1', 'CTYPE2', 'CRPIX2', 'CRVAL2',
-                       'CFINT2', 'LTM1_1', 'LTM2_2', 'WAT0_001', 'LTV1',
-                         'LTV2', 'PIXXMIT', 'PIXOFFST', 'PC1_1', 'PC1_2',
-                         'PC2_1', 'PC2_2', 'CUNIT1', 'CUNIT2']:
-                # removed 'CDELT1', 'CDELT2', 'CRDELT1', 'CRDELT2' from list
+            elif key in ['CTYPE1', 'CRPIX1', 'CRVAL1', 'CROTA1',
+                         'CROTA2', 'CFINT1', 'CTYPE2', 'CRPIX2',
+                         'CRVAL2', 'CFINT2', 'LTM1_1', 'LTM2_2',
+                         'WAT0_001', 'LTV1', 'LTV2', 'PIXXMIT',
+                         'PIXOFFST', 'PC1_1', 'PC1_2', 'PC2_1', 'PC2_2',
+                         'CUNIT1', 'CUNIT2', 'A_ORDER', 'A_0_0',
+                         'A_0_1', 'A_0_2', 'A_1_0', 'A_1_1', 'A_2_0',
+                         'B_ORDER', 'B_0_0', 'B_0_1', 'B_0_2', 'B_1_0',
+                         'B_1_1', 'B_2_0', 'AP_ORDER', 'AP_0_0',
+                         'AP_0_1', 'AP_0_2', 'AP_1_0', 'AP_1_1',
+                         'AP_2_0', 'BP_ORDER', 'BP_0_0', 'BP_0_1',
+                         'BP_0_2', 'BP_1_0', 'BP_1_1', 'BP_2_0', 'CDELT1',
+                         'CDELT2', 'CRDELT1', 'CRDELT2']:
                 # used by LOWELL31, LOWELL90
-
-                header.remove(key)
-
+                if not key in obsparam.values():
+                    header.remove(key)
+                    
 
         # if GENERIC telescope, add implants to header
         if obsparam['telescope_keyword'] is 'GENERIC':
@@ -310,9 +317,6 @@ def prepare(filenames, obsparam, header_update, flipx=False,
 
         # read out ra and dec from header
         if obsparam['radec_separator'] == 'XXX':
-
-            print(header[11:15])
-
             ra_deg  = float(header[obsparam['ra']])
             dec_deg = float(header[obsparam['dec']])
         else:

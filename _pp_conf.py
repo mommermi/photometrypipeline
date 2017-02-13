@@ -66,8 +66,12 @@ if rootpath == None:
 # telescope_parameters = {}
 # instrument_identifiers = {}
 # implemented_telescopes= []
-
 # execfile(rootpath + '/setup/vatt4k.py')
+
+
+### potential FITS header keywords for looking up the instrument
+# any unique header keyword works as a potential identifier
+instrument_keys = ['INSTRUME', 'LCAMMOD']
 
 execfile(rootpath+'/setup/telescopes.py')
 
@@ -96,11 +100,6 @@ log_filename = diagroot+'LOG'
 
 # start pp_process_idx counter (if using 'pp_run all')
 pp_process_idx = 0
-
-
-### potential FITS header keywords for looking up the instrument
-# any unique header keyword works as a potential identifier
-instrument_keys = ['INSTRUME', 'LCAMMOD', 'HEAD']
 
 
 ### available catalogs
