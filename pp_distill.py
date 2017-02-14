@@ -482,10 +482,9 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
         if display:
             print('write photometry results for %s' % target)
         outf = open('photometry_%s.dat' % target.replace(' ', '_'), 'w')
-        outf.writelines('#                          filename     julian_date' +
-                        'ast_mag ast_sig        ast_ra       ast_dec    ' +
-                        '[1]   [2]    [3]   [4]    [5]       ZP ZP_sig ' +
-                        'inst_mag in_sig   [6] [7] [8] [9]\n')
+        outf.writelines('#filename julian_date ast_mag ast_sig ast_ra ast_dec '
+                        '[1] [2] [3] [4] [5] ZP ZP_sig inst_mag in_sig [6] '
+                        '[7] [8] [9]\n')
 
         for dat in data:
 
@@ -502,24 +501,24 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
 
                 output[target].append(dat)
                 outf.write(('%35.35s ' % dat[10].replace(' ', '_')) +
-                           ('%15.7f  ' % dat[9][0]) +
-                           ('%8.4f '   % dat[7]) +
-                           ('%6.4f '   % dat[8]) +
-                           ('%13.8f '  % dat[3]) +
-                           ('%+13.8f  '% dat[4]) +
-                           ('%5.2f '   % ((dat[1]-dat[3])*3600.)) +
-                           ('%5.2f  '  % ((dat[2]-dat[4])*3600.)) +
-                           ('%5.2f '   % offset[0]) +
-                           ('%5.2f  '  % offset[1]) +
-                           ('%5.2f '   % dat[9][1]) +
-                           ('%8.4f '   % (dat[7]-dat[5])) +
-                           ('%6.4f '   % numpy.sqrt(dat[8]**2-dat[6]**2)) +
-                           ('%8.4f '   % dat[5]) +
-                           ('%6.4f  '  % dat[6]) +
-                           ('%s  '   % catalogname) +
-                           ('%s  '   % filtername) +
-                           ('%3d  '  % dat[14]) +
-                           ('%s\n'   % dat[13].split(';')[0]))
+                           ('%15.7f ' % dat[9][0]) +
+                           ('%8.4f ' % dat[7]) +
+                           ('%6.4f ' % dat[8]) +
+                           ('%13.8f ' % dat[3]) +
+                           ('%+13.8f ' % dat[4]) +
+                           ('%5.2f ' % ((dat[1] - dat[3]) * 3600.)) +
+                           ('%5.2f ' % ((dat[2] - dat[4]) * 3600.)) +
+                           ('%5.2f ' % offset[0]) +
+                           ('%5.2f ' % offset[1]) +
+                           ('%5.2f ' % dat[9][1]) +
+                           ('%8.4f ' % (dat[7] - dat[5])) +
+                           ('%6.4f ' % numpy.sqrt(dat[8]**2 - dat[6]**2)) +
+                           ('%8.4f ' % dat[5]) +
+                           ('%6.4f ' % dat[6]) +
+                           ('%s ' % catalogname) +
+                           ('%s ' % filtername) +
+                           ('%3d ' % dat[14]) +
+                           ('%s\n' % dat[13].split(';')[0]))
 
         outf.writelines('#\n# [1]: Horizons_RA - image_RA [arcsec]\n'+
                         '# [2]: Horizons_DDec - image_Dec [arcsec]\n'+
