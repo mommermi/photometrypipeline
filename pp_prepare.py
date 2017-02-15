@@ -214,9 +214,11 @@ def prepare(filenames, obsparam, header_update, flipx=False,
         # remove keywords that might collide with fake wcs
         for key in list(header.keys()):
             if 'CD' in key and '_' in key:
-                header.remove(key)
+                if not key in obsparam.values():
+                    header.remove(key)
             elif 'PV' in key and '_' in key:
-                header.remove(key)
+                if not key in obsparam.values():
+                    header.remove(key)
             elif key in ['CTYPE1', 'CRPIX1', 'CRVAL1', 'CROTA1',
                          'CROTA2', 'CFINT1', 'CTYPE2', 'CRPIX2',
                          'CRVAL2', 'CFINT2', 'LTM1_1', 'LTM2_2',

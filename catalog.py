@@ -366,7 +366,7 @@ class catalog(object):
             self.data.rename_column('r_mag', 'rmag')
             self.data.rename_column('e_r_mag', 'e_rmag')
             self.data.rename_column('i_mag', 'imag')
-            self.data.rename_column('e_i_mag', 'i_gmag')
+            self.data.rename_column('e_i_mag', 'e_imag')
 
         elif self.catalogname == 'SDSS-R9':
             vquery = Vizier(columns=['SDSS9', 'RAJ2000', 'DEJ2000',

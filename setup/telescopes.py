@@ -1359,6 +1359,7 @@ kpno4mos1_param = {
                             'r SDSS k1018': 'r',
                             'i SDSS k1019': 'i',
                             'z SDSS c6020': 'z',
+                            'B Harris k1002': 'B',
                             'none': None},
     # filtername translation dictionary
     'exptime': 'EXPTIME',  # exposure time keyword (s)

@@ -481,10 +481,11 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
 
         if display:
             print('write photometry results for %s' % target)
-        outf = open('photometry_%s.dat' % target.replace(' ', '_'), 'w')
-        outf.writelines('#filename julian_date ast_mag ast_sig ast_ra ast_dec '
-                        '[1] [2] [3] [4] [5] ZP ZP_sig inst_mag in_sig [6] '
-                        '[7] [8] [9]\n')
+        outf = open('photometry_%s.dat' % target.replace(' ', '_'), 'w'
+        outf.write('#                          filename    julian_date '
+                   'ast_mag ast_sig        ast_ra       ast_dec    '
+                   '[1]   [2]    [3]   [4]    [5]       ZP ZP_sig '
+                   'inst_mag in_sig   [6] [7] [8] [9]\n')
 
         for dat in data:
 
