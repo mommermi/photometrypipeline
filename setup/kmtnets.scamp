@@ -17,7 +17,7 @@ ASTREF_CATALOG         2MASS          # NONE, FILE, USNO-A1,USNO-A2,USNO-B1,
                                        # NOMAD-1, PPMX, CMC-14, 2MASS, DENIS-3,
                                        # SDSS-R3,SDSS-R5,SDSS-R6,SDSS-R7,
                                        # SDSS-R8, SDSS-R9
-ASTREF_BAND            DEFAULT         # Photom. band for astr.ref.magnitudes
+ASTREF_BAND            Default         # Photom. band for astr.ref.magnitudes
                                        # or DEFAULT, BLUEST, or REDDEST
 ASTREFCAT_NAME         astrefcat.cat   # Local astrometric reference catalogs
 ASTREFCENT_KEYS        XWIN_WORLD,YWIN_WORLD # Local ref.cat. centroid parameters
@@ -26,7 +26,7 @@ ASTREFERR_KEYS         ERRAWIN_WORLD, ERRBWIN_WORLD, ERRTHETAWIN_WORLD
 ASTREFMAG_KEY          MAG             # Local ref.cat. magnitude parameter
 ASTREFMAGERR_KEY       MAGERR          # Local ref.cat. mag. error parameter
 ASTREFOBSDATE_KEY      OBSDATE         # Local ref.cat. obs. date parameter
-ASTREFMAG_LIMITS       -99.0,99.0      # Select magnitude range in ASTREF_BAND
+ASTREFMAG_LIMITS       -99.0,18.0      # Select magnitude range in ASTREF_BAND
 SAVE_REFCATALOG        Y               # Save ref catalogs in FITS-LDAC format?
 REFOUT_CATPATH         .               # Save path for reference catalogs
  
@@ -46,8 +46,8 @@ MATCH                  Y               # Do pattern-matching (Y/N) ?
 MATCH_NMAX             0               # Max.number of detections for MATCHing
                                        # (0=auto)
 PIXSCALE_MAXERR        1.1             # Max scale-factor uncertainty
-POSANGLE_MAXERR        180.0             # Max position-angle uncertainty (deg)
-POSITION_MAXERR        15.0             # Max positional uncertainty (arcmin)
+POSANGLE_MAXERR        10.            # Max position-angle uncertainty (deg)
+POSITION_MAXERR        10.0             # Max positional uncertainty (arcmin)
 MATCH_RESOL            0               # Matching resolution (arcsec); 0=auto
 MATCH_FLIPPED          Y               # Allow matching with flipped axes?
 MOSAIC_TYPE            UNCHANGED       # UNCHANGED, SAME_CRVAL, SHARE_PROJAXIS,
@@ -69,8 +69,8 @@ CENTROIDERR_KEYS       ERRAWIN_IMAGE,ERRBWIN_IMAGE,ERRTHETAWIN_IMAGE
                                        # Cat. params for centroid err ellipse
 DISTORT_KEYS           XWIN_IMAGE,YWIN_IMAGE # Cat. parameters or FITS keywords
 DISTORT_GROUPS         1,1             # Polynom group for each context key
-DISTORT_DEGREES        2               # Polynom degree for each group
-FOCDISTORT_DEGREE      1               # Polynom degree for focal plane coords
+DISTORT_DEGREES        3               # Polynom degree for each group
+FOCDISTORT_DEGREE      3               # Polynom degree for focal plane coords
 ASTREF_WEIGHT          1.0             # Relative weight of ref.astrom.cat.
 ASTRACCURACY_TYPE      SIGMA-ARCSEC     # SIGMA-PIXEL, SIGMA-ARCSEC,
                                        # or TURBULENCE-ARCSEC
@@ -100,7 +100,7 @@ PHOTFLUX_KEY           FLUX_ISOCOR       # Catalog param. for the flux measureme
 PHOTFLUXERR_KEY        FLUXERR_ISOCOR    # Catalog parameter for the flux error
 PHOTCLIP_NSIGMA        1.5             # Photom.clipping threshold in sigmas
 PHOT_ACCURACY          1e-3            # Photometric uncertainty floor (frac.)
-PHOT_FLAGSMASK         0x00fc          # Photometry rejection mask on SEx FLAGS
+PHOT_FLAGSMASK         0x00f9          # Photometry rejection mask on SEx FLAGS
 PHOT_IMAFLAGSMASK      0x0             # Photometry rejection mask on IMAFLAGS
  
 #------------------------------- Check-plots ----------------------------------
@@ -124,8 +124,8 @@ SN_THRESHOLDS          3.0,50.0      # S/N thresholds (in sigmas) for all and
                                        # high-SN sample
 FWHM_THRESHOLDS        1.0,10.0       # FWHM thresholds (in pixels) for sources
 ELLIPTICITY_MAX        0.8             # Max. source ellipticity
-FLAGS_MASK             0x00f0          # Global rejection mask on SEx FLAGS
-WEIGHTFLAGS_MASK       0x00ff          # Global rejec. mask on SEx FLAGS_WEIGHT
+FLAGS_MASK             0x00fc          # Global rejection mask on SEx FLAGS
+WEIGHTFLAGS_MASK       0x00fc          # Global rejec. mask on SEx FLAGS_WEIGHT
 IMAFLAGS_MASK          0x0             # Global rejec. mask on SEx IMAFLAGS_ISO
 AHEADER_GLOBAL         scamp.ahead     # Filename of the global INPUT header
 AHEADER_SUFFIX         .ahead          # Filename extension for additional

@@ -1327,8 +1327,114 @@ tngdolores_param = {
 }
 
 
+# KPNO 4m Mayall, MOSAIC-1
+kpno4mos1_param = {
+    'telescope_instrument': 'KPNO4m/MOSAIC',  # telescope/instrument name
+    'telescope_keyword': 'KPNO4MOS1',  # telescope/instrument keyword
+    'observatory_code': '695',  # MPC observatory code
+    'secpix': (0.27, 0.27),  # pixel size (arcsec) before binning
+
+    # image orientation preferences
+    'flipx': True,
+    'flipy': False,
+    'rotate': 0,
+
+    # instrument-specific FITS header keywords
+    'binning': (1, 1),  # binning in x/y
+    'extent': ('NAXIS1', 'NAXIS2'),  # N_pixels in x/y
+    'ra': 'RA',  # telescope pointing, RA
+    'dec': 'DEC',  # telescope pointin, Dec
+    'radec_separator': ':',  # RA/Dec hms separator, use 'XXX'
+    # if already in degrees
+    'date_keyword': 'DATE-OBS',  # obs date/time
+    # keyword; use
+    # 'date|time' if
+    # separate
+    'obsmidtime_jd': 'MJD-OBS',  # obs midtime jd keyword
+    # (usually provided by
+    # pp_prepare
+    'object': 'OBJECT',  # object name keyword
+    'filter': 'FILTER',  # filter keyword
+    'filter_translations': {'g SDSS k1017': 'g',
+                            'r SDSS k1018': 'r',
+                            'i SDSS k1019': 'i',
+                            'z SDSS c6020': 'z',
+                            'B Harris k1002': 'B',
+                            'none': None},
+    # filtername translation dictionary
+    'exptime': 'EXPTIME',  # exposure time keyword (s)
+    'airmass': 'AIRMASS',  # airmass keyword
+
+    # source extractor settings
+    'source_minarea': 12,  # default sextractor source minimum N_pixels
+    'aprad_default': 5,  # default aperture radius in px
+    'aprad_range': [2, 10],  # [minimum, maximum] aperture radius (px)
+    'sex-config-file': rootpath + '/setup/kpno4mos1.sex',
+    'mask_file': {},
+    #                        mask files as a function of x,y binning
+
+    # scamp settings
+    'scamp-config-file': rootpath + '/setup/kpno4mos1.scamp',
+    'reg_max_mag'          : 19,  
+    'reg_search_radius'    : 0.5, # deg       
 
 
+    # default catalog settings
+    'astrometry_catalogs': ['GAIA'],
+    'photometry_catalogs': ['SDSS-R9', 'APASS9', '2MASS']
+}
+
+# SALT, SALTICAM
+saltsalticam_param = {
+    'telescope_instrument': 'SALT/SALTICAM',  # telescope/instrument name
+    'telescope_keyword': 'SALTSALTICAM',  # telescope/instrument keyword
+    'observatory_code': 'B31',  # MPC observatory code
+    'secpix': (0.138, 0.138),  # pixel size (arcsec) before binning
+
+    # image orientation preferences
+    'flipx': True,
+    'flipy': False,
+    'rotate': 0,
+
+    # instrument-specific FITS header keywords
+    'binning': (1, 1),  # binning in x/y
+    'extent': ('NAXIS1', 'NAXIS2'),  # N_pixels in x/y
+    'ra': 'RA',  # telescope pointing, RA
+    'dec': 'DEC',  # telescope pointin, Dec
+    'radec_separator': ':',  # RA/Dec hms separator, use 'XXX'
+    # if already in degrees
+    'date_keyword': 'DATE-OBS|TIME-OBS',  # obs date/time keyword
+    # use 'date|time' if separate keywords eg, DATE-OBS|TIME-OBS
+
+    'obsmidtime_jd': 'JD',  # obs midtime jd keyword
+    # (usually provided by
+    # pp_prepare
+    'object': 'OBJECT',  # object name keyword
+    'filter': 'FILTER',  # filter keyword
+    'filter_translations': {'SDSSi-S1': 'i',
+                            'SDSSr-S1': 'r',
+                            'none': None},
+    # filtername translation dictionary
+    'exptime': 'EXPTIME',  # exposure time keyword (s)
+    'airmass': 'AIRMASS',  # airmass keyword
+
+    # source extractor settings
+    'source_minarea': 12,  # default sextractor source minimum N_pixels
+    'aprad_default': 5,  # default aperture radius in px
+    'aprad_range': [2, 10],  # [minimum, maximum] aperture radius (px)
+    'sex-config-file': rootpath + '/setup/saltsalticam.sex',
+    'mask_file': {},
+    #                        mask files as a function of x,y binning
+
+    # scamp settings
+    'scamp-config-file': rootpath + '/setup/saltsalticam.scamp',
+    'reg_max_mag'          : 19,
+    'reg_search_radius'    : 0.5, # deg
+
+    # default catalog settings
+    'astrometry_catalogs': ['GAIA'],
+    'photometry_catalogs': ['SDSS-R9', 'APASS9', '2MASS']
+}
 
 
 ##### access functions for telescope configurations
@@ -1340,7 +1446,7 @@ implemented_telescopes = ['VATT4K', 'DCTLMI', 'ARC35ARCTIC',
                           'CTIO09', 'CTIO10', 'CTIO13CCD', 'UH88SNIFS',
                           'WIYN09HDI', 'RATIR', 'SOARGOODMAN', 'OHP120',
                           #'SL74SAH',
-                          'TNGDOLORES', 'GENERIC']
+                          'TNGDOLORES', 'GENERIC', 'KPNO4MOS1', 'SALTSALTICAM']
 
 # translate INSTRUME (or others, see _pp_conf.py) header keyword into
 # PP telescope keyword 
@@ -1369,7 +1475,9 @@ instrument_identifiers = {'= "Vatt4k"':        'VATT4K',
                           #'SHA':               'SL74SHA',
                           'Goodman Spectrograph': 'SOARGOODMAN',
                           'Andor Tech':        'OHP120',
-                          'LRS':               'TNGDOLORES'}
+                          'LRS':               'TNGDOLORES',
+                          'mosaic_1_1':        'KPNO4MOS1',
+                          'SALTICAM':          'SALTSALTICAM'}
 
 # translate telescope keyword into parameter set defined here
 telescope_parameters = {'VATT4K' :       vatt4k_param, 
@@ -1391,7 +1499,9 @@ telescope_parameters = {'VATT4K' :       vatt4k_param,
                         #'SL74SHA':       sl74sha_param,
                         'SOARGOODMAN':   soargoodman_param,
                         'OHP120':        ohp120_param,
-                        'TNGDOLORES':    tngdolores_param}
+                        'TNGDOLORES':    tngdolores_param,
+                        'KPNO4MOS1':     kpno4mos1_param,
+                        'SALTSALTICAM':  saltsalticam_param}
 
 
 #### append mytelescopes.py, if available

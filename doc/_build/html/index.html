@@ -92,7 +92,7 @@
 <h1>Photometry Pipeline Documentation<a class="headerlink" href="#photometry-pipeline-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>The Photometry Pipeline (PP) is a Python 2.7 software package for
+<p>The Photometry Pipeline (PP) is a Python software package for
 automated photometric analysis of imaging data from small to
 medium-sized observatories. It uses <a class="reference external" href="http://www.astromatic.net/software/sextractor">Source Extractor</a> and <a class="reference external" href="http://www.astromatic.net/software/scamp">SCAMP</a>
 to register and photometrically calibrate images based on catalogs
@@ -120,6 +120,7 @@ try PP on your data, but please be aware that it has its limitations.</p>
 <li>target identification based on tabulated positions for fixed targets
 and moving targets, target identifier for moving targets</li>
 <li>support of Gaia (DR1) astrometry for image registration</li>
+<li>Python 2 and 3 compatibility (thanks to <a class="reference external" href="https://github.com/boada">boada</a>)</li>
 </ul>
 <p>Future versions of the pipeline will support newly available catalogs
 for astrometry and photometry (e.g., GAIA DR2) and enable the extraction
@@ -134,6 +135,7 @@ task, let me know!</p>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation and Setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#setup">Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#example-data">Example Data</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>

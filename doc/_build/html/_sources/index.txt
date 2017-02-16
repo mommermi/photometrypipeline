@@ -9,7 +9,7 @@ Photometry Pipeline Documentation
 Introduction
 ------------
 
-The Photometry Pipeline (PP) is a Python 2.7 software package for
+The Photometry Pipeline (PP) is a Python software package for
 automated photometric analysis of imaging data from small to
 medium-sized observatories. It uses `Source Extractor`_ and `SCAMP`_
 to register and photometrically calibrate images based on catalogs
@@ -40,6 +40,7 @@ The following features are currently available as part of PP:
 * target identification based on tabulated positions for fixed targets
   and moving targets, target identifier for moving targets
 * support of Gaia (DR1) astrometry for image registration
+* Python 2 and 3 compatibility (thanks to `boada`_)
   
 Future versions of the pipeline will support newly available catalogs
 for astrometry and photometry (e.g., GAIA DR2) and enable the extraction
@@ -96,3 +97,4 @@ Indices and tables
 .. _Source Extractor: http://www.astromatic.net/software/sextractor
 .. _SCAMP: http://www.astromatic.net/software/scamp
 .. _MANOS: http://manosobs.wordpress.com/
+.. _boada: https://github.com/boada

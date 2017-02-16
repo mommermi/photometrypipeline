@@ -28,6 +28,7 @@ Python 2.7 modules (available from the `Python Package Index`_ through
 * `astroquery`_
 * `matplotlib`_
 * `callhorizons`_
+* `future`_ 
 * `Pillow`_ (only required for manual target identification)
 
   
@@ -53,6 +54,20 @@ In order to get the latest version of PP, simply change into
 ``photometrypipeline/`` and type::
 
   git pull
+
+
+Example Data
+------------
+
+The PP github clone comes with some sample data that can be used to
+test if the pipeline works properly. The data were taken with the
+VATT4k camera on the VATT and can be found in
+``example_data/vatt4k``. In order to run the pipeline on these images,
+copy them to a new directory, change there, and run ``pp_run
+mscience*fits``. If everything works out properly, the results
+(``photometry_3552.dat``) should resemble those in
+``example_data/vatt4k/LOG``.
+
 
 .. _telescope_setup:
 
@@ -128,6 +143,7 @@ and I will take care of implementing your telescope.
 .. _astroquery: https://github.com/astropy/astroquery
 .. _matplotlib: http://matplotlib.org/
 .. _callhorizons: https://pypi.python.org/pypi/CALLHORIZONS
+.. _future: http://python-future.org/
 .. _Pillow: http://python-pillow.org/
 .. _Source Extractor: http://www.astromatic.net/software/sextractor
 .. _SCAMP: http://www.astromatic.net/software/scamp

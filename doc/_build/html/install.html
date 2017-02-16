@@ -59,7 +59,8 @@
 <li><a class="reference internal" href="#installing-additional-software">Installing Additional Software</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#setup">Setup</a><ul>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#example-data">Example Data</a><ul>
 <li><a class="reference internal" href="#telescope-setup">Telescope Setup</a></li>
 </ul>
 </li>
@@ -124,6 +125,7 @@ Python 2.7 modules (available from the <a class="reference external" href="https
 <li><a class="reference external" href="https://github.com/astropy/astroquery">astroquery</a></li>
 <li><a class="reference external" href="http://matplotlib.org/">matplotlib</a></li>
 <li><a class="reference external" href="https://pypi.python.org/pypi/CALLHORIZONS">callhorizons</a></li>
+<li><a class="reference external" href="http://python-future.org/">future</a></li>
 <li><a class="reference external" href="http://python-pillow.org/">Pillow</a> (only required for manual target identification)</li>
 </ul>
 <p>and some freely available software:</p>
@@ -147,6 +149,17 @@ directory (include these commands in your <code class="docutils literal"><span c
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">pull</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="example-data">
+<h2>Example Data<a class="headerlink" href="#example-data" title="Permalink to this headline">¶</a></h2>
+<p>The PP github clone comes with some sample data that can be used to
+test if the pipeline works properly. The data were taken with the
+VATT4k camera on the VATT and can be found in
+<code class="docutils literal"><span class="pre">example_data/vatt4k</span></code>. In order to run the pipeline on these images,
+copy them to a new directory, change there, and run <code class="docutils literal"><span class="pre">pp_run</span>
+<span class="pre">mscience*fits</span></code>. If everything works out properly, the results
+(<code class="docutils literal"><span class="pre">photometry_3552.dat</span></code>) should resemble those in
+<code class="docutils literal"><span class="pre">example_data/vatt4k/LOG</span></code>.</p>
 <div class="section" id="telescope-setup">
 <span id="id1"></span><h3>Telescope Setup<a class="headerlink" href="#telescope-setup" title="Permalink to this headline">¶</a></h3>
 <p>PP critically relies on information provided in the FITS image headers

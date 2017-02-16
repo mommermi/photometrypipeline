@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
 """ PP_EXTRACT - identify field sources using Source Extractor with
-    multi-threading capabilities 
+    multi-threading capabilities
     v1.0: 2015-12-30, michael.mommert@nau.edu
 """
+from __future__ import print_function
 
-# Photometry Pipeline 
+# Photometry Pipeline
 # Copyright (C) 2016  Michael Mommert, michael.mommert@nau.edu
 
 # This program is free software: you can redistribute it and/or modify
@@ -29,9 +30,17 @@ import subprocess
 import logging
 import argparse, shlex
 import time, datetime
-import Queue, threading
+import queue, threading
 import logging
 from astropy.io import fits
+
+# only import if Python3 is used
+if sys.version_info > (3,0):
+    from builtins import str
+    from future import standard_library
+    standard_library.install_aliases()
+    from builtins import range
+
 
 # pipeline-specific modules
 import _pp_conf
@@ -39,9 +48,9 @@ from catalog import *
 from toolbox import *
 
 # setup logging
-logging.basicConfig(filename = _pp_conf.log_filename, 
+logging.basicConfig(filename = _pp_conf.log_filename,
                     level    = _pp_conf.log_level,
-                    format   = _pp_conf.log_formatline, 
+                    format   = _pp_conf.log_formatline,
                     datefmt  = _pp_conf.log_datefmt)
 
 ########## some definitions
@@ -50,8 +59,8 @@ version = '1.0'
 
 # threading definitions
 nThreads = 10
-extractQueue = Queue.Queue(2000)
-threadLock = threading.Lock()   
+extractQueue = queue.Queue(2000)
+threadLock = threading.Lock()
 
 
 # Determine the Source Extractor executable name: sex or sextractor.
@@ -70,8 +79,8 @@ del cmd
 ##### extractor class definition
 
 class extractor(threading.Thread):
-    """ 
-    call Source Extractor using threading 
+    """
+    call Source Extractor using threading
     """
     def __init__(self, par, output):
         self.param      = par
@@ -83,7 +92,7 @@ class extractor(threading.Thread):
                 filename = extractQueue.get(True,1)
             except:
                 break           # No more jobs in the queue
-    
+
             # add output dictionary
             out = {}
             threadLock.acquire()
@@ -92,7 +101,7 @@ class extractor(threading.Thread):
 
 
             ### process this frame
-            ldacname = filename[:filename.find('.fit')]+'.ldac' 
+            ldacname = filename[:filename.find('.fit')]+'.ldac'
             out['fits_filename'] = filename
             out['ldac_filename'] = ldacname
             out['parameters']    = self.param
@@ -127,7 +136,7 @@ class extractor(threading.Thread):
 
             commandline = '%s -c %s %s %s' % \
                           (sextractor_cmd,
-                           self.param['obsparam']['sex-config-file'], 
+                           self.param['obsparam']['sex-config-file'],
                            optionstring, filename)
 
             logging.info('call Source Extractor as: %s' % commandline)
@@ -135,26 +144,26 @@ class extractor(threading.Thread):
 
             ### run SEXTRACTOR and wait for it to finish
             try:
-                sex = subprocess.Popen(shlex.split(commandline), 
-                                       stdout=subprocess.PIPE, 
-                                       stderr=subprocess.PIPE, 
+                sex = subprocess.Popen(shlex.split(commandline),
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE,
                                        universal_newlines=True)
-            except Exception, e:
-                print 'Source Extractor call:', (e)
+            except Exception as e:
+                print('Source Extractor call:', (e))
                 logging.error('Source Extractor call:', (e))
                 extractQueue.task_done() # inform queue, this task is done
                 return None
 
             sex.wait()
-            
+
             # check output for error messages from Source Extractor
             try:
                 sex_output = sex.communicate()[1]
                 if 'not found, using internal defaults' in sex_output:
                     if not self.param['quiet']:
-                        print ('ERROR: no Source Extractor setup file ' +
+                        print(('ERROR: no Source Extractor setup file ' +
                                'available (should be in %s)') % \
-                            self.param['obsparam']['sex-config-file'] 
+                            self.param['obsparam']['sex-config-file'])
                         logging.error(('ERROR: no Source Extractor setup file'+
                                        ' available (should be in %s)') % \
                         self.param['obsparam']['sex-config-file'])
@@ -164,18 +173,18 @@ class extractor(threading.Thread):
             except ValueError:
                 logging.warning("Cannot read Source Extractor display output")
                 pass
-                
+
             del sex
-                
+
             # read in LDAC file
             ldac_filename = filename[:filename.find('.fit')]+'.ldac'
             ldac_data = catalog(ldac_filename)
 
             if not os.path.exists(ldac_filename):
                 threadLock.acquire()
-                print 'No Source Extractor output for frame', filename, \
-                    '\nplease check output:\n', sex_output
-                logging.error('No Source Extractor output, ' + 
+                print('No Source Extractor output for frame', filename, \
+                    '\nplease check output:\n', sex_output)
+                logging.error('No Source Extractor output, ' +
                               'please check output:' + sex_output)
                 threadLock.release()
                 extractQueue.task_done() # inform queue, this task is done
@@ -185,7 +194,7 @@ class extractor(threading.Thread):
             # make sure ldac file contains data
             if ldac_data.read_ldac(ldac_filename, maxflag=None) is None:
                 extractQueue.task_done()
-                print 'LDAC file empty', filename, 
+                print('LDAC file empty', filename, end=' ')
                 logging.error('LDAC file empty: ' + sex_output)
                 return None
 
@@ -216,28 +225,28 @@ class extractor(threading.Thread):
             #     (",".join([str(aprad) for aprad in self.param['aprad']]), \
             #      'aperture phot radius (px)')
             # hdu[0].header['SEXSNR'] = \
-            #     (self.param['sex_snr'], 
+            #     (self.param['sex_snr'],
             #      'Sextractor detection SNR threshold')
             # hdu[0].header['SEXAREA'] = \
-            #     (self.param['source_minarea'], 
+            #     (self.param['source_minarea'],
             #      'Sextractor source area threshold (px)')
             out['fits_header'] = hdu[0].header
 
             hdu.flush()
             hdu.close()
-            
-            threadLock.acquire()   
+
+            threadLock.acquire()
             logging.info("%d sources extracted from frame %s" % \
                          (len(ldac_data.data), filename))
             if not self.param['quiet']:
-                print "%d sources extracted from frame %s" % \
-                    (len(ldac_data.data), filename)
+                print("%d sources extracted from frame %s" % \
+                    (len(ldac_data.data), filename))
             threadLock.release()
 
             del ldac_data
-            
+
             extractQueue.task_done()  # inform queue that this task is done
-                
+
 
 def extract_multiframe(filenames, parameters):
     """
@@ -246,7 +255,7 @@ def extract_multiframe(filenames, parameters):
                                                   quiet, sex_snr, source_minarea
     output: result properties
     """
-    
+
     logging.info('extract sources from %d files using Source Extractor' % \
                  len(filenames))
     logging.info('extraction parameters: %s' % repr(parameters))
@@ -255,20 +264,20 @@ def extract_multiframe(filenames, parameters):
     # obtain telescope information from image header or override manually
     hdu = fits.open(filenames[0], ignore_missing_end=True, verify='silentfix')
 
-    if 'telescope' not in parameters or parameters['telescope'] is None: 
+    if 'telescope' not in parameters or parameters['telescope'] is None:
         try:
             parameters['telescope'] = hdu[0].header['TEL_KEYW']
         except KeyError:
             logging.critical('ERROR: TEL_KEYW not in image header (%s)' %
                              filenames[0])
-            print 'ERROR: TEL_KEYW not in image header;' + \
-                  'has this image run through register?'
+            print('ERROR: TEL_KEYW not in image header;' + \
+                  'has this image run through register?')
             return {}
     try:
         parameters['obsparam'] = _pp_conf.telescope_parameters[\
                                                 parameters['telescope']]
     except KeyError:
-        print "ERROR: telescope '%s' is unknown." % telescope
+        print("ERROR: telescope '%s' is unknown." % telescope)
         logging.critical('ERROR: telescope \'%s\' is unknown.' % telescope)
         return {}
 
@@ -282,48 +291,19 @@ def extract_multiframe(filenames, parameters):
         if not isinstance(parameters['aprad'], list) and \
            not isinstance(parameters['aprad'], numpy.ndarray):
             parameters['aprad'] = [str(parameters['aprad'])]
-        parameters['aperture_diam'] = ','.join([str(float(rad)*2.) for 
+        parameters['aperture_diam'] = ','.join([str(float(rad)*2.) for
                                                 rad in parameters['aprad']])
 
 
     #check what the binning is and if there is a mask available
-    if '_' in parameters['obsparam']['binning'][0]:
-        if '_blank' in parameters['obsparam']['binning'][0]:
-            binning_x = float(hdu[0].header[\
-                            parameters['obsparam']['binning'][0].\
-                                     split('_')[0]].split()[0])
-            binning_y = float(hdu[0].header[\
-                            parameters['obsparam']['binning'][1].\
-                                     split('_')[0]].split()[1])
-        if '_x' in parameters['obsparam']['binning'][0]:
-            binning_x = float(\
-                        hdu[0].header[parameters['obsparam']['binning'][0].\
-                                      split('_')[0]].split('x')[0])
-            binning_y = float(\
-                        hdu[0].header[parameters['obsparam']['binning'][1].\
-                                      split('_')[0]].split('x')[1])
-        elif '_CH_' in parameters['obsparam']['binning'][0]:
-            # only for RATIR
-            channel = hdu[0].header['INSTRUME'].strip()[1]
-            binning_x = float(hdu[0].header[parameters['obsparam']
-                                                      ['binning'][0].
-                                     replace('_CH_', channel)])
-            binning_y = float(hdu[0].header[parameters['obsparam']
-                                                      ['binning'][1].
-                                     replace('_CH_', channel)])
-
-    else:
-        binning_x = hdu[0].header[parameters['obsparam']['binning'][0]]
-        binning_y = hdu[0].header[parameters['obsparam']['binning'][1]]
-    bin_string = '%d,%d' % (binning_x, binning_y)
-    
-    hdu.close()
+    binning = get_binning(hdu[0].header, parameters['obsparam'])
+    bin_string = '%d,%d' % (binning[0], binning[1])
 
     if bin_string in parameters['obsparam']['mask_file']:
         mask_file = parameters['obsparam']['mask_file'][bin_string]
         parameters['mask_file'] = mask_file
 
-
+    hdu.close()
 
     ### thread and queue handling
 
@@ -349,10 +329,10 @@ def extract_multiframe(filenames, parameters):
     extractQueue.join()
 
     # check if extraction was successful
-    if any(['catalog_data' not in output[i].keys()
+    if any(['catalog_data' not in list(output[i].keys())
             for i in range(len(output))]):
         return None
-    
+
 
     ### output content
     #
@@ -372,7 +352,7 @@ def extract_multiframe(filenames, parameters):
 
 if __name__ == '__main__':
 
-    # define command line arguments                                             
+    # define command line arguments
     parser = argparse.ArgumentParser(description='source detection and' + \
                                      'photometry using Source Extractor')
     parser.add_argument("-snr", help='sextractor SNR threshold', default=1.5)
@@ -391,7 +371,7 @@ if __name__ == '__main__':
     parser.add_argument('-quiet', help='no logging',
                         action="store_true")
     parser.add_argument('images', help='images to process', nargs='+')
-    
+
     args = parser.parse_args()
     sex_snr = float(args.snr)
     source_minarea = float(args.minarea)
@@ -400,16 +380,16 @@ if __name__ == '__main__':
     telescope = args.telescope
     ignore_saturation = args.ignore_saturation
     quiet = args.quiet
-    filenames = args.images 
+    filenames = args.images
 
     # prepare parameter dictionary
     parameters = {'sex_snr':sex_snr, 'source_minarea':source_minarea, \
-                  'aprad':aprad, 'telescope':telescope, 
+                  'aprad':aprad, 'telescope':telescope,
                   'ignore_saturation':ignore_saturation, 'quiet':quiet}
 
     if paramfile is not None:
         parameters['paramfile'] = paramfile
-    
+
     ### call extraction wrapper
     extraction = extract_multiframe(filenames, parameters)
 

@@ -1,6 +1,25 @@
+
+# other stuff
 *~
-*pyc
-#*
 */#*
 dump/
+#*#
+
+# stuff we don't want to track
 setup/mytelescopes.py
+
+### Python ###
+## Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# results stuff
+*.db
+*.ldac
+*.html
+*.xml
+*.dat
+*.lst
+*.cat
+**/.diagnostics
