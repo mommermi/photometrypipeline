@@ -101,7 +101,7 @@ def create_photometrycatalog(ra_deg, dec_deg, rad_deg, filtername,
              ('APASS' in catalogname and
               filtername not in {'B', 'V', 'g', 'r', 'i'}) or
              ('2MASS' in catalogname and
-              filtername not in {'J', 'H', 'Ks'}) ):
+              filtername not in {'J', 'H', 'K'}) ):
             n_transformed = cat.transform_filters(filtername) - \
                             cat.reject_sources_with(\
                                     cat['_e_'+filtername+'mag'] > mag_accuracy)
