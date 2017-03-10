@@ -1371,6 +1371,7 @@ kpno4mos1_param = {
     'telescope_keyword': 'KPNO4MOS1',  # telescope/instrument keyword
     'observatory_code': '695',  # MPC observatory code
     'secpix': (0.2666, 0.2666),  # pixel size (arcsec) before binning
+    #'secpix': (0.25, 0.25),  # pixel size (arcsec) before binning
 
     # image orientation preferences
     'flipx': True,
@@ -1404,7 +1405,8 @@ kpno4mos1_param = {
     'airmass': 'AIRMASS',  # airmass keyword
 
     # source extractor settings
-    'source_minarea': 12,  # default sextractor source minimum N_pixels
+    'source_minarea': 5,  # default sextractor source minimum N_pixels
+    'source_snr': 1.5, # default sextractor snr for registration
     'aprad_default': 5,  # default aperture radius in px
     'aprad_range': [2, 10],  # [minimum, maximum] aperture radius (px)
     'sex-config-file': rootpath + '/setup/kpno4mos1.sex',
@@ -1415,6 +1417,7 @@ kpno4mos1_param = {
     'scamp-config-file': rootpath + '/setup/kpno4mos1.scamp',
     'reg_max_mag'          : 19,
     'reg_search_radius'    : 0.5, # deg
+    'source_tolerance': 'low',
 
 
     # default catalog settings
