@@ -55,23 +55,6 @@ logging.basicConfig(filename = _pp_conf.log_filename,
                     format   = _pp_conf.log_formatline,
                     datefmt  = _pp_conf.log_datefmt)
 
-
-def skycenter(catalogs, ra_key='ra.deg', dec_key='dec.deg'):
-    """derive center position and radius from catalogs"""
-
-    min_ra  = min([numpy.min(cat[ra_key]) for cat in catalogs])
-    max_ra  = max([numpy.max(cat[ra_key]) for cat in catalogs])
-    min_dec = min([numpy.min(cat[dec_key]) for cat in catalogs])
-    max_dec = max([numpy.max(cat[dec_key]) for cat in catalogs])
-
-    ra, dec = old_div((max_ra+min_ra),2.), old_div((max_dec+min_dec),2.)
-    rad     = numpy.sqrt((old_div((max_ra-min_ra),2.))**2 + (old_div((max_dec-min_dec),2.))**2)
-
-    logging.info('FoV center (%.7f/%+.7f) and radius (%.2f deg) derived' % \
-                 (ra, dec, rad))
-
-    return ra, dec, rad
-
 ### photometric fitting routines
 
 def create_photometrycatalog(ra_deg, dec_deg, rad_deg, filtername,
@@ -390,7 +373,8 @@ def calibrate(filenames, minstars, manfilter, manualcatalog,
 
     ### derive center and radius of field of view of all images
     ra_deg, dec_deg, rad_deg = skycenter(catalogs)
-
+    logging.info('FoV center (%.7f/%+.7f) and radius (%.2f deg) derived' %  
+                 (ra_deg, dec_deg, rad_deg))
 
     ### obtain photometric catalog(s) of the field based on settings in
     # setup/telescope.py and the image filter

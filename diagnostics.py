@@ -30,11 +30,25 @@ import logging
 from astropy.io import fits
 from astropy import wcs
 import datetime
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pylab as plt
+try:
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pylab as plt
+except ImportError:
+    print('Module matplotlib not found. Please install with: pip install '
+          'matplotlib')
+    sys.exit()
 import subprocess
 
+try:
+    from scipy.misc import toimage # requires Pillow
+    from scipy.misc import imresize # requires Pillow
+    from scipy.misc import bytescale
+except ImportError:
+    print('Modules scipy or pillow not found. Please install with: pip '
+          'install scipy pillow')
+    sys.exit()
+    
 # only import if Python3 is used
 if sys.version_info > (3,0):
     from builtins import str
@@ -170,6 +184,8 @@ def create_index(filenames, directory, obsparam, display=False):
     refheader = fits.open(filenames[0], ignore_missing_end=True)[0].header
     filtername = obsparam['filter_translations'][refheader[obsparam['filter']]]
 
+    del(refheader)
+
     html = "<H2>data directory: %s</H2>\n" % directory
 
     html += ("<H1>%s/%s-band - Diagnostic Output</H1>\n" + \
@@ -190,7 +206,6 @@ def create_index(filenames, directory, obsparam, display=False):
     # fill table and create frames
     filename = filenames
     for idx, filename in enumerate(filenames):
-
 
         ### fill table
         hdulist = fits.open(filename, ignore_missing_end=True)
@@ -222,6 +237,10 @@ def create_index(filenames, directory, obsparam, display=False):
 
         ### create frame image
         imgdat = hdulist[0].data
+        imgdat = imresize(imgdat, 
+                          min(1., 1000./numpy.max(imgdat.shape)), 
+                          interp='nearest')
+        # resize image larger than 1000px on one side
 
         median = numpy.median(imgdat[int(imgdat.shape[1]*0.25):
                                      int(imgdat.shape[1]*0.75),
@@ -232,10 +251,7 @@ def create_index(filenames, directory, obsparam, display=False):
                                   int(imgdat.shape[0]*0.25):
                                   int(imgdat.shape[0]*0.75)])
 
-        downscale = 2. # scale down image by this factor
-        fig = plt.figure(figsize=(old_div(header[obsparam['extent'][0]],(downscale*100)),
-                                old_div(header[obsparam['extent'][1]],(downscale*100))),
-                                  dpi=downscale*100)
+        plt.figure(figsize=(5, 5))
 
         img = plt.imshow(imgdat, cmap='gray', vmin=median-0.5*std,
                          vmax=median+0.5*std, origin='lower')
@@ -244,10 +260,12 @@ def create_index(filenames, directory, obsparam, display=False):
         img.axes.get_xaxis().set_visible(False)
         img.axes.get_yaxis().set_visible(False)
 
-        plt.savefig(framefilename, format='png', bbox_inches='tight',
-                    pad_inches=0)
+        plt.savefig(framefilename, format='png', bbox_inches='tight', 
+                    pad_inches=0, dpi=200)
+
         plt.close()
         hdulist.close()
+        del(imgdat)
 
     html += '</TABLE>\n'
 
@@ -256,7 +274,7 @@ def create_index(filenames, directory, obsparam, display=False):
 
     ### add to summary website, if requested
     if _pp_conf.use_diagnostics_summary:
-        add_to_summary(refheader[obsparam['object']], filtername,
+        add_to_summary(header[obsparam['object']], filtername, 
                        len(filenames))
 
     return None
@@ -306,7 +324,9 @@ def add_registration(data, extraction_data):
                         '_astrometry.png'
         imgdat = fits.open(dat['fits_filename'],
                            ignore_missing_end=True)[0].data
-        header = fits.open(dat['fits_filename'],
+        resize_factor = min(1., 1000./numpy.max(imgdat.shape))
+        imgdat = imresize(imgdat, resize_factor, interp='nearest')
+        header = fits.open(dat['fits_filename'], 
                            ignore_missing_end=True)[0].header
         median = numpy.median(imgdat[int(imgdat.shape[1]*0.25):
                                      int(imgdat.shape[1]*0.75),
@@ -324,11 +344,8 @@ def add_registration(data, extraction_data):
                'CRVAL' in key or 'CRPIX' in key or \
                'EQUINOX' in key:
                 header[key] = float(val)
-
-        downscale = 2. # scale down image by this factor
-        fig = plt.figure(figsize=(old_div(header[obsparam['extent'][0]],(downscale*100)),
-                                old_div(header[obsparam['extent'][1]],(downscale*100))),
-                         dpi=downscale*100)
+                
+        plt.figure(figsize=(5, 5))
         img = plt.imshow(imgdat, cmap='gray', vmin=median-0.5*std,
                          vmax=median+0.5*std, origin='lower')
         # remove axes
@@ -338,19 +355,28 @@ def add_registration(data, extraction_data):
 
         # plot reference sources
         if refcat.shape[0] > 0:
-            w = wcs.WCS(header)
-            world_coo = numpy.array(list(zip(refcat['ra.deg'], 
-                                             refcat['dec.deg'])))
-            img_coo = w.wcs_world2pix(world_coo, True )
-            img_coo = [c for c in img_coo if (c[0] > 0 and c[1] > 0 and
-                                        c[0] < header[obsparam['extent'][0]]
-                                        and
-                                        c[1] < header[obsparam['extent'][1]])]
-            plt.scatter([c[0] for c in img_coo], [c[1] for c in img_coo],
-                        s=20, marker='o', edgecolors='red', facecolor='none')
+            try:
+                w = wcs.WCS(header)
+                world_coo = numpy.array(list(zip(refcat['ra.deg'], 
+                                                 refcat['dec.deg'])))
+                img_coo = w.wcs_world2pix(world_coo, True )
+                img_coo = [c for c
+                           in img_coo if (c[0] > 0 and c[1] > 0 and 
+                                          c[0] < header[obsparam['extent'][0]] 
+                                          and 
+                                          c[1] < header[obsparam['extent'][1]])]
+                plt.scatter([c[0]*resize_factor for c in img_coo],
+                            [c[1]*resize_factor for c in img_coo], 
+                            s=5, marker='o', edgecolors='red', linewidth=0.1,
+                            facecolor='none')
+            except astropy.wcs._wcs.InvalidTransformError:
+                logging.error('could not plot reference sources due to '
+                              'astropy.wcs._wcs.InvalidTransformError; '
+                              'most likely unknown distortion parameters.')
 
-        plt.savefig(framefilename, format='png', bbox_inches='tight',
-                    pad_inches=0)
+                
+        plt.savefig(framefilename, format='png', bbox_inches='tight', 
+                    pad_inches=0, dpi=200)
         plt.close()
 
 
@@ -561,7 +587,7 @@ def add_calibration(data):
     data['zpplot'] = 'zeropoints.png'
 
 
-    ### create registration website
+    ### create calibration website
     html  = "<H2>Calibration Results</H2>\n"
     html += ("<P>Calibration input: minimum number/fraction of reference " \
              + "stars %.2f, reference catalog: %s, filter name: %s\n") % \
@@ -625,6 +651,8 @@ def add_calibration(data):
         fits_filename = dat['filename'][:dat['filename'].find('.ldac')] + \
                         '.fits'
         imgdat = fits.open(fits_filename, ignore_missing_end=True)[0].data
+        resize_factor = min(1., 1000./numpy.max(imgdat.shape))
+        imgdat = imresize(imgdat, resize_factor, interp='nearest')
         header = fits.open(fits_filename, ignore_missing_end=True)[0].header
         median = numpy.median(imgdat[int(imgdat.shape[1]*0.25):
                                      int(imgdat.shape[1]*0.75),
@@ -643,9 +671,7 @@ def add_calibration(data):
                'EQUINOX' in key:
                 header[key] = float(val)
 
-        fig = plt.figure(figsize=(old_div(imgdat.shape[0],300.),
-                                  old_div(imgdat.shape[1],300.)),
-                         dpi=300)
+        plt.figure(figsize=(5,5))
         img = plt.imshow(imgdat, cmap='gray', vmin=median-0.5*std,
                          vmax=median+0.5*std, origin='lower')
         # remove axes
@@ -655,23 +681,31 @@ def add_calibration(data):
 
         # plot reference sources
         if len(dat['match'][0][3]) > 0 and len(dat['match'][0][4]) > 0:
-            w = wcs.WCS(header)
-            world_coo = [[dat['match'][0][3][idx], dat['match'][0][4][idx]] \
-                         for idx in dat['zp_usedstars']]
-            img_coo = w.wcs_world2pix(world_coo, True )
-            plt.scatter([c[0] for c in img_coo], [c[1] for c in img_coo],
-                        s=40, marker='o', edgecolors='red', facecolor='none')
-            for i in range(len(dat['zp_usedstars'])):
-                plt.annotate(str(i+1), xy=(img_coo[i][0]+30, img_coo[i][1]),
-                             color='red', horizontalalignment='left',
-                             verticalalignment='center')
+            try:
+                w = wcs.WCS(header)
+                world_coo = [[dat['match'][0][3][idx],
+                              dat['match'][0][4][idx]] \
+                             for idx in dat['zp_usedstars']]
+                img_coo = w.wcs_world2pix(world_coo, True )
 
-        plt.savefig(catframe, format='png', bbox_inches='tight',
-                    pad_inches=0)
+                plt.scatter([c[0]*resize_factor for c in img_coo],
+                            [c[1]*resize_factor for c in img_coo], 
+                            s=10, marker='o', edgecolors='red', linewidth=0.1,
+                            facecolor='none')
+                for i in range(len(dat['zp_usedstars'])):
+                    plt.annotate(str(i+1), xy=((img_coo[i][0]*resize_factor)+15,
+                                               img_coo[i][1]*resize_factor), 
+                                 color='red', horizontalalignment='left',
+                                 verticalalignment='center')
+            except astropy.wcs._wcs.InvalidTransformError:
+                logging.error('could not plot reference sources due to '
+                              'astropy.wcs._wcs.InvalidTransformError; '
+                              'most likely unknown distortion parameters.')
+
+                
+        plt.savefig(catframe, format='png', bbox_inches='tight', 
+                    pad_inches=0, dpi=200)
         plt.close()
-
-
-
 
     create_website(_pp_conf.cal_filename, content=html)
 

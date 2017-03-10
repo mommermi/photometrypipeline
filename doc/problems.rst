@@ -14,6 +14,14 @@ General Problems
    symbolic link to ``pp_run.py``; if the former does not work, try
    the latter.
 
+
+**Running the pipeline creates warnings (e.g., FutureWarning); what
+  should I do?**
+  Warnings are usually caused by Python module version issues and
+  cause no harm whatsoever. In theory, there should be no warnings,
+  but they happen occasionally. If you are haunted by some warnings,
+  let me know and I will try to resolve the issue.
+   
 pp_calibrate (Photometric Calibration)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

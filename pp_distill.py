@@ -412,10 +412,26 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
     # sort objects by catalog idx
     for cat_idx, cat in enumerate(catalogs):
 
-        objects_thiscat = [obj for obj in objects if obj['cat_idx']==cat_idx]
+        # check for each target if it is within the image boundaries
+        min_ra  = numpy.min(cat['ra.deg'])
+        max_ra  = numpy.max(cat['ra.deg'])
+        min_dec = numpy.min(cat['dec.deg'])
+        max_dec = numpy.max(cat['dec.deg'])
+        objects_thiscat = []
+        for obj in objects:
+            if obj['cat_idx'] != cat_idx:
+                continue
+            if (obj['ra.deg'] > max_ra or obj['ra.deg'] < min_ra or
+                obj['dec.deg'] > max_dec or obj['dec.deg'] < min_dec):
+                continue
+            objects_thiscat.append(obj)
 
+        if len(objects_thiscat) == 0:
+            continue
+            
         # create a new catalog
         target_cat = catalog('targetlist:_'+cat.catalogname)
+
         target_cat.add_fields(['ident', 'ra.deg', 'dec.deg'],
                               [[obj['ident'] for obj in objects_thiscat],
                                [obj['ra.deg'] for obj in objects_thiscat],

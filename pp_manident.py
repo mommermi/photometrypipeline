@@ -151,8 +151,8 @@ class Clicker(object):
             hdulist = fits.open(filename, ignore_missing_end=True)
             imgdat = hdulist[0].data
 
-            median = numpy.median(imgdat)
-            std    = numpy.std(imgdat)
+            # median = numpy.median(imgdat)
+            # std    = numpy.std(imgdat)
 
             median = numpy.median(imgdat[int(imgdat.shape[1]*0.25):
                                          int(imgdat.shape[1]*0.75),

@@ -26,7 +26,7 @@ ASTREFERR_KEYS         ERRAWIN_WORLD, ERRBWIN_WORLD, ERRTHETAWIN_WORLD
 ASTREFMAG_KEY          MAG             # Local ref.cat. magnitude parameter
 ASTREFMAGERR_KEY       MAGERR          # Local ref.cat. mag. error parameter
 ASTREFOBSDATE_KEY      OBSDATE         # Local ref.cat. obs. date parameter
-ASTREFMAG_LIMITS       -99.0,18.0      # Select magnitude range in ASTREF_BAND
+ASTREFMAG_LIMITS       -99.0,99.0      # Select magnitude range in ASTREF_BAND
 SAVE_REFCATALOG        Y               # Save ref catalogs in FITS-LDAC format?
 REFOUT_CATPATH         .               # Save path for reference catalogs
  
@@ -46,23 +46,23 @@ MATCH                  Y               # Do pattern-matching (Y/N) ?
 MATCH_NMAX             0               # Max.number of detections for MATCHing
                                        # (0=auto)
 PIXSCALE_MAXERR        1.1             # Max scale-factor uncertainty
-POSANGLE_MAXERR        10.            # Max position-angle uncertainty (deg)
-POSITION_MAXERR        10.0             # Max positional uncertainty (arcmin)
+POSANGLE_MAXERR        5.0             # Max position-angle uncertainty (deg)
+POSITION_MAXERR        80.0           # Max positional uncertainty (arcmin)
 MATCH_RESOL            0               # Matching resolution (arcsec); 0=auto
-MATCH_FLIPPED          Y               # Allow matching with flipped axes?
+MATCH_FLIPPED          N               # Allow matching with flipped axes?
 MOSAIC_TYPE            UNCHANGED       # UNCHANGED, SAME_CRVAL, SHARE_PROJAXIS,
                                        # FIX_FOCALPLANE or LOOSE
 FIXFOCALPLANE_NMIN     1               # Min number of dets for FIX_FOCALPLANE
  
 #---------------------------- Cross-identification ----------------------------
  
-CROSSID_RADIUS         1.0             # Cross-id initial radius (arcsec)
+CROSSID_RADIUS         2.0             # Cross-id initial radius (arcsec)
  
 #---------------------------- Astrometric solution ----------------------------
  
 SOLVE_ASTROM           Y               # Compute astrometric solution (Y/N) ?
-PROJECTION_TYPE        SAME            # SAME, TPV or TAN
-ASTRINSTRU_KEY         FILTER,QRUNID   # FITS keyword(s) defining the astrom
+PROJECTION_TYPE        TPV             # SAME, TPV or TAN
+ASTRINSTRU_KEY         FILTER,CCD_NAME    # FITS keyword(s) defining the astrom
 STABILITY_TYPE         INSTRUMENT      # EXPOSURE, PRE-DISTORTED or INSTRUMENT
 CENTROID_KEYS          XWIN_IMAGE,YWIN_IMAGE # Cat. parameters for centroiding
 CENTROIDERR_KEYS       ERRAWIN_IMAGE,ERRBWIN_IMAGE,ERRTHETAWIN_IMAGE
@@ -70,17 +70,17 @@ CENTROIDERR_KEYS       ERRAWIN_IMAGE,ERRBWIN_IMAGE,ERRTHETAWIN_IMAGE
 DISTORT_KEYS           XWIN_IMAGE,YWIN_IMAGE # Cat. parameters or FITS keywords
 DISTORT_GROUPS         1,1             # Polynom group for each context key
 DISTORT_DEGREES        3               # Polynom degree for each group
-FOCDISTORT_DEGREE      3               # Polynom degree for focal plane coords
-ASTREF_WEIGHT          1.0             # Relative weight of ref.astrom.cat.
-ASTRACCURACY_TYPE      SIGMA-ARCSEC     # SIGMA-PIXEL, SIGMA-ARCSEC,
+FOCDISTORT_DEGREE      1               # Polynom degree for focal plane coords
+ASTREF_WEIGHT          1               # Relative weight of ref.astrom.cat.
+ASTRACCURACY_TYPE      SIGMA-ARCSEC    # SIGMA-PIXEL, SIGMA-ARCSEC,
                                        # or TURBULENCE-ARCSEC
 ASTRACCURACY_KEY       ASTRACCU        # FITS keyword for ASTR_ACCURACY param.
 ASTR_ACCURACY          0.01            # Astrom. uncertainty floor parameter
-ASTRCLIP_NSIGMA        1.5             # Astrom. clipping threshold in sigmas
+ASTRCLIP_NSIGMA        2               # Astrom. clipping threshold in sigmas
 COMPUTE_PARALLAXES     N               # Compute trigonom. parallaxes (Y/N)?
 COMPUTE_PROPERMOTIONS  N               # Compute proper motions (Y/N)?
 CORRECT_COLOURSHIFTS   N               # Correct for colour shifts (Y/N)?
-INCLUDE_ASTREFCATALOG  Y               # Include ref.cat in prop.motions (Y/N)?
+INCLUDE_ASTREFCATALOG  N               # Include ref.cat in prop.motions (Y/N)?
 ASTR_FLAGSMASK         0x00fc          # Astrometry rejection mask on SEx FLAGS
 ASTR_IMAFLAGSMASK      0x0             # Astrometry rejection mask on IMAFLAGS
  
@@ -109,7 +109,7 @@ CHECKPLOT_CKEY         SCAMPCOL        # FITS keyword for PLPLOT field colour
 CHECKPLOT_DEV          PSC             # NULL, XWIN, TK, PS, PSC, XFIG, PNG,
                                        # JPEG, AQT, PDF or SVG
 CHECKPLOT_RES          0               # Check-plot resolution (0 = default)
-CHECKPLOT_ANTIALIAS    Y               # Anti-aliasing using convert (Y/N) ?
+CHECKPLOT_ANTIALIAS    N               # Anti-aliasing using convert (Y/N) ?
 CHECKPLOT_TYPE         FGROUPS,DISTORTION,ASTR_REFERROR2D,ASTR_REFERROR1D,ASTR_CHI2
 CHECKPLOT_NAME         fgroups,distort,referror2d,astr_referror1d,astr_chi2 # Check-plot filename(s)
  
@@ -120,10 +120,10 @@ CHECKIMAGE_NAME        check.fits      # Check-image filename(s)
  
 #------------------------------ Miscellaneous ---------------------------------
  
-SN_THRESHOLDS          3.0,50.0      # S/N thresholds (in sigmas) for all and
+SN_THRESHOLDS          30.0,50.0      # S/N thresholds (in sigmas) for all and
                                        # high-SN sample
-FWHM_THRESHOLDS        1.0,10.0       # FWHM thresholds (in pixels) for sources
-ELLIPTICITY_MAX        0.8             # Max. source ellipticity
+FWHM_THRESHOLDS        50.0,100.0     # FWHM thresholds (in pixels) for sources
+ELLIPTICITY_MAX        0.5             # Max. source ellipticity
 FLAGS_MASK             0x00fc          # Global rejection mask on SEx FLAGS
 WEIGHTFLAGS_MASK       0x00fc          # Global rejec. mask on SEx FLAGS_WEIGHT
 IMAFLAGS_MASK          0x0             # Global rejec. mask on SEx IMAFLAGS_ISO

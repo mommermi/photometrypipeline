@@ -80,7 +80,7 @@ Acknowledgments
 
 If you are using PP for your research, please acknowledge PP by citing
 
-* Mommert 2017, PHOTOMETRYPIPELINE: An Automated Pipeline for Calibrated Photometry, Astronomy & Computing (in press).
+* Mommert, M. 2017, PHOTOMETRYPIPELINE: An Automated Pipeline for Calibrated Photometry, `Astronomy & Computing`_, 18, 47.
 
 PP is supported by NASA grants NNX15AE90G and NNX14AN82G and has been
 developed in the framework of the Mission Accessible Near-Earth
@@ -98,3 +98,4 @@ Indices and tables
 .. _SCAMP: http://www.astromatic.net/software/scamp
 .. _MANOS: http://manosobs.wordpress.com/
 .. _boada: https://github.com/boada
+.. _Astronomy & Computing: http://www.sciencedirect.com/science/article/pii/S2213133716300816

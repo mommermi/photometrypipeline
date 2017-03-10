@@ -24,6 +24,8 @@ observatories/instruments:
 | Discovery Channel        | Large Monolithic   | DCTLMI         |
 | Telescope                | Imager             |                |
 +--------------------------+--------------------+----------------+
+| KMTnet SAAO              | --- *              | KMTNETS        |
++--------------------------+--------------------+----------------+
 | Lowell 31"               | NASACAM            | LOWELL31       |
 +--------------------------+--------------------+----------------+
 | Lowell 42"               | NASA42             | LOWELL42       |
@@ -45,6 +47,11 @@ observatories/instruments:
 +--------------------------+--------------------+----------------+
 | Generic Telescope        | any                | GENERIC        |
 +--------------------------+--------------------+----------------+
+
+*: This camera is a multi-detector instrument; it is recommended to
+ split multi-extension FITS frames from this instrument into
+ individual single-extension FITS images and to run the pipeline on
+ these individual FITS images.
 
 If you would like to use the pipeline for other observatories, please
 contact me.

@@ -9,10 +9,18 @@ import os
 import sys
 import logging
 import warnings
-from astropy import wcs
-from astropy.io import fits
-import numpy as np
-
+try:
+    from astropy import wcs
+    from astropy.io import fits
+except ImportError:
+    print('Module astropy not found. Please install with: pip install astropy')
+    sys.exit()
+try:
+    import numpy as np
+except ImportError:
+    print('Module numpy not found. Please install with: pip install numpy')
+    sys.exit()
+    
 # import pipeline-specific modules
 from toolbox import *
 

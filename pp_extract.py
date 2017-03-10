@@ -41,6 +41,15 @@ if sys.version_info > (3,0):
     standard_library.install_aliases()
     from builtins import range
 
+# create a portable DEVNULL
+# necessary to prevent subprocess.PIPE and STDOUT from clogging if
+# Source Extractor runs for too long 
+try:
+    from subprocess import DEVNULL # Py3
+except ImportError:
+    import os # Py2
+    DEVNULL = open(os.devnull, 'wb')
+
 
 # pipeline-specific modules
 import _pp_conf
@@ -113,7 +122,11 @@ class extractor(threading.Thread):
             threadLock.release()
             optionstring  = ' -PHOT_APERTURES %s ' % \
                             self.param['aperture_diam']
-            optionstring += ' -BACKPHOTO_TYPE LOCAL '
+            if ('global_background' in self.param and 
+                self.param['global_background']):
+                optionstring += ' -BACKPHOTO_TYPE GLOBAL '
+            else:
+                optionstring += ' -BACKPHOTO_TYPE LOCAL '
             optionstring += ' -DETECT_MINAREA %f ' % \
                             self.param['source_minarea']
             optionstring += ' -DETECT_THRESH %f -ANALYSIS_THRESH %f ' % \
@@ -145,9 +158,12 @@ class extractor(threading.Thread):
             ### run SEXTRACTOR and wait for it to finish
             try:
                 sex = subprocess.Popen(shlex.split(commandline),
-                                       stdout=subprocess.PIPE,
-                                       stderr=subprocess.PIPE,
-                                       universal_newlines=True)
+                                       stdout=DEVNULL,
+                                       stderr=DEVNULL,
+                                       close_fds=True)
+                # do not direct stdout to subprocess.PIPE:
+                # for large FITS files, PIPE will clog, stalling 
+                # subprocess.Popen
             except Exception as e:
                 print('Source Extractor call:', (e))
                 logging.error('Source Extractor call:', (e))
@@ -156,23 +172,23 @@ class extractor(threading.Thread):
 
             sex.wait()
 
-            # check output for error messages from Source Extractor
-            try:
-                sex_output = sex.communicate()[1]
-                if 'not found, using internal defaults' in sex_output:
-                    if not self.param['quiet']:
-                        print(('ERROR: no Source Extractor setup file ' +
-                               'available (should be in %s)') % \
-                            self.param['obsparam']['sex-config-file'])
-                        logging.error(('ERROR: no Source Extractor setup file'+
-                                       ' available (should be in %s)') % \
-                        self.param['obsparam']['sex-config-file'])
+            # # check output for error messages from Source Extractor
+            # try:
+            #     sex_output = sex.communicate()[1]
+            #     if 'not found, using internal defaults' in sex_output:
+            #         if not self.param['quiet']:
+            #             print(('ERROR: no Source Extractor setup file ' +
+            #                    'available (should be in %s)') % \
+            #                 self.param['obsparam']['sex-config-file'])
+            #             logging.error(('ERROR: no Source Extractor setup file'+
+            #                            ' available (should be in %s)') % \
+            #             self.param['obsparam']['sex-config-file'])
 
-                    extractQueue.task_done() # inform queue, this task is done
-                    return None
-            except ValueError:
-                logging.warning("Cannot read Source Extractor display output")
-                pass
+            #         extractQueue.task_done() # inform queue, this task is done
+            #         return None
+            # except ValueError:
+            #     logging.warning("Cannot read Source Extractor display output")
+            #     pass
 
             del sex
 

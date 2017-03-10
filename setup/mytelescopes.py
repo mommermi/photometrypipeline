@@ -57,6 +57,7 @@ mytelescope_param = {
 
     # source extractor settings
     'source_minarea': 12,  # default sextractor source minimum N_pixels
+    'source_snr': 3,  # default sextractor source snr for registration
     'aprad_default': 5,  # default aperture radius in px
     'aprad_range': [2, 10],  # [minimum, maximum] aperture radius (px)
     'sex-config-file': rootpath + '/setup/mytelescope.sex',
@@ -67,6 +68,7 @@ mytelescope_param = {
     'scamp-config-file': rootpath + '/setup/mytelescope.scamp',
     'reg_max_mag'          : 19,  
     'reg_search_radius'    : 0.5, # deg   
+    'source_tolerance': 'high',
 
     # default catalog settings
     'astrometry_catalogs': ['GAIA'],
