@@ -221,12 +221,12 @@ def run_the_pipeline(filenames, man_targetname, man_filtername,
     # in case not all image were registered successfully
     filenames = registration['goodfits']
 
-    # stop here if filtername == None
-    if filtername == None:
-        logging.info('Nothing else to do for this filter (%s)' %
-                     filtername)
-        print('Nothing else to do for this filter (%s)' % filtername)
-        return None
+    # # stop here if filtername == None
+    # if filtername == None:
+    #     logging.info('Nothing else to do for this filter (%s)' %
+    #                  filtername)
+    #     print('Nothing else to do for this filter (%s)' % filtername)
+    #     return None
 
     # stop here if registration failed for all images
     if len(filenames) == 0:
@@ -234,8 +234,6 @@ def run_the_pipeline(filenames, man_targetname, man_filtername,
         print('Nothing else to do for this image set')
         diag.abort('pp_registration')
         return None
-
-
 
     ### run photometry (curve-of-growth analysis)
     snr, source_minarea = 1.5, obsparam['source_minarea']
@@ -277,27 +275,35 @@ def run_the_pipeline(filenames, man_targetname, man_filtername,
     ### run photometric calibration
     minstars = _pp_conf.minstars
     manualcatalog = None
+
     print('\n----- run photometric calibration\n')
+
     calibration = pp_calibrate.calibrate(filenames, minstars, filtername,
                                          manualcatalog, obsparam, display=True,
                                          diagnostics=True)
 
-    if calibration == None:
-        print('Nothing to do!')
-        logging.error('Nothing to do! Error in pp_calibrate')
-        diag.abort('pp_calibrate')
-        sys.exit(1)
+    # if calibration == None:
+    #     print('Nothing to do!')
+    #     logging.error('Nothing to do! Error in pp_calibrate')
+    #     diag.abort('pp_calibrate')
+    #     sys.exit(1)
 
-    zps = [frame['zp'] for frame in calibration['zeropoints']]
-    zp_errs = [frame['zp_sig'] for frame in calibration['zeropoints']]
-    if all(zp==0 for zp in zps):
-        summary_message = "<FONT COLOR=\"red\">no phot. calibration</FONT>; "
-    else:
+    try:
+        zps = [frame['zp'] for frame in calibration['zeropoints']]
+        zp_errs = [frame['zp_sig'] for frame in calibration['zeropoints']]
+
+        if calibration['ref_cat'] is not None:
+            refcatname = calibration['ref_cat'].catalogname
+        else:
+            refcatname = 'instrumental magnitudes'
         summary_message = "<FONT COLOR=\"green\">average zeropoint = " + \
                            ("%5.2f+-%5.2f using %s</FONT>; " %
                             (numpy.average(zps),
                              numpy.average(zp_errs),
-                             calibration['ref_cat'].catalogname))
+                             refcatname))
+    except TypeError:
+        summary_message = "<FONT COLOR=\"red\">no phot. calibration</FONT>; "
+
     # add information to summary website, if requested
     if _pp_conf.use_diagnostics_summary:
         diag.insert_into_summary(summary_message)
@@ -378,6 +384,10 @@ if __name__ == '__main__':
         # walk through directories underneath
         for root, dirs, files in os.walk(_masterroot_directory):
 
+            # ignore .diagnostics directories
+            if '.diagnostics' in root:
+                continue
+            
             # identify data frames
             filenames = sorted([s for s in files if re.match(regex, s)])
 

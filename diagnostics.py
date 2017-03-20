@@ -709,8 +709,8 @@ def add_calibration(data):
 
     create_website(_pp_conf.cal_filename, content=html)
 
-    ### update index.html
-    html  = "<H2>Photometric Calibration - Catalog Match </H2>\n"
+    ### update index.html 
+    html  = "<H2>Photometric Calibration - Zeropoints</H2>\n"
     html += "match image data with %s (%s);\n" % \
             (data['ref_cat'].catalogname, data['ref_cat'].history)
     html += "see <A HREF=\"%s\">calibration</A> website for details\n" % \
@@ -718,8 +718,26 @@ def add_calibration(data):
     html += "<P><IMG SRC=\"%s\">\n" % ('.diagnostics/' + data['zpplot'])
 
     append_website(_pp_conf.index_filename, html,
-                   replace_below=("<H2>Photometric Calibration " +
-                                  "- Catalog Match </H2>\n"))
+                   replace_below=("<H2>Photometric Calibration "
+                                  "- Zeropoints</H2>\n"))
+
+    return None
+
+
+def add_calibration_instrumental(data):
+    """
+    add instrumental calibration results to website
+    """
+
+    ### update index.html 
+    html  = "<H2>Photometric Calibration - Zeropoints </H2>\n"
+    html += "Instrumental magnitudes have been derived for the image data "
+    html += "(recognized photometric filter: %s); " % data['filtername']
+    html += "all zeropoints have been set to zero.\n"
+
+    append_website(_pp_conf.index_filename, html,
+                   replace_below=("<H2>Photometric Calibration - "
+                                  "Zeropoints</H2>\n"))
 
     return None
 
@@ -744,11 +762,12 @@ def add_results(data):
                      linestyle='', color='black')
         plt.ylim([plt.ylim()[1], plt.ylim()[0]])
         plt.grid()
-        plt.savefig('.diagnostics/' + ('%s.png' % target.replace(' ', '_')),
+        plt.savefig('.diagnostics/'
+                    + ('%s.png' % target.translate(_pp_conf.target2filename)),
                     format='png')
         plt.close()
-        data['lightcurveplots'][target] = ('.diagnostics/' + '%s.png' %
-                                           target.replace(' ', '_'))
+        data['lightcurveplots'][target] = ('.diagnostics/' + '%s.png' % 
+                                           target.translate(_pp_conf.target2filename))
 
     ##### create thumbnail images
 
@@ -832,9 +851,9 @@ def add_results(data):
             aprad = float(hdulist[0].header['APRAD'])
 
             # create plot
-            plotsize = 7. # inches
-            fig = plt.figure(figsize=(plotsize,plotsize),
-                             dpi=old_div(boxsize,plotsize))
+            #plotsize = 7. # inches
+            fig = plt.figure()#figsize=(plotsize,plotsize), 
+                             #dpi=old_div(boxsize,plotsize))
             img = plt.imshow(thumbdata, cmap='gray',
                              vmin=median-2*std,
                              #vmax=maxval,
@@ -861,10 +880,12 @@ def add_results(data):
                             exp_y-obj_y+old_div(boxsize,2.),
                             marker='+', s=100, color='green')
 
-            thumbfilename = '.diagnostics/' + target.replace(' ', '_')+'_'+ \
+            thumbfilename = '.diagnostics/' + \
+                            target.translate(_pp_conf.target2filename) + '_' + \
                             fitsfilename[:fitsfilename.find('.fit')] + \
                             '_thumb.png'
-            plt.savefig(thumbfilename, format='png', bbox_inches='tight',
+            plt.savefig(thumbfilename, format='png',
+                        bbox_inches='tight', 
                         pad_inches=0)
             plt.close()
             hdulist.close()
@@ -872,16 +893,15 @@ def add_results(data):
                                                      thumbfilename))
 
         ## create gif animation
-        gif_filename = ('%s.gif' %
-                        (target.replace(' ', '_')))
+        gif_filename = ('%s.gif' % target.translate(_pp_conf.target2filename))
         logging.info('converting images to gif: %s' % gif_filename)
         root = os.getcwd()
         os.chdir(_pp_conf.diagroot)
         try:
-            convert = subprocess.Popen(['convert', '-delay', '50',
-                                        ('%s*thumb.png' %
-                                (target.replace(' ', '_'))),
-                                        '-loop', '0',
+            convert = subprocess.Popen(['convert', '-delay', '50', 
+                                        ('%s*thumb.png' % 
+                                (target.translate(_pp_conf.target2filename))), 
+                                        '-loop', '0', 
                                         ('%s' % gif_filename)])
 
             convert.wait()
@@ -923,7 +943,9 @@ def add_results(data):
             html += "<P>%s<IMG ID=\"%s\" SRC=\"%s\">\n" % (plts[0],
                                     data[target][idx][10],
                                     plts[1].split('.diagnostics/')[1])
-        filename = '.diagnostics/'+target.replace(' ', '_')+'_'+'results.html'
+        filename = '.diagnostics/' + \
+                   target.translate(_pp_conf.target2filename) + \
+                   '_' + 'results.html'
         create_website(filename, html)
         data['resultswebsites'][target] = filename
 

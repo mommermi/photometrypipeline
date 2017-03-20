@@ -314,8 +314,8 @@ if __name__ == "__main__":
         # accurate position
         if app.target_index[image_idx] is not None:
             outf.write('%50.50s   %9.5f  %9.5f   %15.7f\n' % (image_name,
-                app.ldac[image_idx][app.target_index[image_idx]]['XWIN_WORLD'],
-                app.ldac[image_idx][app.target_index[image_idx]]['YWIN_WORLD'],
+                app.ldac[image_idx][app.target_index[image_idx]]['ra.deg'],
+                app.ldac[image_idx][app.target_index[image_idx]]['dec.deg'],
                 app.mjd[image_idx]))
         # interpolated position
         else:
@@ -323,8 +323,8 @@ if __name__ == "__main__":
             interp_idx = app.extrapolate(app.mjd[image_idx])
 
             outf.write('%50.50s   %9.5f  %9.5f  %15.7f\n' % (image_name,
-                app.ldac[image_idx][interp_idx]['XWIN_WORLD'],
-                app.ldac[image_idx][interp_idx]['YWIN_WORLD'],
+                app.ldac[image_idx][interp_idx]['ra.deg'],
+                app.ldac[image_idx][interp_idx]['dec.deg'],
                 app.mjd[image_idx]))
 
     print(image_idx+1, 'target positions written to file positions.dat')

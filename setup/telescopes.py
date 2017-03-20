@@ -84,8 +84,8 @@ vatt4k_param = {
     'swarp-config-file'    : rootpath+'/setup/vatt4k.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -124,8 +124,7 @@ dctlmi_param = {
     'filter'               : 'FILTERS',  # filter keyword
     'filter_translations'  : {'V': 'V', 'R': 'R', 'B': 'B', 'VR': None,
                               'I': 'I', 'SDSS-U' : 'u', 'SDSS-G' : 'g',
-                              'SDSS-R' : 'r', 'SDSS-I' : 'i',
-                              'SDSS-Z' : 'z'},
+                              'UC': None, 'NH': None, 'BC': None,
                              # filtername translation dictionary
     'exptime'              : 'EXPTIME', # exposure time keyword (s)
     'airmass'              : 'AIRMASS', # airmass keyword
@@ -154,8 +153,8 @@ dctlmi_param = {
     'swarp-config-file'    : rootpath+'/setup/dctlmi.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS','2MASS']
 }
 
 
@@ -223,8 +222,8 @@ arc35arctic_param = {
     'swarp-config-file'    : rootpath+'/setup/arc35arctic.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -291,8 +290,8 @@ arc35agile_param = {
     'swarp-config-file'    : rootpath+'/setup/arc35agile.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -372,8 +371,8 @@ magimacs_param = {
     'swarp-config-file'    : rootpath+'/setup/magimacs.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -440,8 +439,8 @@ ca123dlrmkiii_param = {
     'swarp-config-file'    : rootpath+'/setup/ca123dlrmkiii.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -506,8 +505,8 @@ lowell31_param = {
     'swarp-config-file'    : rootpath+'/setup/lowell31.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -575,8 +574,8 @@ lowell42_param = {
     'swarp-config-file'    : rootpath+'/setup/lowell42.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -644,8 +643,8 @@ lowell72_param = {
     'swarp-config-file'    : rootpath+'/setup/lowell72.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -713,8 +712,8 @@ ctio09_param = {
     'swarp-config-file'    : rootpath+'/setup/ctio09.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -780,8 +779,8 @@ ctio10_param = {
     'swarp-config-file'    : rootpath+'/setup/ctio10.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -846,8 +845,8 @@ ctio13ccd_param = {
     'swarp-config-file'    : rootpath+'/setup/andicam.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -915,8 +914,8 @@ uh88snifs_param = {
     'reg_search_radius'    : 0.5, # deg
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 # WIYN 0.9m, Half Degree Imager (HDI)
@@ -981,8 +980,8 @@ wiyn09hdi_param = {
     'swarp-config-file'    : rootpath+'/setup/wiyn09hdi.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -1049,8 +1048,8 @@ generic_param = {
     'swarp-config-file'    : rootpath+'/setup/generic.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 # SPM 1.3m, RATIR
@@ -1116,8 +1115,8 @@ ratir_param = {
     'swarp-config-file'    : rootpath+'/setup/ratir.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -1179,8 +1178,8 @@ ratir_param = {
 #     'swarp-config-file'    : rootpath+'/setup/sl74sha.swarp',
 
 #     # default catalog settings
-#     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'],
-#     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+#     'astrometry_catalogs'  : ['URAT-1', '2MASS', 'USNO-B1'], 
+#     'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 # }
 
 # SOAR, Goodman (imager)
@@ -1249,8 +1248,8 @@ soargoodman_param = {
     'swarp-config-file'    : rootpath+'/setup/soargoodman.swarp',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 # Observatoire de Haute-Provence, 120cm, CCD
@@ -1305,8 +1304,8 @@ ohp120_param = {
     'source_tolerance': 'high',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -1360,8 +1359,8 @@ tngdolores_param = {
     'source_tolerance': 'high',
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'],
-    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', '2MASS']
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 
@@ -1422,7 +1421,7 @@ kpno4mos1_param = {
 
     # default catalog settings
     'astrometry_catalogs': ['GAIA'],
-    'photometry_catalogs': ['SDSS-R9', 'APASS9', '2MASS']
+    'photometry_catalogs': ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
 }
 
 # KPNO 4m Mayall, NEWFIRM
@@ -1476,7 +1475,7 @@ kpno4newf_param = {
 
     # default catalog settings
     'astrometry_catalogs': ['GAIA'],
-    'photometry_catalogs': ['2MASS']
+    'photometry_catalog': ['2MASS']
 }
 
 # SALT, SALTICAM
@@ -1529,6 +1528,7 @@ saltsalticam_param = {
     # default catalog settings
     'astrometry_catalogs': ['GAIA'],
     'photometry_catalogs': ['SDSS-R9', 'APASS9', '2MASS']
+    'photometry_catalogs': ['2MASS']
 }
 
 # KMTNET-S
@@ -1681,7 +1681,7 @@ kmtnets_param = {
     # default catalog settings
     'astrometry_catalogs': ['GAIA', 'GAIA'], # run registration twice
     # due to large field distortions
-    'photometry_catalogs': ['SDSS-R9', 'APASS9', '2MASS'],
+    'photometry_catalogs': ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS'],
 
     # list of header keywords that should not be removed
     'dont_remove': 'CCD_NAME'

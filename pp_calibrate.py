@@ -75,6 +75,14 @@ def create_photometrycatalog(ra_deg, dec_deg, rad_deg, filtername,
         if n_sources < min_sources:
             continue
 
+        if 'URAT' in catalogname:
+            print(catalogname + ' should only be used as an astrometric ' 
+                  'catalog; please use APASS9 instead')
+            logging.error(catalogname + ' should only be used as an '
+                          'astrometric catalog; please use APASS9 instead')
+            return None
+
+        
         # transform catalog to requested filtername, if necessesary
         if ( n_sources > 0 and
              ('SDSS' in catalogname and
@@ -84,7 +92,10 @@ def create_photometrycatalog(ra_deg, dec_deg, rad_deg, filtername,
              ('APASS' in catalogname and
               filtername not in {'B', 'V', 'g', 'r', 'i'}) or
              ('2MASS' in catalogname and
-              filtername not in {'J', 'H', 'K'}) ):
+              filtername not in {'J', 'H', 'K'}) or 
+             ('PANSTARRS' in catalogname and
+              filtername not in {'g', 'r', 'i', 'z', 'y'}) ):
+
             n_transformed = cat.transform_filters(filtername) - \
                             cat.reject_sources_with(\
                                     cat['_e_'+filtername+'mag'] > mag_accuracy)
@@ -306,8 +317,7 @@ def derive_zeropoints(ref_cat, catalogs, filtername, minstars_external,
         cat.history += 'calibrated using ' + ref_cat.history
 
     output['catalogs'] = catalogs
-    output['ref_cat']   = ref_cat
-
+    output['ref_cat'] = ref_cat
 
     ### output content
     #
@@ -419,7 +429,44 @@ def calibrate(filenames, minstars, manfilter, manualcatalog,
 
         logging.info('Done! ------------------------------------------------')
 
-        return None
+        output = {'filtername': None,
+                  'minstars': 0,
+                  'zeropoints': [{'filename': 'stuff',
+                                  'zp': 0,
+                                  'zp_sig': 0,
+                                  'zp_nstars': 0,
+                                  'zp_usedstars': 0,
+                                  'obstime': 0,
+                                  'match': 0,
+                                  'clipping_steps': 0,
+                                  'zp_idx': 0} for i in range(len(filenames))],
+                  'catalogs': catalogs,
+                  'ref_cat': None}
+
+        ### output content
+        #
+        # { 'filtername'      : filter name,
+        #   'minstars'        : requested minimum number/fraction of ref stars,
+        #   'zeropoints'      : for each frame:
+        #                       {'filename' : catalog name,
+        #                        'zp'       : derived zeropoint,
+        #                        'zp_sig'   : uncertainty,
+        #                        'zp_nstars': number of reference stars available,
+        #                        'zp_usedstars': numer used stars,
+        #                        'obstime'  : observation midtime (JD),
+        #                        'match'    : match array (see above),
+        #                        'clipping_steps'  : clipping_steps (see above),
+        #                        'zp_idx'   : zeropoint index
+        #                       },
+        #   'catalogs'        : ldac catalogs,
+        #   'ref_cat'         : reference catalog
+        # }
+        ###
+
+        ### update diagnostics website
+        diag.add_calibration_instrumental(output)
+        
+        return output
 
     ### match catalogs and derive magnitude zeropoint
     zp_data = derive_zeropoints(ref_cat, catalogs, filtername,

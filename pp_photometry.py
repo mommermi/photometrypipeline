@@ -111,7 +111,7 @@ def curve_of_growth_analysis(filenames, parameters,
             # pull target coordinates from Horizons
             targetname =  hdu[0].header[obsparam['object']]
             if parameters['manobjectname'] is not None:
-                targetname = parameters['manobjectname'].replace('_', ' ')
+                targetname = parameters['manobjectname'].translate(_pp_conf.target2filename)
 
             image = hdu[0].data
 
@@ -449,7 +449,7 @@ if __name__ == '__main__':
     obsparam = _pp_conf.telescope_parameters[telescope]
 
     if type(manobjectname) == str:
-        manobjectname = manobjectname.replace(' ', '_')
+        manobjectname = manobjectname.translate(_pp_conf.target2filename)
 
     # set minarea from obsparam
     if source_minarea == 0:
