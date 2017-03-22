@@ -9,10 +9,19 @@ import os
 import sys
 import logging
 import warnings
-from astropy import wcs
-from astropy.io import fits
-import numpy as np
 
+try:
+    from astropy import wcs
+    from astropy.io import fits
+except ImportError:
+    print('Module astropy not found. Please install with: pip install astropy')
+    sys.exit()
+try:
+    import numpy as np
+except ImportError:
+    print('Module numpy not found. Please install with: pip install numpy')
+    sys.exit()
+    
 # import pipeline-specific modules
 from toolbox import *
 
@@ -53,6 +62,7 @@ warnings.filterwarnings('ignore', category=fits.card.VerifyWarning)
 # following warning gets cast by Gaia query: XXX.convert_unit_to(u.deg)
 warnings.filterwarnings('ignore', category=np.ma.core.MaskedArrayFutureWarning)
 warnings.filterwarnings('ignore', category=UserWarning)
+warnings.filterwarnings('ignore', category=FutureWarning)
 
 # read photometry pipeline root path from environment variable
 rootpath = os.environ.get('PHOTPIPEDIR')
@@ -96,17 +106,26 @@ log_filename = diagroot+'LOG'
 # start pp_process_idx counter (if using 'pp_run all')
 pp_process_idx = 0
 
+# Translation table to transform target names to file names
+# space and / --> _
+if sys.version_info > (3, 0):
+    target2filename = str.maketrans(' /', '__')
+else:
+    import string
+    target2filename = string.maketrans(' /', '__')
+
 # available catalogs
 
 # list of available catalogs
-allcatalogs = ['URAT-1', '2MASS', 'SDSS-R9', 'APASS9', 'GAIA']
+allcatalogs = ['URAT-1', '2MASS', 'SDSS-R9', 'APASS9', 'GAIA', 'PANSTARRS']
 
 # catalog magnitude systems
 allcatalogs_magsys = {'URAT-1': 'Vega',
                       '2MASS': 'Vega',
                       'SDSS-R9': 'AB',
                       'APASS9': 'Vega',
-                      'GAIA': 'Vega'}
+                      'GAIA': 'Vega',
+                      'PANSTARRS': 'AB'}
 
 # ---- pipeline preferences
 # (if you don't know what you're doing, better don't mess around here)

@@ -4,8 +4,8 @@ Toolbox for the Photometry Pipeline
 """
 from __future__ import print_function
 from __future__ import division
-
-# Photometry Pipeline
+  
+# Photometry Pipeline 
 # Copyright (C) 2016  Michael Mommert, michael.mommert@nau.edu
 
 # This program is free software: you can redistribute it and/or modify
@@ -22,12 +22,15 @@ from __future__ import division
 # along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
 
-
-from past.utils import old_div
-import math
 import sys
+try:
+  from past.utils import old_div
+except ImportError:
+  print('Module future not found. Please install with: pip install future')
+  sys.exit()
+  
+import math
 import numpy
-#import urllib.request, urllib.error, urllib.parse
 
 # only import if Python3 is used
 if sys.version_info > (3,0):
@@ -183,3 +186,18 @@ def get_binning(header, obsparam):
         binning_y = header[obsparam['binning'][1]]
 
     return (binning_x, binning_y)
+
+
+def skycenter(catalogs, ra_key='ra.deg', dec_key='dec.deg'):
+    """derive center position and radius from catalogs"""
+
+    min_ra  = min([numpy.min(cat[ra_key]) for cat in catalogs])
+    max_ra  = max([numpy.max(cat[ra_key]) for cat in catalogs])
+    min_dec = min([numpy.min(cat[dec_key]) for cat in catalogs])
+    max_dec = max([numpy.max(cat[dec_key]) for cat in catalogs])
+
+    ra, dec = old_div((max_ra+min_ra),2.), old_div((max_dec+min_dec),2.)
+    rad     = numpy.sqrt((old_div((max_ra-min_ra),2.))**2 + 
+                         (old_div((max_dec-min_dec),2.))**2)
+
+    return ra, dec, rad

@@ -1,5 +1,4 @@
-
-# other stuff
+# supplemental files not to track
 *~
 */#*
 dump/
@@ -7,6 +6,7 @@ dump/
 
 # stuff we don't want to track
 setup/mytelescopes.py
+doc/_build/
 
 ### Python ###
 ## Byte-compiled / optimized / DLL files

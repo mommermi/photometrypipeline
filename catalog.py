@@ -33,14 +33,23 @@ import logging
 #import urllib.request, urllib.error, urllib.parse
 import time
 import sqlite3 as sql
-from scipy import spatial
+try:
+    from scipy import spatial
+except ImportError:
+    print('Module scipy not found. Please install with: pip install scipy')
+    sys.exit()
 from astropy.io import fits
 import scipy.optimize as optimization
-from astroquery.vizier import Vizier
+try:
+    from astroquery.vizier import Vizier
+except ImportError:
+    print('Module astroquery not found. Please install with: pip install '
+          'astroquery')
+    sys.exit()
 import astropy.units as u
 import astropy.coordinates as coord
 from astropy.table import Table, Column
-
+from astropy import __version__ as astropyversion
 
 # only import if Python3 is used
 if sys.version_info > (3,0):
@@ -189,7 +198,6 @@ class catalog(object):
                               [mags], [e_mags], epoch_jd
         """
 
-
         ### setup Vizier query
         # note: column filters uses original Vizier column names
         # -> green column names in Vizier
@@ -206,7 +214,100 @@ class catalog(object):
         field = coord.SkyCoord(ra=ra_deg, dec=dec_deg, unit=(u.deg, u.deg),
                                frame='icrs')
 
-        if self.catalogname == 'GAIA':
+
+        
+        # ---------------------------------------------------------------------
+
+        # use MAST query for Pan-STARRS; this is experimental!
+        if self.catalogname == 'PANSTARRS':
+            import requests
+            from astropy.io.votable import parse_single_table, VOTableSpecWarning, VOWarning
+            import warnings
+            warnings.filterwarnings('ignore',
+                            category=VOTableSpecWarning)
+            warnings.filterwarnings('ignore',
+                            category=VOWarning)
+
+            server = 'https://archive.stsci.edu/panstarrs/search.php'
+
+            if rad_deg > 0.5:
+                rad_deg = 0.499
+                logging.warning('MAST does currently not allow for PANSTARRS '
+                                'catalog queries with radii larger '
+                                'than 0.5 deg; clip radius to 0.5 deg')
+                print ('MAST does currently not allow for PANSTARRS '
+                       'catalog queries with radii larger '
+                       'than 0.5 deg; clip radius to 0.5 deg')
+            
+            r = requests.get(server, 
+                             params= {'RA': ra_deg, 'DEC': dec_deg, 
+                                      'SR': rad_deg,
+                                      'max_records': int(max_sources), 
+                                      'outputformat': 'VOTABLE',
+                                      'coordformat': 'FLOAT',
+                                      'ndetections': ('>%d' % max_mag)}) 
+            
+            # write query data into local file 
+            outf = open('panstarrs.xml', 'wr') 
+            outf.write(r.text)
+            outf.close()
+    
+            # parse local file into astropy.table object 
+            data = parse_single_table('panstarrs.xml')
+            self.data = data.to_table(use_names_over_ids=True) 
+            
+            # rename column names using PP conventions
+            self.data.rename_column('objName', 'ident')
+            self.data.rename_column('raMean', 'ra.deg')
+            self.data.rename_column('decMean', 'dec.deg')
+            self.data.rename_column('raMeanErr', 'e_ra.deg')
+            self.data.rename_column('decMeanErr', 'e_dec.deg')
+            self.data.rename_column('gMeanPSFMag', 'gmag')
+            self.data.rename_column('gMeanPSFMagErr', 'e_gmag')
+            self.data.rename_column('rMeanPSFMag', 'rmag')
+            self.data.rename_column('rMeanPSFMagErr', 'e_rmag')
+            self.data.rename_column('iMeanPSFMag', 'imag')
+            self.data.rename_column('iMeanPSFMagErr', 'e_imag')
+            self.data.rename_column('zMeanPSFMag', 'zmag')
+            self.data.rename_column('zMeanPSFMagErr', 'e_zmag')
+            self.data.rename_column('yMeanPSFMag', 'ymag')
+            self.data.rename_column('yMeanPSFMagErr', 'e_ymag')
+            
+            # clip self.data to enforce magnitude error limits
+            self.data = self.data[self.data['e_rmag'] <= 0.03]
+            
+            # transform magnitudes to SDSS AB system
+            # using Tonry et al. 2012, ApJ 750
+            g_sdss = (self.data['gmag'] + 0.013 +
+                      0.145*(self.data['gmag']-self.data['rmag']) +
+                      0.019*(self.data['gmag']-self.data['rmag'])**2)
+            gerr_sdss = numpy.sqrt(self.data['e_gmag']**2 + 0.008**2)
+            r_sdss = (self.data['rmag'] - 0.001 +
+                      0.004*(self.data['gmag']-self.data['rmag']) +
+                      0.007*(self.data['gmag']-self.data['rmag'])**2)
+            rerr_sdss = numpy.sqrt(self.data['e_rmag']**2 + 0.004**2)
+            i_sdss = (self.data['imag'] - 0.005 +
+                      0.011*(self.data['gmag']-self.data['rmag']) +
+                      0.010*(self.data['gmag']-self.data['rmag'])**2)
+            ierr_sdss = numpy.sqrt(self.data['e_imag']**2 + 0.004**2)
+            z_sdss = (self.data['rmag'] + 0.013 -
+                      0.039*(self.data['gmag']-self.data['rmag']) -
+                      0.012*(self.data['gmag']-self.data['rmag'])**2)
+            zerr_sdss = numpy.sqrt(self.data['e_zmag']**2 + 0.01**2)
+
+            self.data['gmag'] = g_sdss
+            self.data['e_gmag'] = gerr_sdss            
+            self.data['rmag'] = r_sdss
+            self.data['e_rmag'] = rerr_sdss            
+            self.data['imag'] = i_sdss
+            self.data['e_imag'] = ierr_sdss            
+            self.data['zmag'] = z_sdss
+            self.data['e_zmag'] = zerr_sdss            
+
+            
+        # --------------------------------------------------------------------
+                
+        elif self.catalogname == 'GAIA':
             # astrometric catalog
             vquery = Vizier(columns=['Source', 'RA_ICRS', 'DE_ICRS',
                                      'e_RA_ICRS', 'e_DE_ICRS', 'pmRA',
@@ -226,7 +327,7 @@ class catalog(object):
                 return 0
 
 
-                ### rename column names using PP conventions
+            ### rename column names using PP conventions
             self.data.rename_column('Source', 'ident')
             self.data.rename_column('RA_ICRS', 'ra.deg')
             self.data.rename_column('DE_ICRS', 'dec.deg')
@@ -331,8 +432,6 @@ class catalog(object):
                                         unit=self.data['sigm'].unit),
                                  index=4)
             self.data.remove_column('sigm')
-
-
 
         elif self.catalogname == 'APASS9':
             # photometric catalog
@@ -545,9 +644,12 @@ class catalog(object):
 
         # # combine HDUs and write file
         hdulist = fits.HDUList([primaryhdu, hdrhdu, datahdu])
-        hdulist.writeto(ldac_filename, clobber=True)
-
-        logging.info('wrote %d sources from %s to LDAC file' %
+        if float(astropyversion.split('.')[1]) >= 3:
+            hdulist.writeto(ldac_filename, overwrite=True)
+        else:
+            hdulist.writeto(ldac_filename, clobber=True)
+            
+        logging.info('wrote %d sources from %s to LDAC file' % 
                      (nsrc, ldac_filename))
 
         return nsrc
@@ -978,75 +1080,122 @@ class catalog(object):
 
             return self.shape[0]
 
-        ### 2MASS to Warner BVRI (not accounting for galactic extinction)
-        elif (self.catalogname == '2MASS') and \
-           (targetfilter in {'B', 'V', 'R', 'I'}) and \
-           (self.magsystem == 'Vega'):
+        # PANSTARRS to BVRI
+        elif (self.catalogname == 'PANSTARRS' and 
+              targetfilter in ['B', 'V', 'R', 'I'] and
+              self.magsystem == 'AB'):
 
-            logging.info(('trying to transform %d 2MASS sources to ' \
-                          + 'Warner %s') % (self.shape[0], targetfilter))
+            logging.info(('trying to transform %d PANSTARRS sources to ' \
+                          + '%s') % (self.shape[0], targetfilter))
 
-            # transformations using the recipe by Warner 2007, MPBu
-            mags  = [self['Jmag'], self['Kmag'], self['e_Jmag']]
-            lbl   = {'_Bmag':0 , '_e_Bmag': 1, '_Vmag': 2, '_e_Vmag': 3, 
-                     '_Rmag': 4, '_e_Rmag': 5, '_Imag': 6, '_e_Imag': 7}
-            nmags = [numpy.zeros(self.shape[0]) for i in range(len(lbl))]
+            # transform magnitudes to BVRI, Vega system
+            # using Tonry et al. 2012, ApJ 750
+            B = (self.data['gmag'] + 0.212 +
+                      0.556*(self.data['gmag']-self.data['rmag']) +
+                      0.034*(self.data['gmag']-self.data['rmag'])**2)
+            Berr = numpy.sqrt(self.data['e_gmag']**2 + 0.032**2)
+            V = (self.data['gmag'] + 0.005 -
+                 0.536*(self.data['gmag']-self.data['rmag']) +
+                 0.011*(self.data['gmag']-self.data['rmag'])**2)
+            Verr = numpy.sqrt(self.data['e_gmag']**2 + 0.012**2)
+            R = (self.data['rmag'] - 0.137 -
+                      0.108*(self.data['gmag']-self.data['rmag']) -
+                      0.029*(self.data['gmag']-self.data['rmag'])**2)
+            Rerr = numpy.sqrt(self.data['e_rmag']**2 + 0.015**2)
+            I = (self.data['imag'] - 0.366 -
+                      0.136*(self.data['gmag']-self.data['rmag']) -
+                      0.018*(self.data['gmag']-self.data['rmag'])**2)
+            Ierr = numpy.sqrt(self.data['e_imag']**2 + 0.017**2)
 
-            for idx in range(self.shape[0]):
-                keep = True
-                # remove objects with extreme J-Ks color index
-                cidx = mags[0][idx]-mags[1][idx]
-                if cidx < -0.1 or cidx > 1.0:
-                    keep = False
-                # reject faint stars based on Figure 6 by Hodgkin et
-                # al. 2009, MNRAS
-                if mags[0][idx] > 18 or mags[1][idx] > 17:
-                    keep = False
-
-                if keep:
-                    nmags[lbl['_Bmag']][idx]   = mags[0][idx] + 1.7495*cidx**3 \
-                                                - 2.7785*cidx**2 \
-                                                + 5.215*cidx + 0.1980
-                    nmags[lbl['_e_Bmag']][idx] = numpy.sqrt(0.08*0.08 +
-                                                           mags[2][idx]**2)
-
-                    nmags[lbl['_Vmag']][idx]   = mags[0][idx] + 1.4688*cidx**3 \
-                                                - 2.3250*cidx**2 \
-                                                + 3.5143*cidx + 0.1496
-                    nmags[lbl['_e_Vmag']][idx] = numpy.sqrt(0.05*0.05 + 
-                                                           mags[2][idx]**2)
-
-                    nmags[lbl['_Rmag']][idx]   = mags[0][idx] + 1.1230*cidx**3 \
-                                                - 1.7849*cidx**2 \
-                                                + 2.5105*cidx + 0.1045
-                    nmags[lbl['_e_Rmag']][idx] = numpy.sqrt(0.08*0.08 + 
-                                                           mags[2][idx]**2)
-                
-                    nmags[lbl['_Imag']][idx]   = mags[0][idx] + 0.2963*cidx**3 \
-                                                - 0.4866*cidx**2 \
-                                                + 1.2816*cidx + 0.0724
-                    nmags[lbl['_e_Imag']][idx] = numpy.sqrt(0.03*0.03 + 
-                                                           mags[2][idx]**2)
-                else:
-                    for mag in lbl.keys():
-                        nmags[lbl[mag]][idx] = 99
-
-            # append nmags arrays to catalog
-            for key, idx in lbl.items():
-                self.add_field(key, nmags[idx])
-                
-            # get rid of sources that have not been transformed
-            self.data = self.data[self['_Vmag'] < 99]
+            self.data.add_column(Column(data=B, name='_Bmag', unit=u.mag))
+            self.data.add_column(Column(data=Berr, name='_e_Bmag', unit=u.mag))
+            self.data.add_column(Column(data=V, name='_Vmag', unit=u.mag))
+            self.data.add_column(Column(data=Verr, name='_e_Vmag', unit=u.mag))
+            self.data.add_column(Column(data=R, name='_Rmag', unit=u.mag))
+            self.data.add_column(Column(data=Rerr, name='_e_Rmag', unit=u.mag))
+            self.data.add_column(Column(data=I, name='_Imag', unit=u.mag))
+            self.data.add_column(Column(data=Ierr, name='_e_Imag', unit=u.mag))
 
             self.catalogname  += '_transformed'
-            self.history += ', %d transformed to Warner %s (Vega)' % \
+            self.history += ', %d transformed to %s (Vega)' % \
                             (self.shape[0], targetfilter)
             self.magsystem = 'Vega'
 
-            logging.info('%d sources sucessfully transformed to Warner %s' % \
+            logging.info('%d sources sucessfully transformed to %s' % \
                          (self.shape[0], targetfilter))
             
             return self.shape[0]
+        
+
+        # ### 2MASS to Warner BVRI (not accounting for galactic extinction)
+        # elif (self.catalogname == '2MASS') and \
+        #    (targetfilter in {'B', 'V', 'R', 'I'}) and \
+        #    (self.magsystem == 'Vega'):
+
+        #     logging.info(('trying to transform %d 2MASS sources to ' \
+        #                   + 'Warner %s') % (self.shape[0], targetfilter))
+
+        #     # transformations using the recipe by Warner 2007, MPBu
+        #     mags  = [self['Jmag'], self['Kmag'], self['e_Jmag']]
+        #     lbl   = {'_Bmag':0 , '_e_Bmag': 1, '_Vmag': 2, '_e_Vmag': 3, 
+        #              '_Rmag': 4, '_e_Rmag': 5, '_Imag': 6, '_e_Imag': 7}
+        #     nmags = [numpy.zeros(self.shape[0]) for i in range(len(lbl))]
+
+        #     for idx in range(self.shape[0]):
+        #         keep = True
+        #         # remove objects with extreme J-Ks color index
+        #         cidx = mags[0][idx]-mags[1][idx]
+        #         if cidx < -0.1 or cidx > 1.0:
+        #             keep = False
+        #         # reject faint stars based on Figure 6 by Hodgkin et
+        #         # al. 2009, MNRAS
+        #         if mags[0][idx] > 18 or mags[1][idx] > 17:
+        #             keep = False
+
+        #         if keep:
+        #             nmags[lbl['_Bmag']][idx]   = mags[0][idx] + 1.7495*cidx**3 \
+        #                                         - 2.7785*cidx**2 \
+        #                                         + 5.215*cidx + 0.1980
+        #             nmags[lbl['_e_Bmag']][idx] = numpy.sqrt(0.08*0.08 +
+        #                                                    mags[2][idx]**2)
+
+        #             nmags[lbl['_Vmag']][idx]   = mags[0][idx] + 1.4688*cidx**3 \
+        #                                         - 2.3250*cidx**2 \
+        #                                         + 3.5143*cidx + 0.1496
+        #             nmags[lbl['_e_Vmag']][idx] = numpy.sqrt(0.05*0.05 + 
+        #                                                    mags[2][idx]**2)
+
+        #             nmags[lbl['_Rmag']][idx]   = mags[0][idx] + 1.1230*cidx**3 \
+        #                                         - 1.7849*cidx**2 \
+        #                                         + 2.5105*cidx + 0.1045
+        #             nmags[lbl['_e_Rmag']][idx] = numpy.sqrt(0.08*0.08 + 
+        #                                                    mags[2][idx]**2)
+                
+        #             nmags[lbl['_Imag']][idx]   = mags[0][idx] + 0.2963*cidx**3 \
+        #                                         - 0.4866*cidx**2 \
+        #                                         + 1.2816*cidx + 0.0724
+        #             nmags[lbl['_e_Imag']][idx] = numpy.sqrt(0.03*0.03 + 
+        #                                                    mags[2][idx]**2)
+        #         else:
+        #             for mag in lbl.keys():
+        #                 nmags[lbl[mag]][idx] = 99
+
+            # # append nmags arrays to catalog
+            # for key, idx in lbl.items():
+            #     self.add_field(key, nmags[idx])
+                
+            # # get rid of sources that have not been transformed
+            # self.data = self.data[self['_Vmag'] < 99]
+
+            # self.catalogname  += '_transformed'
+            # self.history += ', %d transformed to Warner %s (Vega)' % \
+            #                 (self.shape[0], targetfilter)
+            # self.magsystem = 'Vega'
+
+            # logging.info('%d sources sucessfully transformed to Warner %s' % \
+            #              (self.shape[0], targetfilter))
+            
+            # return self.shape[0]
 
 
                         

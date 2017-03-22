@@ -13,12 +13,19 @@ General Problems
    $PHOTPIPEDIR`` in a terminal), or (2) the command ``pp_run`` uses a
    symbolic link to ``pp_run.py``; if the former does not work, try
    the latter.
+   
+**Running the pipeline creates warnings (e.g., FutureWarning); what
+  should I do?**
+   Warnings are usually caused by Python module version issues and
+   cause no harm whatsoever. In theory, there should be no warnings,
+   but they happen occasionally. If you are haunted by some warnings,
+   let me know and I will try to resolve the issue.
 
+  
 pp_calibrate (Photometric Calibration)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **I keep getting output like `zeropoint for image.fits: Warning: 0 reference stars after source matching for frame image.ldac`. What does it mean?**
-
    It means that none of the reference stars with measured magnitudes
    in your field of view could be matched with a source in your
    image. As a result, the magnitudes in the photometry output files

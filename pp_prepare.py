@@ -34,7 +34,12 @@ import subprocess
 import argparse
 import shlex
 import time
-import callhorizons
+try:
+    import callhorizons
+except ImportError:
+    print('Module callhorizons not found. Please install with: pip install '
+          'callhorizons')
+    sys.exit()
 from astropy.io import fits
 
 # pipeline-specific modules
@@ -85,6 +90,13 @@ def prepare(filenames, obsparam, header_update, flipx=False,
                         ignore_missing_end='True')
     header = hdulist[0].header
 
+    # check if this is a single-extension FITS file
+    if float(header['NAXIS']) > 2.:
+        logging.error('This is not a single-extension FITS file. Please '
+                      'extract individual extensions and run them '
+                      'individually.')
+        sys.exit()
+    
     # keywords that have to be implanted into each image
     implants = {}
 
@@ -214,8 +226,7 @@ def prepare(filenames, obsparam, header_update, flipx=False,
                 if key not in obsparam.values():
                     header.remove(key)
             elif 'PV' in key and '_' in key:
-                if key not in obsparam.values():
-                    header.remove(key)
+                header.remove(key)
             elif key in ['CTYPE1', 'CRPIX1', 'CRVAL1', 'CROTA1',
                          'CROTA2', 'CFINT1', 'CTYPE2', 'CRPIX2',
                          'CRVAL2', 'CFINT2', 'LTM1_1', 'LTM2_2',
@@ -229,7 +240,6 @@ def prepare(filenames, obsparam, header_update, flipx=False,
                          'AP_2_0', 'BP_ORDER', 'BP_0_0', 'BP_0_1',
                          'BP_0_2', 'BP_1_0', 'BP_1_1', 'BP_2_0', 'CDELT1',
                          'CDELT2', 'CRDELT1', 'CRDELT2']:
-                # used by LOWELL31, LOWELL90
                 if key not in obsparam.values():
                     header.remove(key)
 
@@ -374,6 +384,20 @@ def prepare(filenames, obsparam, header_update, flipx=False,
         header['CRPIX2'] = (int(old_div(
                                 float(header[obsparam['extent'][1]]), 2)),
                             'PP: fake Coordinate reference pixel')
+
+        # plugin default distortion parameters, if available
+        if 'distort' in obsparam and 'functionof' in obsparam['distort']:
+            try:
+                pv_dict = obsparam['distort'][header[obsparam['distort']
+                                                     ['functionof']]]
+                for pv_key, pv_val in pv_dict.items():
+                    header[pv_key] = pv_val
+            except KeyError:
+                logging.error(('No distortion coefficients available for %s '
+                              '%s') % (obsparam['distort']['functionof'],
+                                       header[obsparam['distort']
+                                              ['functionof']]))
+        
         header['CD1_1'] = (xnorm * numpy.cos(this_rotate/180.*numpy.pi) *
                            obsparam['secpix'][0]*binning[0]/3600.,
                            'PP: fake Coordinate matrix')
