@@ -236,8 +236,8 @@ def derive_zeropoints(ref_cat, catalogs, filtername, minstars_external,
             minstars = int(minstars_external)
 
         # max 100 minstars
-        if minstars > 100:
-            minstars = 100
+        #if minstars > 100:
+        #    minstars = 100
 
 
         # perform clipping to reject one outlier at a time
