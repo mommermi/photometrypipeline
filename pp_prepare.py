@@ -220,10 +220,13 @@ def prepare(filenames, obsparam, header_update, flipx=False,
         header['PHOTFLAG'] = ('F', 'PP: data is not photometric (SCAMP)')
         header['PHOT_K'] = (0.05, 'PP: assumed extinction coefficient')
 
+        
         # remove keywords that might collide with fake wcs
         for key in list(header.keys()):
             if 'CD' in key and '_' in key:
-                if key not in obsparam.values():
+                # if key not in obsparam.values():
+                #     header.remove(key)
+                if not toolbox.if_val_in_dict(key, obsparam):
                     header.remove(key)
             elif 'PV' in key and '_' in key:
                 header.remove(key)
@@ -240,7 +243,7 @@ def prepare(filenames, obsparam, header_update, flipx=False,
                          'AP_2_0', 'BP_ORDER', 'BP_0_0', 'BP_0_1',
                          'BP_0_2', 'BP_1_0', 'BP_1_1', 'BP_2_0', 'CDELT1',
                          'CDELT2', 'CRDELT1', 'CRDELT2']:
-                if key not in obsparam.values():
+                if toolbox.if_val_in_dict(key, obsparam):
                     header.remove(key)
 
         # if GENERIC telescope, add implants to header

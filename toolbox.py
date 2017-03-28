@@ -201,3 +201,16 @@ def skycenter(catalogs, ra_key='ra.deg', dec_key='dec.deg'):
                          (old_div((max_dec-min_dec),2.))**2)
 
     return ra, dec, rad
+
+
+## miscellaneous tools
+
+def if_val_in_dict(target_val, dic):
+    """check if a value appears in a nested dict structure"""
+    for key, val in dic.items():
+        if type(val) is dict:
+            return if_val_in_dict(target_val, val)
+        elif type(val) is list:
+            return target_val in val
+        else:
+            return target_val == val

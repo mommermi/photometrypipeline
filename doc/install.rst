@@ -4,8 +4,8 @@ Installation and Setup
 Installation
 ------------
 
-Getting PP
-~~~~~~~~~~
+General Installation Instructions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 PP is available from `github`_. You can get the source code by typing
 into your terminal::
@@ -15,12 +15,12 @@ into your terminal::
 This will create a ``photometrypipeline/`` directory in your current
 directory. 
 
-Installing Additional Software
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Software Requirements
+.....................
 
 PP requires `git`_ for the installation, a number of non-standard
-Python 2.7 modules (available from the `Python Package Index`_ through
-`pip`_):
+Python modules (either Python2 or Python3; available from the `Python
+Package Index`_ through `pip`_):
 
 * `numpy`_
 * `scipy`_
@@ -30,18 +30,15 @@ Python 2.7 modules (available from the `Python Package Index`_ through
 * `callhorizons`_
 * `future`_ 
 * `pillow`_
-
   
 and some freely available software:
 
+* `imagemagick`_
 * `Source Extractor`_ 
-* `SCAMP`_  
-
-Installation walkthroughs for MAC OS and Ubuntu will be available here, soon!
+* `SCAMP`_ (please download the `latest development version`_)
   
-
 Setup
------
+.....
 
 In order to be able to use PP anywhere on your machine, you have to
 add the full path of the ``photometrypipeline/`` directory to your
@@ -50,11 +47,120 @@ add the full path of the ``photometrypipeline/`` directory to your
 directory (include these commands in your ``.bashrc``, ``.cshrc``, or
 ``.profile`` file.)
 
-In order to get the latest version of PP, simply change into
+
+Installation Instructions for Ubuntu 16.10
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Clone the PP github repo::
+
+  git clone https://github.com/mommermi/photometrypipeline
+
+Install software requirements for SCAMP, Source Extractor and imagemagick::
+
+  sudo apt-get install -y \
+         build-essential \
+	 libssl-dev \
+	 libffi-dev \
+	 git \
+	 sextractor \
+	 wget \
+	 imagemagick \
+	 curl \
+	 libplplot-dev \
+	 libshp-dev \
+	 libcurl4-gnutls-dev \
+	 liblapack3 liblapack-dev liblapacke liblapacke-dev \
+	 libfftw3-3 libfftw3-dev libfftw3-single3 \
+	 libatlas-base-dev
+
+Unpack SCAMP and install using::
+
+  ./configure --enable-threads
+  make
+  sudo make install
+
+Install Python modules::
+
+  pip install numpy scipy astropy astroquery matplotlib matplotlib callhorizons future pillow
+
+Add these lines to the ``.bashrc`` file in your home directory and
+replace ``<path>`` with the actual path to the PP directory::
+
+  # photometry pipeline setup export
+  PHOTPIPEDIR=<path>/photometrypipeline export
+  PATH=$PATH:~<path>/photometrypipeline/
+
+Kudos to `towicode`_ for figuring out the SCAMP requirements.
+  
+
+Installation Instructions for Mac OS (Sierra)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Install Anaconda: download Anaconda from https://www.continuum.io/downloads
+In your terminal window type one of the below and follow the instructions::
+  
+  Anaconda3-4.4.0-MacOSX-x86_64.sh
+  Anaconda2-4.4.0-MacOSX-x86_64.sh
+
+Install Homebrew::
+  
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  
+Install MacPorts by downloading the installer from their website:
+https://www.macports.org::
+
+  sudo port -v selfupdate
+
+Test if gcc will run by typing ``gcc`` in a bash terminal. If prompted
+to install command-line tools, follow the instructions to do so
+
+Update pip::
+
+  python -m pip install –-upgrade pip
+
+Install extra python modules in Anaconda::
+
+  pip install –-user numpy scipy matplotlib callhorizons future astroquery Pillow==2.6.1
+  pip install astropy
+  conda update astropy
+
+Install SExtractor::
+
+  brew install homebrew/science/sextractor
+
+Install SCAMP::
+
+  brew install homebrew/science/scamp
+
+Install extra software::
+
+  sudo port install wget
+  
+Install PP::
+  
+  git clone https://github.com/mommermi/photometrypipeline
+
+Add to ``\∼/.bash_profile`` file by replacing ``<username>`` with your
+system user name and ``<PyVersion>`` with the Python version you are
+using::
+
+  export PATH="$PATH:/home/<username>/.local/bin"
+  export PATH="$PATH:/Users/<username>/photometrypipeline" 
+  export PATH="$PATH:/Users/<username>/Library/Python/<PyVersion>/bin"
+
+Kudos to Annika Gustafsson and Colin Chandler for producing this
+summary and Kathryn Neugent for providing corrections.
+
+  
+Update your Version of PP
+-------------------------
+
+In order to update your version of PP, simply change into
 ``photometrypipeline/`` and type::
 
   git pull
 
+You should do this regularly as PP is still under constant development.
 
 Example Data
 ------------
@@ -145,7 +251,9 @@ and I will take care of implementing your telescope.
 .. _callhorizons: https://pypi.python.org/pypi/CALLHORIZONS
 .. _future: http://python-future.org/
 .. _pillow: http://python-pillow.org/
+.. _imagemagick: http://www.imagemagick.org/
 .. _Source Extractor: http://www.astromatic.net/software/sextractor
 .. _SCAMP: http://www.astromatic.net/software/scamp
-.. _r345: http://www.astromatic.net/wsvn/public/dl.php?repname=public+software.scamp&path=%2Ftrunk%2F&rev=0&isdir=1
+.. _latest development version: http://www.astromatic.net/wsvn/public/dl.php?repname=public+software.scamp&path=%2Ftrunk%2F&rev=0&isdir=1
+.. _towicode: https://github.com/towicode
 .. _mytelescopes.py: http://134.114.60.45/photometrypipeline/mytelescopes.py

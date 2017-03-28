@@ -245,7 +245,8 @@ class catalog(object):
                                       'max_records': int(max_sources), 
                                       'outputformat': 'VOTABLE',
                                       'coordformat': 'FLOAT',
-                                      'ndetections': ('>%d' % max_mag)}) 
+                                      'ndetections': ('>%d' % max_mag)},
+                             timeout=180) 
             
             # write query data into local file 
             outf = open('panstarrs.xml', 'wr') 
