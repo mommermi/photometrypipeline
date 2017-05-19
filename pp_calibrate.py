@@ -377,6 +377,11 @@ def calibrate(filenames, minstars, manfilter, manualcatalog,
                                 exptime_keyword=obsparam['exptime'],
                                 time_keyword='MIDTIMJD'), \
                 '(sources, columns) read from', filename)
+        else:
+            cat.read_ldac(ldac_filename, filename, maxflag=maxflag,
+                                object_keyword=obsparam['object'],
+                                exptime_keyword=obsparam['exptime'],
+                                time_keyword='MIDTIMJD')
 
         catalogs.append(cat)
 

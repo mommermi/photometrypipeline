@@ -33,6 +33,13 @@ import logging
 #import urllib.request, urllib.error, urllib.parse
 import time
 import sqlite3 as sql
+
+# translates numpy datatypes to sql-readable datatypes
+sql.register_adapter(numpy.float64, float)
+sql.register_adapter(numpy.float32, float)
+sql.register_adapter(numpy.int64, int)
+sql.register_adapter(numpy.int32, int)  
+
 try:
     from scipy import spatial
 except ImportError:
@@ -719,11 +726,13 @@ class catalog(object):
             if type(self.data[key][0]) == numpy.float32 \
                or type(self.data[key][0]) == numpy.float64:
                 table_cmd += "'%s' REAL" % db_key
-            if type(self.data[key][0]) == numpy.int16 \
+            elif type(self.data[key][0]) == numpy.int16 \
                or type(self.data[key][0]) == numpy.int32:
-                table_cmd += "'%s' INTEGER" % db_key
-            if type(self.data[key][0]) == numpy.string_:
-                table_cmd += "'%s' TEXT" % db_key
+                table_cmd += "'%s' INTEGER" % db_key 
+            elif type(self.data[key][0]) == numpy.string_:
+                table_cmd += "'%s' TEXT" % db_key 
+            else:
+                print('unknown data type: ' + type(self.data[key][0]))
             if key_idx < len(self.fields)-1:
                 table_cmd += ", "
 
@@ -733,6 +742,7 @@ class catalog(object):
         # create a data array in which data types are converted to SQL types
         sqltypes = {numpy.float32:numpy.float64, numpy.float64:numpy.float64,
                     numpy.int16:numpy.int64, numpy.int32:numpy.int64}
+
         data_cols = [self.data[key].astype(sqltypes[type(self.data[key][0])]) \
                      for key in self.fields]
         data = [[data_cols[j][i] for j in range(len(data_cols))] \
@@ -772,13 +782,13 @@ class catalog(object):
         db.execute("SELECT * FROM header")
         rows = db.fetchall()
 
-        self.catalogname = rows[0][0].encode('ascii')
-        self.origin      = rows[0][1].encode('ascii')
-        self.history     = rows[0][2].encode('ascii')
-        self.magsys      = rows[0][3].encode('ascii')
+        self.catalogname = rows[0][0]#.decode('utf-8')
+        self.origin      = rows[0][1]#.decode('utf-8')
+        self.history     = rows[0][2]#.decode('utf-8')
+        self.magsys      = rows[0][3]#.decode('utf-8')
         self.obstime[0]  = rows[0][4]
         self.obstime[1]  = rows[0][5]
-        self.obj         = rows[0][6].encode('ascii')
+        self.obj         = rows[0][6]#.decode('utf-8')
 
         # query database sources
         db.execute("SELECT * FROM data")
@@ -789,6 +799,10 @@ class catalog(object):
         type_dict = {float:numpy.float64, int:numpy.int64, str:numpy.string_}
         for key_idx, key in enumerate(db.description):
             fieldnames.append(key[0])
+            # if isinstance(rows[0][key_idx], bytes):
+            #     continue
+            #     # print(rows[0][key_idx])
+            #     # rows[0][key_idx] = rows[0][key_idx].decode('utf-8')
             types.append(type_dict[type(rows[0][key_idx])])
 
         # read in data in FITS_rec structure by creating a

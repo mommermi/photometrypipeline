@@ -66,14 +66,36 @@ def manual_positions(posfile, catalogs, display=True):
     option)"""
 
     if display:
-        print('# target positions as a function of time manually provided... ', end=' ')
+        print('# target positions as a function of time manually provided... ',
+              end=' ')
         sys.stdout.flush()
     logging.info('target positions as a function of time manually provided')
 
-    positions = numpy.genfromtxt(posfile, dtype=[('filename', 'S50'),
-                                                 ('ra', float),
-                                                 ('dec', float),
-                                                 ('MJD', float)])
+    # handle wildcard symbol
+    if posfile == 'all_objects':
+
+        objects = []
+        for filename in os.listdir('.'):
+            if 'positions_' in filename and '.dat' in filename:
+                objects.append(manual_positions(filename, catalogs,
+                                                display=False))
+
+        if display:
+            print(old_div(len(objects),len(catalogs)), 'object(s) found')
+
+        return (list(numpy.hstack(objects)))
+    
+    try:
+        positions = numpy.genfromtxt(posfile, dtype=[('filename', 'S50'),
+                                                     ('ra', float),
+                                                     ('dec', float),
+                                                     ('MJD', float),
+                                                     ('name', 'S30')])
+    except:
+        positions = numpy.genfromtxt(posfile, dtype=[('filename', 'S50'),
+                                                     ('ra', float),
+                                                     ('dec', float),
+                                                     ('MJD', float)])
 
     try:
         assert len(positions) == len(catalogs)
@@ -86,12 +108,19 @@ def manual_positions(posfile, catalogs, display=True):
 
     objects = []
     for cat_idx, cat in enumerate(catalogs):
-        objects.append({'ident'      : 'manual_target',
-                        'obsdate.jd' :  cat.obstime,
-                        'cat_idx'    :  cat_idx,
-                        'ra.deg'     :  positions[cat_idx]['ra'],
-                        'dec.deg'    :  positions[cat_idx]['dec']})
-
+        try:
+            objects.append({'ident'      : positions[cat_idx]['name'].decode('utf-8'),
+                            'obsdate.jd' :  cat.obstime,
+                            'cat_idx'    :  cat_idx,
+                            'ra.deg'     :  positions[cat_idx]['ra'],
+                            'dec.deg'    :  positions[cat_idx]['dec']})
+        except:
+            objects.append({'ident'      : 'manual_target',
+                            'obsdate.jd' :  cat.obstime,
+                            'cat_idx'    :  cat_idx,
+                            'ra.deg'     :  positions[cat_idx]['ra'],
+                            'dec.deg'    :  positions[cat_idx]['dec']})
+            
     if display:
         print(old_div(len(objects),len(catalogs)), 'object(s) found')
 
@@ -255,7 +284,7 @@ def fixed_targets(fixed_targets_file, catalogs, display=True):
     objects = []
     for obj in fixed_targets:
         for cat_idx, cat in enumerate(catalogs):
-            objects.append({'ident': obj['name'],
+            objects.append({'ident': obj['name'].decode('utf-8'),
                             'obsdate.jd': cat.obstime[0],
                             'cat_idx'   : cat_idx,
                             'ra.deg'    : obj['ra'],
@@ -339,7 +368,7 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
     output = {}
 
     ### read in database files (if necessary)
-    if type(catalogs[0]) == str:
+    if isinstance(catalogs[0], str):
         filenames = catalogs[:]
         catalogs = []
         for filename in filenames:
@@ -368,7 +397,7 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
     ### check for positions file
     if posfile is not None:
         objects += manual_positions(posfile, catalogs, display=display)
-
+        
     ### select a sufficiently bright star as control star
     objects += pick_controlstar(catalogs, display=display)
 
@@ -399,9 +428,9 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
         #     'potential target(s) per frame identified:', \
         #     ", ".join(set([obj['ident'] for obj in objects]))
 
-    logging.info('%d potential targets per frame identified: %s' %
-                 (int(old_div(len(objects),len(catalogs))),
-                  ", ".join(set([obj['ident'] for obj in objects]))))
+    # logging.info('%d potential targets per frame identified: %s' %
+    #              (int(old_div(len(objects),len(catalogs))),
+    #               ", ".join(set([obj['ident'] for obj in objects]))))
 
 
     ##### extract source data for identified targets
@@ -423,12 +452,18 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
                 continue
             if (obj['ra.deg'] > max_ra or obj['ra.deg'] < min_ra or
                 obj['dec.deg'] > max_dec or obj['dec.deg'] < min_dec):
+                if display:
+                    print('\"%s\" not in image %s' % (obj['ident'],
+                                                      cat.catalogname))
+                    logging.info('\"%s\" not in image %s' % (obj['ident'],
+                                                             cat.catalogname))
+
                 continue
             objects_thiscat.append(obj)
 
         if len(objects_thiscat) == 0:
             continue
-            
+
         # create a new catalog
         target_cat = catalog('targetlist:_'+cat.catalogname)
 
@@ -493,10 +528,14 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
 
     for target in targetnames:
 
+        if sys.version_info < (3, 0):
+            target = str(target)
+        
         output[target] = []
 
         if display:
             print('write photometry results for %s' % target)
+
         outf = open('photometry_%s.dat' %
                     target.translate(_pp_conf.target2filename), 'w')
         outf.write('#                          filename    julian_date '

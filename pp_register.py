@@ -119,6 +119,8 @@ def register(filenames, telescope, sex_snr, source_minarea, aprad,
                 cat = catalog(frame['ldac_filename'])
                 cat.read_ldac(frame['ldac_filename'], 
                               frame['fits_filename'],
+                              object_keyword=obsparam['object'],
+                              exptime_keyword=obsparam['exptime'],
                               maxflag=0)
                 ldac_catalogs.append(cat)
 

@@ -276,7 +276,6 @@ def extract_multiframe(filenames, parameters):
                  len(filenames))
     logging.info('extraction parameters: %s' % repr(parameters))
 
-
     # obtain telescope information from image header or override manually
     hdu = fits.open(filenames[0], ignore_missing_end=True, verify='silentfix')
 
@@ -361,6 +360,11 @@ def extract_multiframe(filenames, parameters):
     # }
     ###
 
+    # delete parameters to not have them stick around in memory
+    # if not deleted, might cause collisions with parameters['paramfile']
+    # in pp_photometry
+    del parameters
+    
     return output
 
 

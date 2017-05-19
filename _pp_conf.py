@@ -133,7 +133,7 @@ allcatalogs_magsys = {'URAT-1': 'Vega',
 # minimum number of reference sources in astrometric reference catalog
 # in one of the frames (middle one of sequence); try other catalog
 # if number of sources less than this number
-min_sources_astrometric_catalog = 20
+min_sources_astrometric_catalog = 10
 
 # how often to run SCAMP using one single catalog?
 n_registration_repetitions = 2

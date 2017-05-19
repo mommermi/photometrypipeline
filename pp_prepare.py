@@ -27,6 +27,7 @@ from __future__ import division
 from past.utils import old_div
 import numpy
 import os
+import re
 import sys
 import shutil
 import logging
@@ -223,7 +224,7 @@ def prepare(filenames, obsparam, header_update, flipx=False,
         
         # remove keywords that might collide with fake wcs
         for key in list(header.keys()):
-            if 'CD' in key and '_' in key:
+            if re.match('^CD[1,2]_[1,2]', key) is not None:
                 # if key not in obsparam.values():
                 #     header.remove(key)
                 if not toolbox.if_val_in_dict(key, obsparam):
@@ -235,7 +236,8 @@ def prepare(filenames, obsparam, header_update, flipx=False,
                          'CRVAL2', 'CFINT2', 'LTM1_1', 'LTM2_2',
                          'WAT0_001', 'LTV1', 'LTV2', 'PIXXMIT',
                          'PIXOFFST', 'PC1_1', 'PC1_2', 'PC2_1', 'PC2_2',
-                         'CUNIT1', 'CUNIT2', 'A_ORDER', 'A_0_0',
+                         #'CUNIT1', 'CUNIT2',
+                         'A_ORDER', 'A_0_0',
                          'A_0_1', 'A_0_2', 'A_1_0', 'A_1_1', 'A_2_0',
                          'B_ORDER', 'B_0_0', 'B_0_1', 'B_0_2', 'B_1_0',
                          'B_1_1', 'B_2_0', 'AP_ORDER', 'AP_0_0',
@@ -246,6 +248,15 @@ def prepare(filenames, obsparam, header_update, flipx=False,
                 if toolbox.if_val_in_dict(key, obsparam):
                     header.remove(key)
 
+        # normalize CUNIT keywords
+        try:
+            if 'degree' in header['CUNIT1'].lower():
+                header['CUNIT1'] = ('deg')
+            if 'degree' in header['CUNIT2'].lower():
+                header['CUNIT2'] = ('deg')
+        except KeyError:
+            pass
+                    
         # if GENERIC telescope, add implants to header
         if obsparam['telescope_keyword'] is 'GENERIC':
             for key, val in list(implants.items()):
@@ -286,6 +297,18 @@ def prepare(filenames, obsparam, header_update, flipx=False,
         else:
             header['AIRMASS'] = (1, 'PP: fake airmass')
 
+        # check if filter can be translated by PP
+        try:
+            obsparam['filter_translations'][header[obsparam['filter']]]
+        except KeyError:
+            logging.warning('cannot translate filter keyword \"' +
+                          header[obsparam['filter']] +
+                          '\"; assume clear filter')
+            header[obsparam['filter']] = 'clear'
+        header['FILTER'] = (header[obsparam['filter']], 'PP:copied')
+
+
+            
         # perform header update
         for key, value in list(header_update.items()):
             if key in header:

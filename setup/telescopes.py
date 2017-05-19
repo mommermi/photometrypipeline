@@ -997,12 +997,12 @@ wiyn09hdi_param = {
 
 # Generic telescope (e.g., amateur telescope)
 generic_param = {
-    'telescope_instrument': 'Generic',  # telescope/instrument name
-    'telescope_keyword': 'GENERIC',  # telescope/instrument keyword
-    'observatory_code': None,  # MPC observatory code
-    'secpix': (None, None),  # pixel size (arcsec)
-    # before binning
-    'ext_coeff': 0.05,  # typical extinction coefficient
+    'telescope_instrument' : 'Generic', # telescope/instrument name
+    'telescope_keyword'    : 'GENERIC',     # telescope/instrument keyword
+    'observatory_code'     : '500',         # MPC observatory code
+    'secpix'               : (None, None), # pixel size (arcsec)
+                                               # before binning
+    'ext_coeff'            : 0.05,          # typical extinction coefficient
 
     # image orientation preferences
     'flipx': False,
@@ -1755,6 +1755,72 @@ kmtnets_param = {
     'dont_remove': 'CCD_NAME'
 }
 
+# Flagstaff Robotic survey telescopes
+frost_param = {
+    'telescope_instrument' : 'FRoST', # telescope/instrument name
+    'telescope_keyword'    : 'FROST',      # telescope/instrument keyword
+    'observatory_code'     : '688',         # MPC observatory code
+    'secpix'               : (2.81, 2.81), # pixel size (arcsec)
+                                               # before binning
+    'ext_coeff'            : 0.05,          # typical extinction coefficient
+
+
+    # image orientation preferences
+    'flipx'                : True,
+    'flipy'                : False,
+    'rotate'               : 0,
+
+    # instrument-specific FITS header keywords
+    'binning'              : ('CCDBIN1', 'CCDBIN2'), # binning in x/y
+    'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
+    'ra'                   : 'RA',  # telescope pointing, RA
+    'dec'                  : 'DEC', # telescope pointin, Dec 
+    'radec_separator'      : 'XXX',   # RA/Dec hms separator, use 'XXX'
+                                    # if already in degrees
+    'date_keyword'         : 'DATE-OBS', # obs date/time
+                                                  # keyword; use
+                                                  # 'date|time' if
+                                                  # separate
+    'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
+                                         # (usually provided by
+                                         # pp_prepare
+    'object'               : 'OBJECT',  # object name keyword 
+    'filter'               : 'FILTER',  # filter keyword
+    'filter_translations'  : {'clear': 'R'},
+                             # filtername translation dictionary
+    'exptime'              : 'EXPTIME', # exposure time keyword (s)
+    'airmass'              : 'AIRMASS', # airmass keyword
+
+
+    # source extractor settings
+    'source_minarea'       : 5, # default sextractor source minimum N_pixels
+    'source_snr': 3, # default sextractor source snr for registration
+    'aprad_default'        : 3, # default aperture radius in px 
+    'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
+    'sex-config-file'      : rootpath+'/setup/frost.sex',
+    'mask_file'            : {},
+    #                        mask files as a function of x,y binning
+
+    # registration settings (Scamp)
+    'scamp-config-file'    : rootpath+'/setup/frost.scamp', 
+    'reg_max_mag'          : 18,  
+    'reg_search_radius'    : 0.5, # deg       
+    'source_tolerance': 'high', 
+    
+    # swarp settings
+    'copy_keywords'        : ('TELESCOP,INSTRUME,FILTER,EXPTIME,OBJECT,' +
+                              'DATE-OBS,TIME-OBS,RA,DEC,SECPIX,AIRMASS,' +
+                              'TEL_KEYW'),
+    #                         keywords to be copied in image
+    #                         combination using swarp
+    'swarp-config-file'    : rootpath+'/setup/frost.swarp',  
+
+    # default catalog settings
+    'astrometry_catalogs'  : ['GAIA'], 
+    'photometry_catalogs'  : ['SDSS-R9', 'APASS9', 'PANSTARRS', '2MASS']
+}
+
+
 ##### access functions for telescope configurations
 
 implemented_telescopes = ['VATT4K',
@@ -1774,6 +1840,7 @@ implemented_telescopes = ['VATT4K',
                           'SOARGOODMAN',
                           'OHP120',
                           #'SL74SAH',
+                          'FROST',
                           'TNGDOLORES',
                           'GENERIC',
                           'KPNO4MOS1',
@@ -1806,12 +1873,14 @@ instrument_identifiers = {'= "Vatt4k"': 'VATT4K',
                           'C4': 'RATIR',
                           #'SHA':               'SL74SHA',
                           'Goodman Spectrograph': 'SOARGOODMAN',
-                          'Andor Tech': 'OHP120',
-                          'LRS': 'TNGDOLORES',
-                          'mosaic_1_1': 'KPNO4MOS1',
-                          'Mosaic3': 'KPNO4MOS3',
+                          'Andor Tech':        'OHP120',
+                          'LRS':               'TNGDOLORES',
+                          'mosaic_1_1':        'KPNO4MOS1',
+                          'mosaic_1':          'KPNO4MOS1',
+                          'KMTS':              'KMTNETS',
+                          'SI Model 620 SN 263': 'FROST'
                           'newfirm': 'KPNO4NEWF',
-                          'SALTICAM': 'SALTSALTICAM'}
+                          'Mosaic3': 'KPNO4MOS3'}
 
 # translate telescope keyword into parameter set defined here
 telescope_parameters = {'VATT4K': vatt4k_param,
@@ -1831,13 +1900,14 @@ telescope_parameters = {'VATT4K': vatt4k_param,
                         'GENERIC': generic_param,
                         'RATIR': ratir_param,
                         #'SL74SHA':       sl74sha_param,
-                        'SOARGOODMAN': soargoodman_param,
-                        'OHP120': ohp120_param,
-                        'TNGDOLORES': tngdolores_param,
-                        'KPNO4MOS1': kpno4mos1_param,
+                        'SOARGOODMAN':   soargoodman_param,
+                        'OHP120':        ohp120_param,
+                        'TNGDOLORES':    tngdolores_param,
+                        'KPNO4MOS1':     kpno4mos1_param,
+                        'KMTNETS':       kmtnets_param,
+                        'FROST':         frost_param
                         'KPNO4MOS3': kpno4mos3_param,
-                        'KPNO4NEWF': kpno4newf_param,
-                        'SALTSALTICAM': saltsalticam_param}
+                        'KPNO4NEWF': kpno4newf_param}
 
 #### append mytelescopes.py, if available
 #

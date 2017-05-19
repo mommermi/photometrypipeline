@@ -7,6 +7,8 @@ dump/
 # stuff we don't want to track
 setup/mytelescopes.py
 doc/_build/
+ppident_asteroids*
+ppident_variablestars*
 
 ### Python ###
 ## Byte-compiled / optimized / DLL files

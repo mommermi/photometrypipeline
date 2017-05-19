@@ -148,6 +148,8 @@ def curve_of_growth_analysis(filenames, parameters,
                 logging.info('proceeding with background sources analysis')
                 parameters['background_only'] = True
             else:
+                logging.info('ephemerides for %s pulled from Horizons' %
+                             targetname)
                 target_ra, target_dec = eph[0]['RA'], eph[0]['DEC']
 
 
@@ -186,7 +188,8 @@ def curve_of_growth_analysis(filenames, parameters,
             n_src = 50 # use only 50 sources
             for idx, src in enumerate(data.data[:n_src]):
                 if (numpy.any(numpy.isnan(src['FLUX_APER'])) or
-                    numpy.any(numpy.isnan(src['FLUXERR_APER']))):
+                    numpy.any(numpy.isnan(src['FLUXERR_APER'])) or
+                    src['FLAGS'] > 3):
                     continue
 
                 # create growth curve
@@ -196,8 +199,6 @@ def curve_of_growth_analysis(filenames, parameters,
                                       src['FLUXERR_APER']/\
                                       max(old_div(src['FLUX_APER'],\
                                           src['FLUXERR_APER'])))
-
-
 
 
     ###### investigate curve-of-growth

@@ -27,6 +27,7 @@ import os
 import sys
 import numpy
 import logging
+import astropy
 from astropy.io import fits
 from astropy import wcs
 import datetime
@@ -253,8 +254,8 @@ def create_index(filenames, directory, obsparam, display=False):
 
         plt.figure(figsize=(5, 5))
 
-        img = plt.imshow(imgdat, cmap='gray', vmin=median-0.5*std,
-                         vmax=median+0.5*std, origin='lower')
+        img = plt.imshow(imgdat, cmap='gray', vmin=median-1.5*std,
+                         vmax=median+1.5*std, origin='lower')
         # remove axes
         plt.axis('off')
         img.axes.get_xaxis().set_visible(False)
@@ -346,8 +347,8 @@ def add_registration(data, extraction_data):
                 header[key] = float(val)
                 
         plt.figure(figsize=(5, 5))
-        img = plt.imshow(imgdat, cmap='gray', vmin=median-0.5*std,
-                         vmax=median+0.5*std, origin='lower')
+        img = plt.imshow(imgdat, cmap='gray', vmin=median-1.5*std,
+                         vmax=median+1.5*std, origin='lower')
         # remove axes
         plt.axis('off')
         img.axes.get_xaxis().set_visible(False)
@@ -672,8 +673,8 @@ def add_calibration(data):
                 header[key] = float(val)
 
         plt.figure(figsize=(5,5))
-        img = plt.imshow(imgdat, cmap='gray', vmin=median-0.5*std,
-                         vmax=median+0.5*std, origin='lower')
+        img = plt.imshow(imgdat, cmap='gray', vmin=median-1.5*std,
+                         vmax=median+1.5*std, origin='lower')
         # remove axes
         plt.axis('off')
         img.axes.get_xaxis().set_visible(False)
@@ -751,6 +752,10 @@ def add_results(data):
 
     data['lightcurveplots'] = {}
     for target in data['targetnames']:
+
+        if sys.version_info < (3, 0):
+            target = str(target)
+            
         logging.info('create lightcurve plot for %s' % target)
         plt.plot()
         plt.title(target)
@@ -775,6 +780,10 @@ def add_results(data):
     data['gifs'] = {}
     boxsize = 300 # thumbnail boxsize
     for target in data['targetnames']:
+
+        if sys.version_info < (3, 0):
+            target = str(target)
+            
         data['thumbnailplots'][target] = []
         for dat in data[target]:
             for fitsfilename in ['.fits', '.fit']:
@@ -915,6 +924,10 @@ def add_results(data):
     ### create results website for each target
     data['resultswebsites'] = {}
     for target in data['targetnames']:
+
+        if sys.version_info < (3, 0):
+            target = str(target)
+
         html  = "<H2>%s - Photometric Results</H2>\n" % target
         html += "<P><IMG SRC=\"%s\">\n" % \
                 data['lightcurveplots'][target].split('.diagnostics/')[1]
