@@ -577,8 +577,8 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
                            ('%3d ' % dat[14]) +
                            ('%s\n' % dat[13].split(';')[0]))
 
-        outf.writelines('#\n# [1]: Horizons_RA - image_RA [arcsec]\n'+
-                        '# [2]: Horizons_DDec - image_Dec [arcsec]\n'+
+        outf.writelines('#\n# [1]: predicted_RA - image_RA [arcsec]\n'+
+                        '# [2]: predicted_Dec - image_Dec [arcsec]\n'+
                         '# [3,4]: manual target offsets in RA and DEC ' +
                         '[arcsec]\n'+
                         '# [5]: exposure time (s)\n'+

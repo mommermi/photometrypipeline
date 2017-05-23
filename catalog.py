@@ -481,8 +481,10 @@ class catalog(object):
                                      'e_DEJ2000', 'umag', 'e_umag',
                                      'gmag', 'e_gmag', 'rmag', 'e_rmag',
                                      'imag', 'e_imag', 'zmag', 'e_zmag'],
-                            column_filters={"gmag":
-                                            ("<%f" % max_mag)},
+                            column_filters={"gmag": ("<%f" % max_mag),
+                                            "mode": "1",
+                                            "q_mode" "+"
+                            },
                             row_limit = max_sources)
             try:
                 self.data = vquery.query_region(field,
@@ -1364,9 +1366,10 @@ class catalog(object):
 # print cat2.fields
 
 # cat3 = catalog('SDSS-R9')
-# print cat3.download_catalog(80, 40, 0.5, 10000), 'sources grabbed from', cat3.catalogname
-#print cat3[305]
-#print cat3.fields
+# print(cat3.download_catalog(329.50922672, -2.33703204, 0.001, 10000), 'sources grabbed from', cat3.catalogname)
+# print(cat3.data['imag'])
+
+
 
 # cat4 = catalog('USNO-B1')
 # print cat4.download_catalog(80, 0, 0.5, 10000), 'sources grabbed from', cat4.catalogname
