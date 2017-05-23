@@ -1878,7 +1878,7 @@ instrument_identifiers = {'= "Vatt4k"': 'VATT4K',
                           'mosaic_1_1':        'KPNO4MOS1',
                           'mosaic_1':          'KPNO4MOS1',
                           'KMTS':              'KMTNETS',
-                          'SI Model 620 SN 263': 'FROST'
+                          'SI Model 620 SN 263': 'FROST',
                           'newfirm': 'KPNO4NEWF',
                           'Mosaic3': 'KPNO4MOS3'}
 
@@ -1905,7 +1905,7 @@ telescope_parameters = {'VATT4K': vatt4k_param,
                         'TNGDOLORES':    tngdolores_param,
                         'KPNO4MOS1':     kpno4mos1_param,
                         'KMTNETS':       kmtnets_param,
-                        'FROST':         frost_param
+                        'FROST':         frost_param,
                         'KPNO4MOS3': kpno4mos3_param,
                         'KPNO4NEWF': kpno4newf_param}
 
