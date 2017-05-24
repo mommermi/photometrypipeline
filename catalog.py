@@ -483,8 +483,7 @@ class catalog(object):
                                      'imag', 'e_imag', 'zmag', 'e_zmag'],
                             column_filters={"gmag": ("<%f" % max_mag),
                                             "mode": "1",
-                                            "q_mode" "+"
-                            },
+                                            "q_mode": "+"},
                             row_limit = max_sources)
             try:
                 self.data = vquery.query_region(field,
