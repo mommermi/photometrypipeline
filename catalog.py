@@ -1,4 +1,4 @@
-""" 
+"""
 CATALOG - class structure for dealing with astronomical catalogs,
           FITS_LDAC files, and sqlite databases.
 
@@ -7,7 +7,7 @@ version 0.9, 2016-01-27, michael.mommert@nau.edu
 from __future__ import print_function
 from __future__ import division
 
-# Photometry Pipeline 
+# Photometry Pipeline
 # Copyright (C) 2016  Michael Mommert, michael.mommert@nau.edu
 
 # This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ from __future__ import division
 
 from past.utils import old_div
 import os
-import sys 
+import sys
 import numpy
 import logging
 #import urllib.request, urllib.error, urllib.parse
@@ -71,18 +71,18 @@ if sys.version_info > (3,0):
 
 
 # pipeline-related modules (only needed for testing)
-import _pp_conf 
+import _pp_conf
 
 # setup logging
-logging.basicConfig(filename = _pp_conf.log_filename, 
+logging.basicConfig(filename = _pp_conf.log_filename,
                     level    = _pp_conf.log_level,
-                    format   = _pp_conf.log_formatline, 
+                    format   = _pp_conf.log_formatline,
                     datefmt  = _pp_conf.log_datefmt)
 
 
 class catalog(object):
     def __init__(self, catalogname, display=False):
-        self.data         = None # will be an astropy table 
+        self.data         = None # will be an astropy table
         self.catalogname  = catalogname
         self.obstime      = [None, None] # observation midtime (JD) +
                                          # duration
@@ -91,7 +91,7 @@ class catalog(object):
         self.history      = '' # catalog history
         self.magsys       = '' # [AB|Vega|instrumental]
         self.display      = display
-        
+
     #### data access functions
 
     @property
@@ -103,11 +103,11 @@ class catalog(object):
             return (len(self.data), len(self.fields))
         except AttributeError:
             return (len(self.data), len(self.data.columns))
-        
+
     @property
     def fields(self):
-        """ 
-        return: array of all available fields 
+        """
+        return: array of all available fields
         """
         return self.data.columns
 
@@ -121,7 +121,7 @@ class catalog(object):
     ##### data manipulation functions
 
     def reject_sources_other_than(self, condition):
-        """ 
+        """
         reject sources based on condition
         input: condition
         return: number of sources left
@@ -131,14 +131,14 @@ class catalog(object):
 
         self.data = self.data[condition]
 
-        logging.info('%s:reject %s sources' % 
+        logging.info('%s:reject %s sources' %
                      (self.catalogname, n_raw-self.shape[0]))
-                     
+
         return len(self.data)
 
 
     def reject_sources_with(self, condition):
-        """ 
+        """
         reject sources based on condition
         input: condition
         return: number of sources left
@@ -147,12 +147,12 @@ class catalog(object):
         n_raw = self.shape[0]
         self.data = self.data[~condition]
 
-        logging.info('%s:reject %s sources' % 
+        logging.info('%s:reject %s sources' %
                      (self.catalogname, n_raw-self.shape[0]))
-                     
+
         return n_raw - len(self.data)
 
-        
+
     def add_field(self, field_name, field_array, field_type='D'):
         """
         single-field wrapper for add_fields
@@ -160,13 +160,13 @@ class catalog(object):
         ### numpy.recarray treatment
         #return self.add_fields([field_name], [field_array], [field_type])
 
-        ### astropy.table treatment 
+        ### astropy.table treatment
         return self.data.add_column(Column(field_array, name=field_name,
                                            format=field_type))
 
 
     def add_fields(self, field_names, field_arrays, field_types):
-        """ 
+        """
         add fields to self.data
         input: field_names, field_arrays, field_types
         output: number of added fields
@@ -176,27 +176,27 @@ class catalog(object):
 
         if self.data is None:
             self.data = Table()
-        
+
         for i in range(len(field_names)):
             self.data.add_column(Column(numpy.array(field_arrays[i]),
-                                        name=field_names[i], 
+                                        name=field_names[i],
                                         format=field_types[i]))
 
         return len(field_arrays)
 
-    
+
 
 
     ##### data io
 
     ### online catalog access
-        
+
     def download_catalog(self, ra_deg, dec_deg, rad_deg,
-                         max_sources, save_catalog=False, 
+                         max_sources, save_catalog=False,
                          max_mag=21):
-        """ 
+        """
         download existing catalog from VIZIER server using self.catalogname
-        input: ra_deg, dec_deg, rad_deg, max_sources, (display_progress), 
+        input: ra_deg, dec_deg, rad_deg, max_sources, (display_progress),
                (sort=['ascending', 'descending', None])
         return: number of sources downloaded
 
@@ -218,7 +218,7 @@ class catalog(object):
         logging.info(('query Vizier for %s at %7.3f/%+8.3f in ' \
                    + 'a %.2f deg radius') % \
                    (self.catalogname, ra_deg, dec_deg, rad_deg))
-        
+
         field = coord.SkyCoord(ra=ra_deg, dec=dec_deg, unit=(u.deg, u.deg),
                                frame='icrs')
 
@@ -348,14 +348,14 @@ class catalog(object):
 
             self.data.add_column(Column(numpy.ones(len(self.data))*2457023.5,
                                         name='epoch_jd', unit=u.day))
-            
+
             ### TBD:
             # - implement proper error ellipse handling
             # - implement propor motion handling for DR2
-            
+
         elif self.catalogname == '2MASS':
             # photometric catalog
-            vquery = Vizier(columns=['2MASS', 'RAJ2000', 'DEJ2000', 'errMaj', 
+            vquery = Vizier(columns=['2MASS', 'RAJ2000', 'DEJ2000', 'errMaj',
                                      'errMin', 'errPA', 'Jmag', 'e_Jmag',
                                      'Hmag', 'e_Hmag', 'Kmag', 'e_Kmag'],
                             column_filters={"Jmag":
@@ -374,14 +374,14 @@ class catalog(object):
 
             ### rename column names using PP conventions
             self.data.rename_column('_2MASS', 'ident')
-            self.data.rename_column('RAJ2000', 'ra.deg')            
+            self.data.rename_column('RAJ2000', 'ra.deg')
             self.data.rename_column('DEJ2000', 'dec.deg')
             self.data['mag'] = self.data['Jmag'] # use J as default mag
-            
+
             ### determine RA and Dec positional uncertainties and
             #   add respective columns
             self.data['errPA'][self.data['errPA'] == 0] = 1 # workaround
-            
+
             arc_xopt = numpy.arctan(-self.data['errMin']/self.data['errMaj']*
                                     numpy.tan(self.data['errPA'].to(u.rad)))
             ra_err  = abs(self.data['errMaj']*numpy.cos(arc_xopt)*
@@ -401,7 +401,7 @@ class catalog(object):
                           numpy.cos(self.data['errPA'].to(u.rad)))
             self.data.add_column(Column(data=dec_err*1000,
                                         name='e_dec.deg', unit=u.mas), index=3)
-            
+
             # remove error ellipse columns
             self.data.remove_column('errMaj')
             self.data.remove_column('errMin')
@@ -504,7 +504,7 @@ class catalog(object):
             self.data.rename_column('e_DEJ2000', 'e_dec.deg')
 
             # perform correction to AB system for SDSS
-            # http://www.sdss3.org/dr8/algorithms/fluxcal.php#SDSStoAB 
+            # http://www.sdss3.org/dr8/algorithms/fluxcal.php#SDSStoAB
             self.data['umag'] -= 0.04
             self.data['zmag'] += 0.02
 
@@ -587,9 +587,9 @@ class catalog(object):
 
         # convert all coordinate uncertainties to degrees
         self.data['e_ra.deg'] = self.data['e_ra.deg'].to(u.deg)
-        self.data['e_dec.deg'] = self.data['e_dec.deg'].to(u.deg)        
+        self.data['e_dec.deg'] = self.data['e_dec.deg'].to(u.deg)
 
-        
+
         # set catalog magnitude system
         self.magsystem = _pp_conf.allcatalogs_magsys[self.catalogname]
 
@@ -598,16 +598,16 @@ class catalog(object):
             self.write_ldac(self.catalogname+'.cat')
 
         return self.shape[0]
-        
 
-    
+
+
     ### FITS/LDAC interface
 
     def read_ldac(self, filename, fits_filename=None, maxflag=None,
                   time_keyword='MIDTIMJD', exptime_keyword='EXPTIME',
                   object_keyword='OBJECT', telescope_keyword='TEL_KEYW'):
-        """ 
-        read in FITS_LDAC file 
+        """
+        read in FITS_LDAC file
         input: LDAC filename
         return: (number of sources, number of fields)
         """
@@ -616,12 +616,12 @@ class catalog(object):
         hdulist  = fits.open(filename, ignore_missing_end=True)
 
         if len(hdulist) < 3:
-            print(('ERROR: %s seems to be empty; check LOG file if ' + 
+            print(('ERROR: %s seems to be empty; check LOG file if ' +
                    'Source Extractor ran properly') % filename)
-            logging.error(('ERROR: %s seems to be empty; check LOG file if ' + 
+            logging.error(('ERROR: %s seems to be empty; check LOG file if ' +
                    'Source Extractor ran properly') % filename)
             return None
-        
+
 
         # load data array
         self.data = Table(hdulist[2].data)
@@ -642,7 +642,7 @@ class catalog(object):
 
         # read data from image header, if requested
         if fits_filename is not None:
-            fitsheader = fits.open(fits_filename, 
+            fitsheader = fits.open(fits_filename,
                                    ignore_missing_end=True)[0].header
             self.obstime[0] = float(fitsheader[time_keyword])
             self.obstime[1] = float(fitsheader[exptime_keyword])
@@ -653,18 +653,18 @@ class catalog(object):
             self.data.rename_column('XWIN_WORLD', 'ra.deg')
         if 'YWIN_WORLD' in self.fields:
             self.data.rename_column('YWIN_WORLD', 'dec.deg')
-        
-        logging.info('read %d sources in %d columns from LDAC file %s' % 
+
+        logging.info('read %d sources in %d columns from LDAC file %s' %
                      (self.shape[0], self.shape[1], filename))
 
         hdulist.close()
 
         return self.shape
 
-    
+
     def write_ldac(self, ldac_filename):
-        """ 
-        write data in new FITS_LDAC file (mainly for use in SCAMP) 
+        """
+        write data in new FITS_LDAC file (mainly for use in SCAMP)
         input: filename, ra/dec field names, projection_type
         return: number of sources written to file
         """
@@ -673,12 +673,12 @@ class catalog(object):
         primaryhdu = fits.PrimaryHDU(header=fits.Header())
 
         ### create header table
-        hdr_col = fits.Column(name='Field Header Card', format='1680A', 
+        hdr_col = fits.Column(name='Field Header Card', format='1680A',
                               array=["obtained through Vizier"])
         hdrhdu = fits.BinTableHDU.from_columns(fits.ColDefs([hdr_col]))
         hdrhdu.header['EXTNAME'] = ('LDAC_IMHEAD')
         #hdrhdu.header['TDIM1'] = ('(80, 36)') # remove?
-            
+
         ### create data table
         colname_dic = {'ra.deg': 'XWIN_WORLD', 'dec.deg': 'YWIN_WORLD',
                        'e_ra.deg': 'ERRAWIN_WORLD',
@@ -717,12 +717,12 @@ class catalog(object):
                                      format='1D',
                                      unit='yr',
                                      array=numpy.ones(len(self.data))*2015.0))
-                
+
         datahdu = fits.BinTableHDU.from_columns(fits.ColDefs(data_cols))
         datahdu.header['EXTNAME'] = ('LDAC_OBJECTS')
-        
+
         nsrc = len(self.data)
-            
+
         # # combine HDUs and write file
         hdulist = fits.HDUList([primaryhdu, hdrhdu, datahdu])
         if float(astropyversion.split('.')[1]) >= 3:
@@ -732,14 +732,14 @@ class catalog(object):
 
         logging.info('wrote %d sources from %s to LDAC file' %
                      (nsrc, ldac_filename))
-        
+
         return nsrc
 
 
     ### ascii interface
 
     def write_ascii(self, filename):
-        """ 
+        """
         write catalog to ascii table
         input: target filename
         return: number of sources written to file
@@ -759,19 +759,19 @@ class catalog(object):
                 formatline += '%15d'
 
         # write data into file
-        numpy.savetxt(filename, self.data, fmt=formatline, 
+        numpy.savetxt(filename, self.data, fmt=formatline,
                       header=legend+headerline)
 
-        logging.info('wrote %d sources from %s to ASCII file %s' % 
+        logging.info('wrote %d sources from %s to ASCII file %s' %
                      (self.shape[0], self.catalogname, filename))
-        
+
         return self.shape[0]
-    
-    
+
+
     ### SQLite interface
 
     def write_database (self, filename):
-        """ 
+        """
         write catalog object to SQLite database file
         input: target filename
         output: number of sources written to file
@@ -786,9 +786,9 @@ class catalog(object):
         db.execute("CREATE TABLE header (" + \
                    "[name] TEXT, [origin] TEXT, [description] TEXT, " + \
                    "[magsys] TEXT, [obstime] REAL, [exptime] REAL, [obj] TEXT)")
-        db.execute("INSERT INTO header VALUES (?,?,?,?,?,?,?)", 
+        db.execute("INSERT INTO header VALUES (?,?,?,?,?,?,?)",
                    (self.catalogname, self.origin, self.history,
-                    self.magsys, self.obstime[0], self.obstime[1], 
+                    self.magsys, self.obstime[0], self.obstime[1],
                     self.obj))
 
 
@@ -823,21 +823,21 @@ class catalog(object):
         db.executemany("INSERT INTO data VALUES (" + \
                        ','.join(['?' for i in range(len(self.fields))]) + \
                        ')', data)
-        
+
         db_conn.commit()
 
         # return number of objects written to database
         db.execute("SELECT COUNT(DISTINCT %s) FROM data" % self.fields[0].name)
         n_obj = db.fetchall()[0][0]
-        
+
         logging.info('wrote %d sources from catalog %s to database file %s' %
-                     (n_obj, " | ".join([self.catalogname, self.origin, 
+                     (n_obj, " | ".join([self.catalogname, self.origin,
                                          self.history]),
                       filename))
 
         return n_obj
 
-    
+
     def read_database (self, filename):
         """ read in photometry database into catalog """
 
@@ -894,14 +894,14 @@ class catalog(object):
         self.data = Table(tbhdu.data)
 
         return self.shape[0]
-            
-       
+
+
 
     ##### filter transformations
 
     def lin_func(self, x, a, b):
         return a*x + b
-    
+
     def transform_filters (self, targetfilter):
         """
         transform a given catalog into a different filter band; crop the
@@ -912,14 +912,14 @@ class catalog(object):
         """
 
         ### TBD: modify this function to make use of table functionality
-        
+
         if len(self.data) == 0:
             return 0
 
         ### SDSS to BVRI
-        ### transformations based on Chonis & Gaskell 2008, AJ, 135 
-        if (('SDSS' in self.catalogname) and 
-            (targetfilter in {'B', 'V', 'R', 'I'}) and 
+        ### transformations based on Chonis & Gaskell 2008, AJ, 135
+        if (('SDSS' in self.catalogname) and
+            (targetfilter in {'B', 'V', 'R', 'I'}) and
             (self.magsystem == 'AB')):
 
             logging.info(('trying to transform %d SDSS sources to ' \
@@ -934,15 +934,15 @@ class catalog(object):
                                 self['e_umag']])
 
             # ### template for adding astropy.table columns
-            # self.data.add_column(Column(self.data['Jmag']+1.7495*cidx**3 
+            # self.data.add_column(Column(self.data['Jmag']+1.7495*cidx**3
             #                             - 2.7785*cidx**2
             #                             + 5.215*cidx + 0.1980,
             #                             name='_Bmag',
             #                             unit=u.mag))
 
 
-            
-            # lbl   = {'_Bmag':0 , '_e_Bmag': 1, '_Vmag': 2, '_e_Vmag': 3, 
+
+            # lbl   = {'_Bmag':0 , '_e_Bmag': 1, '_Vmag': 2, '_e_Vmag': 3,
             #          '_Rmag': 4, '_e_Rmag': 5, '_Imag': 6, '_e_Imag': 7}
             # nmags = [numpy.zeros(self.shape[0]) for i in range(len(lbl))]
 
@@ -952,7 +952,7 @@ class catalog(object):
                        (mags[0] >= 14.5)        & (mags[0] < 19.5) & \
                        (mags[1] >= 14.5)        & (mags[1] < 19.5) & \
                        (mags[2] >= 14.5)        & (mags[2] < 19.5)
-            filtered_mags = numpy.array([mags[i][keep_idc] 
+            filtered_mags = numpy.array([mags[i][keep_idc]
                                          for i in range(len(mags))])
 
             # ... derive a linear best fit and remove outliers (>3 sigma)
@@ -975,7 +975,7 @@ class catalog(object):
                     if idx not in set(remove)]
 
             # transformed magnitudes; uncertainties through Gaussian and C&G2008
-            nmags = numpy.array([numpy.empty(len(mags[0])), 
+            nmags = numpy.array([numpy.empty(len(mags[0])),
                                  numpy.empty(len(mags[0]))])
             if targetfilter == 'U':
                 nmags[0] = mags[6] - 0.854
@@ -987,27 +987,27 @@ class catalog(object):
                                       + ((mags[0]-mags[1])*0.047)**2\
                                       + 0.027**2)
             elif targetfilter == 'V':
-                nmags[0]   = mags[0] - 0.587*(mags[0] - mags[1]) - 0.011 
+                nmags[0]   = mags[0] - 0.587*(mags[0] - mags[1]) - 0.011
                 nmags[1] = numpy.sqrt(((1+0.587)*mags[3])**2 \
                                       + (0.587*mags[4])**2 \
                                       + ((mags[0]-mags[1])*0.022)**2 \
                                       + 0.011**2)
             elif targetfilter == 'R':
-                nmags[0]   = mags[1] - 0.272*(mags[1] - mags[2]) - 0.159 
+                nmags[0]   = mags[1] - 0.272*(mags[1] - mags[2]) - 0.159
                 nmags[1] = numpy.sqrt(((1-0.272)*mags[4])**2 \
                                       + (0.272*mags[5])**2 \
                                       + ((mags[1]-mags[2])*0.092)**2 \
                                       + 0.022**2)
-            # elif targetfilter == 'I':                    
-            #     nmags[0]   = mags[2] - 0.337*(mags[1] - mags[2]) - 0.370 
+            # elif targetfilter == 'I':
+            #     nmags[0]   = mags[2] - 0.337*(mags[1] - mags[2]) - 0.370
             #     nmags[1] = numpy.sqrt(((1+0.337)*mags[5])**2 \
             #                           + (0.337*mags[4])**2 \
             #                           + ((mags[1]-mags[2])*0.191)**2 \
             #                           + 0.041**2)
-            
+
             ##### experimental!!!!! Based on Connor's transformations
-            elif targetfilter == 'I':                    
-                nmags[0]   = mags[2] - 0.2526*(mags[1] - mags[2]) - 0.3636 
+            elif targetfilter == 'I':
+                nmags[0]   = mags[2] - 0.2526*(mags[1] - mags[2]) - 0.3636
                 nmags[1] = numpy.sqrt(((1+0.2526)*mags[5])**2 \
                                       + (0.2526*mags[4])**2 \
                                       + ((mags[1]-mags[2])*0.191)**2 \
@@ -1018,14 +1018,14 @@ class catalog(object):
             self.add_field('_e_'+targetfilter+'mag', nmags[1])
 
             # get rid of sources that have not been transformed
-            self.data = self.data[keep]            
+            self.data = self.data[keep]
 
             self.catalogname  += '_transformed'
             self.history += ', %d transformed to %s (Vega)' % \
                             (self.shape[0], targetfilter)
             self.magsystem = 'AB (ugriz), Vega (%s)' % targetfilter
 
-            logging.info(('%d sources sucessfully transformed to %s' % 
+            logging.info(('%d sources sucessfully transformed to %s' %
                           (self.shape[0], targetfilter)))
 
 
@@ -1035,15 +1035,15 @@ class catalog(object):
         ### APASS to R/I
         # todo: include g magnitudes and account for color
         elif ('URAT' in self.catalogname or
-              'APASS' in self.catalogname and 
+              'APASS' in self.catalogname and
               (targetfilter == 'R' or targetfilter == 'I')
               and self.magsystem == 'Vega'):
 
-            logging.info('trying to transform %d %s sources to %s' % 
+            logging.info('trying to transform %d %s sources to %s' %
                           (self.shape[0], self.catalogname, targetfilter))
 
 
-            ### transformations based on Chonis & Gaskell 2008, AJ, 135 
+            ### transformations based on Chonis & Gaskell 2008, AJ, 135
             mags = numpy.array([self['rmag'],
                                 self['imag'],
                                 self['e_rmag'],
@@ -1053,17 +1053,17 @@ class catalog(object):
             keep_idc = (mags[0]-mags[1] > 0.08) & (mags[0]-mags[1] < 0.5)
 
             # transformed magnitudes; uncertainties through Gaussian and C&G2008
-            nmags = numpy.array([numpy.empty(len(mags[0])), 
+            nmags = numpy.array([numpy.empty(len(mags[0])),
                                  numpy.empty(len(mags[0]))])
 
             if targetfilter == 'R':
-                nmags[0]   = mags[0] - 0.272*(mags[0] - mags[1]) - 0.159 
+                nmags[0]   = mags[0] - 0.272*(mags[0] - mags[1]) - 0.159
                 nmags[1] = numpy.sqrt(((1-0.272)*mags[2])**2 \
                                       + (0.272*mags[3])**2 \
                                       + ((mags[0]-mags[1])*0.092)**2 \
                                       + 0.022**2)
-            elif targetfilter == 'I':                    
-                nmags[0]   = mags[1] - 0.337*(mags[0] - mags[1]) - 0.370 
+            elif targetfilter == 'I':
+                nmags[0]   = mags[1] - 0.337*(mags[0] - mags[1]) - 0.370
                 nmags[1] = numpy.sqrt(((1+0.337)*mags[3])**2 \
                                       + (0.337*mags[2])**2 \
                                       + ((mags[0]-mags[1])*0.191)**2 \
@@ -1074,19 +1074,19 @@ class catalog(object):
             self.add_field('_e_'+targetfilter+'mag', nmags[1])
 
             # get rid of sources that have not been transformed
-            self.data = self.data[keep_idc]            
+            self.data = self.data[keep_idc]
 
             self.catalogname  += '_transformed'
             self.history += ', %d transformed to %s (Vega)' % \
                             (self.shape[0], targetfilter)
             self.magsystem = 'Vega'
-            
+
             logging.info('%d sources sucessfully transformed to %s' % \
                          (self.shape[0], targetfilter))
-            
+
             return self.shape[0]
 
-    
+
 
         ### 2MASS to UKIRT YZJHK)
         elif (self.catalogname.find('2MASS') > -1) and \
@@ -1099,10 +1099,10 @@ class catalog(object):
 
             # transformations using the recipe by Hodgkin et al. 2009, MNRAS
             mags  = [self['Jmag'], self['Hmag'], self['Kmag'],
-                     self['e_Jmag'], self['e_Hmag'], 
+                     self['e_Jmag'], self['e_Hmag'],
                      self['e_Kmag']]
-            lbl   = {'_Ymag': 0, '_e_Ymag': 1, '_Zmag': 2, '_e_Zmag': 3, 
-                     '_Jmag': 4, '_e_Jmag': 5, '_Hmag': 6, '_e_Hmag': 7, 
+            lbl   = {'_Ymag': 0, '_e_Ymag': 1, '_Zmag': 2, '_e_Zmag': 3,
+                     '_Jmag': 4, '_e_Jmag': 5, '_Hmag': 6, '_e_Hmag': 7,
                      '_Kmag': 8, '_e_Kmag': 9}
             nmags = [numpy.zeros(self.shape[0]) for i in range(len(lbl))]
 
@@ -1141,7 +1141,7 @@ class catalog(object):
                     nmags[lbl['_Jmag']][idx]   = mags[0][idx] \
                                                  - 0.065*(mags[0][idx] - oldH)
                     nmags[lbl['_e_Jmag']][idx] = mags[3][idx]
-                
+
                     nmags[lbl['_Kmag']][idx]    = mags[2][idx] \
                                                   + 0.01*(mags[0][idx] \
                                                           - mags[2][idx])
@@ -1154,7 +1154,7 @@ class catalog(object):
             # append nmags arrays to catalog
             for key, idx in list(lbl.items()):
                 self.add_field(key, nmags[idx])
-                
+
             # get rid of sources that have not been transformed
             self.data = self.data[self['_Zmag'] < 99]
 
@@ -1165,7 +1165,7 @@ class catalog(object):
 
             logging.info('%d sources sucessfully transformed to UKIRT YZJHK' % \
                          self.shape[0])
-            
+
             return self.shape[0]
 
         # PANSTARRS to BVRI
@@ -1307,11 +1307,11 @@ class catalog(object):
                 nmags[lbl['_Zmag']][idx]   = mags[0][idx] - 0.01 + 0.06* \
                                              (mags[1][idx]-mags[0][idx])-0.528
                 nmags[lbl['_e_Zmag']][idx] = mags[2][idx]
-              
+
             # append nmags arrays to catalog
             for key, idx in list(lbl.items()):
                 self.add_field(key, nmags[idx])
-                
+
             # get rid of sources that have not been transformed
             self.data = self.data[self['_Zmag'] < 99]
 
@@ -1322,7 +1322,7 @@ class catalog(object):
 
             logging.info('%d sources sucessfully transformed to UKIRT Z' % \
                          self.shape[0])
-            
+
             return self.shape[0]
 
         else:
@@ -1330,7 +1330,7 @@ class catalog(object):
                 print('ERROR: no transformation from %s to %s available' % \
                     (self.catalogname, targetfilter))
             return 0
-        
+
 
     ##### catalog operations
 
@@ -1341,12 +1341,12 @@ class catalog(object):
                    extract_this_catalog=['ra.deg', 'dec.deg'],
                    extract_other_catalog=['ra.deg', 'dec.deg'],
                    tolerance=old_div(0.5,3600.)):
-        """ match sources from different catalogs based on two fields 
+        """ match sources from different catalogs based on two fields
             (e.g., postions)
-            return: requested fields for matched sources 
+            return: requested fields for matched sources
             note: will only match exclusive pairs
 
-            TBD: replace this routine with something that uses 
+            TBD: replace this routine with something that uses
                  astropy.table functionality; how about astropy.coord matching?
         """
 
@@ -1363,13 +1363,13 @@ class catalog(object):
 
             indices_this_catalog  = [x for x in range(len(match)) if len(match[x]) == 1]
             indices_other_catalog = [x[0] for x in list(filter((lambda x: len(x)==1), match))]
-            
+
         else:
             # will find the closest match for each target in this catalog
             other_cat = list(zip(catalog[match_keys_other_catalog[0]].data,
                             catalog[match_keys_other_catalog[1]].data))
 
-            match = this_tree.query(other_cat) 
+            match = this_tree.query(other_cat)
 
             indices_this_catalog, indices_other_catalog = [], []
 
@@ -1391,13 +1391,13 @@ class catalog(object):
         check_not_nan = lambda x: not numpy.isnan(x) if \
                                   (type(x) is numpy.float_) else True
 
-        indices = [i for i in indices if all([check_not_nan(self[i[0]][key]) 
+        indices = [i for i in indices if all([check_not_nan(self[i[0]][key])
                                         for key in extract_this_catalog] \
-                                       + [check_not_nan(catalog[i[1]][key]) 
+                                       + [check_not_nan(catalog[i[1]][key])
                                           for key in extract_other_catalog])]
-        output_this_catalog  = [self[key][[i[0] for i in indices]] 
+        output_this_catalog  = [self[key][[i[0] for i in indices]]
                                 for key in extract_this_catalog]
-        output_other_catalog = [catalog[key][[i[1] for i in indices]] 
+        output_other_catalog = [catalog[key][[i[1] for i in indices]]
                                 for key in extract_other_catalog]
 
         return [output_this_catalog, output_other_catalog]

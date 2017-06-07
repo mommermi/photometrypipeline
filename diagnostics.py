@@ -4,7 +4,7 @@
 from __future__ import print_function
 from __future__ import division
 
-# Photometry Pipeline 
+# Photometry Pipeline
 # Copyright (C) 2016  Michael Mommert, michael.mommert@nau.edu
 
 # This program is free software: you can redistribute it and/or modify
@@ -63,9 +63,9 @@ import toolbox
 from catalog import *
 
 # setup logging
-logging.basicConfig(filename = _pp_conf.log_filename, 
+logging.basicConfig(filename = _pp_conf.log_filename,
                     level    = _pp_conf.log_level,
-                    format   = _pp_conf.log_formatline, 
+                    format   = _pp_conf.log_formatline,
                     datefmt  = _pp_conf.log_datefmt)
 
 
@@ -73,7 +73,7 @@ logging.basicConfig(filename = _pp_conf.log_filename,
 #
 # - diagnostics.html goes into the data directory
 # - all supplementary data and website go into diagroot (see _pp_init.py)
-# - if there are sub-directories with data, create diagnostics.html in 
+# - if there are sub-directories with data, create diagnostics.html in
 #   each directory with data; summary.html links to other directories
 ###
 
@@ -99,12 +99,12 @@ def create_website(filename, content=''):
     return None
 
 
-def append_website(filename, content, insert_at='</BODY>', 
+def append_website(filename, content, insert_at='</BODY>',
                    replace_below='X?!do not replace anything!?X'):
-    """ 
-    append content to an existing website: 
+    """
+    append content to an existing website:
     insert content before line that contains `insert_at`
-    replace lines between `replace_below` and `insert_at` (by 
+    replace lines between `replace_below` and `insert_at` (by
     default, nothing is replaced)
     """
     # read existing code
@@ -126,7 +126,7 @@ def append_website(filename, content, insert_at='</BODY>',
     outf.close()
 
     return None
-    
+
 ###########
 
 ### pipeline summary websites
@@ -162,8 +162,8 @@ def insert_into_summary(text):
     """
     insert result information into summary website
     """
-    append_website(_pp_conf.diagnostics_summary, text+'\n', 
-                   insert_at=("<!-- pp_process_idx=%d -->\n" % 
+    append_website(_pp_conf.diagnostics_summary, text+'\n',
+                   insert_at=("<!-- pp_process_idx=%d -->\n" %
                               _pp_conf.pp_process_idx))
 
     return None
@@ -193,8 +193,8 @@ def create_index(filenames, directory, obsparam, display=False):
                "%d frames total, see full pipeline " + \
                "<A HREF=\"%s\">log</A> for more information\n") % \
                (obsparam['telescope_instrument'], filtername,
-                len(filenames), 
-                '.diagnostics/' + 
+                len(filenames),
+                '.diagnostics/' +
                 _pp_conf.log_filename.split('.diagnostics/')[1])
 
     ### create frame information table
@@ -227,7 +227,7 @@ def create_index(filenames, directory, obsparam, display=False):
                  "<TD>%16.8f</TD><TD>%s</TD>" + \
                  "<TD>%s</TD><TD>%4.2f</TD><TD>%.1f</TD>" + \
                  "<TD>%.1f x %.1f</TD>\n</TR>\n") % \
-            (idx+1, framefilename, filename, header["MIDTIMJD"], 
+            (idx+1, framefilename, filename, header["MIDTIMJD"],
              objectname,
              header[obsparam['filter']],
              float(header[obsparam['airmass']]),
@@ -235,7 +235,7 @@ def create_index(filenames, directory, obsparam, display=False):
              header[obsparam['extent'][0]]*obsparam['secpix'][0]*binning[0]/60.,
              header[obsparam['extent'][1]]*obsparam['secpix'][1]*binning[1]/60.)
 
-   
+
         ### create frame image
         imgdat = hdulist[0].data
         imgdat = imresize(imgdat, 
@@ -250,7 +250,7 @@ def create_index(filenames, directory, obsparam, display=False):
         std    = numpy.std(imgdat[int(imgdat.shape[1]*0.25):
                                   int(imgdat.shape[1]*0.75),
                                   int(imgdat.shape[0]*0.25):
-                                  int(imgdat.shape[0]*0.75)]) 
+                                  int(imgdat.shape[0]*0.75)])
 
         plt.figure(figsize=(5, 5))
 
@@ -269,7 +269,7 @@ def create_index(filenames, directory, obsparam, display=False):
         del(imgdat)
 
     html += '</TABLE>\n'
-   
+
     create_website(_pp_conf.index_filename, html)
 
 
@@ -322,8 +322,8 @@ def add_registration(data, extraction_data):
     ### create frame images
     for dat in extraction_data:
         framefilename = '.diagnostics/' + dat['fits_filename'] + \
-                        '_astrometry.png'        
-        imgdat = fits.open(dat['fits_filename'], 
+                        '_astrometry.png'
+        imgdat = fits.open(dat['fits_filename'],
                            ignore_missing_end=True)[0].data
         resize_factor = min(1., 1000./numpy.max(imgdat.shape))
         imgdat = imresize(imgdat, resize_factor, interp='nearest')
@@ -336,7 +336,7 @@ def add_registration(data, extraction_data):
         std    = numpy.std(imgdat[int(imgdat.shape[1]*0.25):
                                      int(imgdat.shape[1]*0.75),
                                      int(imgdat.shape[0]*0.25):
-                                     int(imgdat.shape[0]*0.75)]) 
+                                     int(imgdat.shape[0]*0.75)])
 
         # turn relevant header keys into floats
         # astropy.io.fits bug
@@ -389,11 +389,11 @@ def add_registration(data, extraction_data):
              data['catalog'])
     if len(data['badfits']) > 0:
         html += '<B>%d files could not be registered</B>;' % \
-                len(data['badfits'])  
+                len(data['badfits'])
     html += 'see <A HREF=\"%s\">registration website</A> for details\n' % \
             _pp_conf.reg_filename
 
-    append_website(_pp_conf.index_filename, html, 
+    append_website(_pp_conf.index_filename, html,
                    replace_below="<H2>Registration Results</H2>\n")
 
     return None
@@ -416,19 +416,19 @@ def add_photometry(data, extraction):
     plt.xlim([min(parameters['aprad']), max(parameters['aprad'])])
     plt.ylabel('Fractional Combined Flux')
     if not parameters['target_only']:
-        plt.errorbar(parameters['aprad'], data['background_flux'][0], 
-                     data['background_flux'][1], color='black', 
-                     linewidth=1, 
+        plt.errorbar(parameters['aprad'], data['background_flux'][0],
+                     data['background_flux'][1], color='black',
+                     linewidth=1,
                      label='background objects')
     if not parameters['background_only']:
-        plt.errorbar(parameters['aprad'], data['target_flux'][0], 
-                     data['target_flux'][1], color='red', linewidth=1, 
+        plt.errorbar(parameters['aprad'], data['target_flux'][0],
+                     data['target_flux'][1], color='red', linewidth=1,
                      label='target')
-    plt.plot([data['optimum_aprad'], data['optimum_aprad']], 
-             [plt.ylim()[0], plt.ylim()[1]], 
+    plt.plot([data['optimum_aprad'], data['optimum_aprad']],
+             [plt.ylim()[0], plt.ylim()[1]],
              linewidth=2, color='black')
-    plt.plot([plt.xlim()[0], plt.xlim()[1]], 
-             [data['fluxlimit_aprad'], data['fluxlimit_aprad']], 
+    plt.plot([plt.xlim()[0], plt.xlim()[1]],
+             [data['fluxlimit_aprad'], data['fluxlimit_aprad']],
              color='black', linestyle='--')
     plt.grid()
     plt.legend(loc=4)
@@ -439,13 +439,13 @@ def add_photometry(data, extraction):
     plt.xlabel('Aperture Radius (px)')
     plt.ylabel('SNR')
     if not parameters['target_only']:
-        plt.errorbar(parameters['aprad'], data['background_snr'], 
+        plt.errorbar(parameters['aprad'], data['background_snr'],
                      color='black', linewidth=1)
     if not parameters['background_only']:
-        plt.errorbar(parameters['aprad'], data['target_snr'], 
+        plt.errorbar(parameters['aprad'], data['target_snr'],
                      color='red', linewidth=1)
-    plt.plot([data['optimum_aprad'], data['optimum_aprad']], 
-             [plt.ylim()[0], plt.ylim()[1]], 
+    plt.plot([data['optimum_aprad'], data['optimum_aprad']],
+             [plt.ylim()[0], plt.ylim()[1]],
              linewidth=2, color='black')
     plt.grid()
     plt.savefig(growth_filename, format='png')
@@ -464,10 +464,10 @@ def add_photometry(data, extraction):
     plt.title('Median PSF FWHM per Frame')
     plt.xlabel('Observation Midtime (JD)')
     plt.ylabel('Point Source FWHM (px)')
-    plt.scatter(frame_midtimes, fwhm, marker='o', 
+    plt.scatter(frame_midtimes, fwhm, marker='o',
                 color='black')
     xrange = [plt.xlim()[0], plt.xlim()[1]]
-    plt.plot(xrange, [data['optimum_aprad']*2, data['optimum_aprad']*2], 
+    plt.plot(xrange, [data['optimum_aprad']*2, data['optimum_aprad']*2],
              color='red')
     plt.xlim(xrange)
     plt.ylim([0, max([data['optimum_aprad']*2+1, max(fwhm)])])
@@ -516,16 +516,16 @@ def add_calibration(data):
         if not data['zeropoints'][idx]['success']:
             continue
         ax1 = plt.subplot(211)
-        ax1.set_title('%s: %s-band from %s' % 
-                      (cat.catalogname, data['filtername'], 
+        ax1.set_title('%s: %s-band from %s' %
+                      (cat.catalogname, data['filtername'],
                        data['ref_cat'].catalogname))
         ax1.set_xlabel('Number of Reference Stars')
         ax1.set_ylabel('Magnitude Zeropoint', fontdict={'color':'red'})
         #ax1.ticklabel_format(style='sci', axis='y', scilimits=(-5,5))
 
         zp_idx = data['zeropoints'][idx]['zp_idx']
-        clipping_steps = data['zeropoints'][idx]['clipping_steps'] 
-        
+        clipping_steps = data['zeropoints'][idx]['clipping_steps']
+
         x = [len(clipping_steps[i][3]) for i in range(len(clipping_steps))]
 
         ax1.errorbar(x, [clipping_steps[i][0] for i
@@ -533,9 +533,9 @@ def add_calibration(data):
                      yerr=[clipping_steps[i][1] for i
                            in range(len(clipping_steps))], color='red')
         ax1.set_ylim(ax1.get_ylim()[::-1]) # reverse y axis
-        ax1.plot([len(clipping_steps[zp_idx][3]), 
+        ax1.plot([len(clipping_steps[zp_idx][3]),
                   len(clipping_steps[zp_idx][3])],
-                 ax1.get_ylim(), color='black') 
+                 ax1.get_ylim(), color='black')
 
         ax2 = ax1.twinx()
         ax2.plot(x, [clipping_steps[i][2] for i
@@ -543,24 +543,24 @@ def add_calibration(data):
                  color='blue')
         ax2.set_ylabel(r'reduced $\chi^2$', fontdict={'color':'blue'})
         ax2.set_yscale('log')
-            
+
         # residual plot
         ax3 = plt.subplot(212)
         ax3.set_xlabel('Reference Star Magnitude')
         ax3.set_ylabel('Calibration-Reference (mag)')
-            
+
         match = data['zeropoints'][idx]['match']
         x             = match[0][0][clipping_steps[zp_idx][3]]
         residuals     = match[1][0][clipping_steps[zp_idx][3]] \
                         + clipping_steps[zp_idx][0] \
-                        - match[0][0][clipping_steps[zp_idx][3]] 
+                        - match[0][0][clipping_steps[zp_idx][3]]
         residuals_sig = numpy.sqrt(match[1][1][clipping_steps[zp_idx][3]]**2\
                                    + clipping_steps[zp_idx][1]**2)
 
         ax3.errorbar(x, residuals, yerr=residuals_sig, color='black',
                      linestyle='')
         ax3.plot(ax3.get_xlim(), [0,0], color='black', linestyle='--')
-        ax3.set_ylim(ax3.get_ylim()[::-1]) # reverse y axis  
+        ax3.set_ylim(ax3.get_ylim()[::-1]) # reverse y axis
 
         plt.grid()
         plt.savefig(('.diagnostics/%s_photcal.png') % cat.catalogname,
@@ -570,7 +570,7 @@ def add_calibration(data):
                                         cat.catalogname
         plt.close()
 
-            
+
     ### create zeropoint overview plot
     times = [dat['obstime'][0] for dat in data['zeropoints']]
     zp    = [dat['zp'] for dat in data['zeropoints']]
@@ -601,7 +601,7 @@ def add_calibration(data):
             html += ("<TR><TD><A HREF=\"#%s\">%s</A></TD>" \
                      + "<TD>%7.4f</TD><TD>%7.4f</TD><TD>%d</TD>" \
                      + "<TD>%d</TD>\n</TR>" ) % \
-                (dat['plotfilename'].split('.diagnostics/')[1], 
+                (dat['plotfilename'].split('.diagnostics/')[1],
                  dat['filename'], dat['zp'],
                  dat['zp_sig'], dat['zp_nstars'],
                  len(dat['match'][0][0]))
@@ -621,11 +621,11 @@ def add_calibration(data):
                  + "<IMG ID=\"%s\" SRC=\"%s\" HEIGHT=400 WIDTH=400>" \
                  + "</A></TD>\n") % \
                 (dat['filename'],
-                 dat['plotfilename'].split('.diagnostics/')[1], 
                  dat['plotfilename'].split('.diagnostics/')[1],
-                 dat['plotfilename'].split('.diagnostics/')[1], 
-                 catframe.split('.diagnostics/')[1], 
-                 catframe.split('.diagnostics/')[1], 
+                 dat['plotfilename'].split('.diagnostics/')[1],
+                 dat['plotfilename'].split('.diagnostics/')[1],
+                 catframe.split('.diagnostics/')[1],
+                 catframe.split('.diagnostics/')[1],
                  catframe.split('.diagnostics/')[1])
         html += "<TD><TABLE BORDER=\"1\">\n<TR>\n"
         html += "<TH>Idx</TH><TH>Name</TH><TH>RA</TH><TH>Dec</TH>" \
@@ -638,10 +638,10 @@ def add_calibration(data):
                      + "<TD>%.3f+-%.3f</TD>" \
                      + "<TD>%.3f+-%.3f</TD><TD>%.3f</TD></TR>") % \
                 (i+1, dat['match'][0][2][idx], dat['match'][0][3][idx],
-                 dat['match'][0][4][idx], dat['match'][0][0][idx], 
+                 dat['match'][0][4][idx], dat['match'][0][0][idx],
                  dat['match'][0][1][idx],
                  dat['match'][1][0][idx], dat['match'][1][1][idx],
-                 dat['zp']+dat['match'][1][0][idx], 
+                 dat['zp']+dat['match'][1][0][idx],
                  numpy.sqrt(dat['zp_sig']**2 + dat['match'][1][1][idx]**2),
                  (dat['zp']+dat['match'][1][0][idx])-dat['match'][0][0][idx])
         html += "</TABLE><P>derived zeropoint: %7.4f+-%6.4f mag\n" % \
@@ -662,7 +662,7 @@ def add_calibration(data):
         std    = numpy.std(imgdat[int(imgdat.shape[1]*0.25):
                                      int(imgdat.shape[1]*0.75),
                                      int(imgdat.shape[0]*0.25):
-                                     int(imgdat.shape[0]*0.75)]) 
+                                     int(imgdat.shape[0]*0.75)])
 
         # turn relevant header keys into floats
         # astropy.io.fits bug
@@ -761,8 +761,8 @@ def add_results(data):
         plt.title(target)
         plt.xlabel('Observation Midtime (JD)')
         plt.ylabel('Magnitude')
-        plt.errorbar([dat[9][0] for dat in data[target]], 
-                     [dat[7] for dat in data[target]], 
+        plt.errorbar([dat[9][0] for dat in data[target]],
+                     [dat[7] for dat in data[target]],
                      yerr=[dat[8] for dat in data[target]],
                      linestyle='', color='black')
         plt.ylim([plt.ylim()[1], plt.ylim()[0]])
@@ -775,7 +775,7 @@ def add_results(data):
                                            target.translate(_pp_conf.target2filename))
 
     ##### create thumbnail images
-    
+
     data['thumbnailplots'] = {}
     data['gifs'] = {}
     boxsize = 300 # thumbnail boxsize
@@ -793,7 +793,7 @@ def add_results(data):
                 #= dat[10][:dat[10].find('.ldac')]+'.fits'
             hdulist = fits.open(fitsfilename, ignore_missing_end=True)
 
-            logging.info('create thumbnail image for %s/%s' % (target, 
+            logging.info('create thumbnail image for %s/%s' % (target,
                                                             fitsfilename))
 
             # turn relevant header keywords into floats
@@ -803,41 +803,41 @@ def add_results(data):
                    'CRVAL' in key or 'CRPIX' in key or \
                    'EQUINOX' in key:
                     hdulist[0].header[key] = float(val)
-                # if 'PV1' in key or 'PV2' in key:            
+                # if 'PV1' in key or 'PV2' in key:
                 #     del hdulist[0].header[key]
-            
+
             w = wcs.WCS(hdulist[0].header)
             obj_x, obj_y = dat[11], dat[12]
-            image_coords = w.wcs_world2pix(numpy.array([[dat[1], dat[2]]]), 
+            image_coords = w.wcs_world2pix(numpy.array([[dat[1], dat[2]]]),
                                            True)
             exp_x, exp_y = image_coords[0][0], image_coords[0][1]
 
-            # create margin around image allowing for any cropping 
-            composite = numpy.zeros((hdulist[0].data.shape[0]+2*boxsize, 
+            # create margin around image allowing for any cropping
+            composite = numpy.zeros((hdulist[0].data.shape[0]+2*boxsize,
                                      hdulist[0].data.shape[1]+2*boxsize))
 
-            composite[boxsize:boxsize+hdulist[0].data.shape[0], 
+            composite[boxsize:boxsize+hdulist[0].data.shape[0],
                       boxsize:boxsize+hdulist[0].data.shape[1]] = \
                                                             hdulist[0].data
 
             # extract thumbnail data accordingly
             thumbdata = composite[int(boxsize+obj_y-old_div(boxsize,2)):
-                                  int(boxsize+obj_y+old_div(boxsize,2)), 
+                                  int(boxsize+obj_y+old_div(boxsize,2)),
                                   int(boxsize+obj_x-old_div(boxsize,2)):
                                   int(boxsize+obj_x+old_div(boxsize,2))]
 
             ## run statistics over center of the frame around the target
             if thumbdata.shape[0] > 0 and thumbdata.shape[1] > 0:
-                median = numpy.median(thumbdata[old_div(boxsize,2)-20:old_div(boxsize,2)+20, 
+                median = numpy.median(thumbdata[old_div(boxsize,2)-20:old_div(boxsize,2)+20,
                                                 old_div(boxsize,2)-20:old_div(boxsize,2)+20])
-                std = numpy.std(thumbdata[old_div(boxsize,2)-20:old_div(boxsize,2)+20, 
+                std = numpy.std(thumbdata[old_div(boxsize,2)-20:old_div(boxsize,2)+20,
                                           old_div(boxsize,2)-20:old_div(boxsize,2)+20])
-                maxval = numpy.max(thumbdata[old_div(boxsize,2)-20:old_div(boxsize,2)+20, 
+                maxval = numpy.max(thumbdata[old_div(boxsize,2)-20:old_div(boxsize,2)+20,
                                              old_div(boxsize,2)-20:old_div(boxsize,2)+20])
             else:
                 logging.warning('cannot produce thumbnail image ' + \
                                 'for %s in frame %s' % (target, dat[10]))
-                continue 
+                continue
 
 
 
@@ -846,16 +846,16 @@ def add_results(data):
             #     median = numpy.median(numpy.ma.masked_equal(thumbdata,
             #                                                 0).compressed())
             #     std = numpy.std(numpy.ma.masked_equal(thumbdata,
-            #                                           0).compressed()) 
-            #     maxval = numpy.max(thumbdata[boxsize/2-10:boxsize/2+10, 
+            #                                           0).compressed())
+            #     maxval = numpy.max(thumbdata[boxsize/2-10:boxsize/2+10,
             #                                  boxsize/2-10:boxsize/2+10])
             # else:
             #     logging.warning('cannot produce thumbnail image ' + \
             #                     'for %s in frame %s' % (target, dat[10]))
-            #     continue 
+            #     continue
 
 
-            
+
             # extract aperture radius
             aprad = float(hdulist[0].header['APRAD'])
 
@@ -864,7 +864,7 @@ def add_results(data):
             fig = plt.figure()#figsize=(plotsize,plotsize), 
                              #dpi=old_div(boxsize,plotsize))
             img = plt.imshow(thumbdata, cmap='gray',
-                             vmin=median-2*std, 
+                             vmin=median-2*std,
                              #vmax=maxval,
                              vmax=min([median+2*std,maxval]),
                              origin='lower')
@@ -874,19 +874,19 @@ def add_results(data):
             img.axes.get_yaxis().set_visible(False)
 
             plt.annotate('%s\n%5.3f+-%5.3f mag' % (fitsfilename,
-                                                   dat[7], dat[8]), (3,10), 
+                                                   dat[7], dat[8]), (3,10),
                          color='white')
 
             # place aperture
-            circle = plt.Circle((old_div(boxsize,2.), old_div(boxsize,2.)), 
+            circle = plt.Circle((old_div(boxsize,2.), old_div(boxsize,2.)),
                                 aprad, ec='red', fc='none', linewidth=1)
             plt.gca().add_patch(circle)
 
             # place expected position (if within thumbnail)
-            if (abs(exp_x-obj_x) <= old_div(boxsize,2.) and 
-                abs(exp_y-obj_y) <= old_div(boxsize,2.)): 
-                plt.scatter(exp_x-obj_x+old_div(boxsize,2.), 
-                            exp_y-obj_y+old_div(boxsize,2.), 
+            if (abs(exp_x-obj_x) <= old_div(boxsize,2.) and
+                abs(exp_y-obj_y) <= old_div(boxsize,2.)):
+                plt.scatter(exp_x-obj_x+old_div(boxsize,2.),
+                            exp_y-obj_y+old_div(boxsize,2.),
                             marker='+', s=100, color='green')
 
             thumbfilename = '.diagnostics/' + \
@@ -898,7 +898,7 @@ def add_results(data):
                         pad_inches=0)
             plt.close()
             hdulist.close()
-            data['thumbnailplots'][target].append((fitsfilename, 
+            data['thumbnailplots'][target].append((fitsfilename,
                                                      thumbfilename))
 
         ## create gif animation
@@ -946,7 +946,7 @@ def add_results(data):
                      + "<TD>%6.4f</TD><TD>%13.8f</TD>" \
                      + "<TD>%+13.8f</TD><TD>%5.2f</TD><TD>%5.2f</TD>\n" \
                      + "</TR>\n" )% \
-                (dat[10], dat[10], dat[9][0], dat[7], dat[8], dat[3], dat[4], 
+                (dat[10], dat[10], dat[9][0], dat[7], dat[8], dat[3], dat[4],
                  ((dat[1]-dat[3])*3600.), ((dat[2]-dat[4])*3600.))
         html += "</TABLE>\n"
 
@@ -960,7 +960,7 @@ def add_results(data):
                    target.translate(_pp_conf.target2filename) + \
                    '_' + 'results.html'
         create_website(filename, html)
-        data['resultswebsites'][target] = filename 
+        data['resultswebsites'][target] = filename
 
 
     ### update index.html
@@ -973,8 +973,8 @@ def add_results(data):
     for target in data['targetnames']:
         html += "<P><IMG SRC=\"%s\">\n" % data['lightcurveplots'][target]
         html += "<IMG SRC=\"%s\">\n" % data['gifs'][target]
-    append_website(_pp_conf.index_filename, html, 
-                   replace_below="<H2>Photometry Results</H2>\n")    
+    append_website(_pp_conf.index_filename, html,
+                   replace_below="<H2>Photometry Results</H2>\n")
 
     return None
 
