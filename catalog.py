@@ -427,7 +427,7 @@ class catalog(object):
             # Convert to AB mags see Blanton et al., AJ, 2005, Eqs. (5)
             self.data['Jmag'] += 0.91
             self.data['Hmag'] += 1.39
-            self.data['Jmag'] += 1.85
+            self.data['Kmag'] += 1.85
 
             ### rename column names using PP conventions
             self.data.rename_column('_2MASS', 'ident')
