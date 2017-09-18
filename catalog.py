@@ -423,6 +423,12 @@ class catalog(object):
             # filter columns to only have really good detections
             self.data = self.data[qmask]
 
+            # By default, 2MASS magnitudes are VEGA magnitudes
+            # Convert to AB mags see Blanton et al., AJ, 2005, Eqs. (5)
+            self.data['Jmag'] += 0.91
+            self.data['Hmag'] += 1.39
+            self.data['Jmag'] += 1.85
+
             ### rename column names using PP conventions
             self.data.rename_column('_2MASS', 'ident')
             self.data.rename_column('RAJ2000', 'ra.deg')            
