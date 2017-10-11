@@ -226,7 +226,7 @@ def moving_primary_target(catalogs, man_targetname, offset, is_asteroid=None,
         if man_targetname is not None:
             targetname = man_targetname.replace('_', ' ')
             cat.obj = targetname
-        eph = callhorizons.query(targetname, smallbody=is_asteroid)
+        eph = callhorizons.query(targetname) #, smallbody=is_asteroid)
         eph.set_discreteepochs(cat.obstime[0])
 
         try:
@@ -245,15 +245,14 @@ def moving_primary_target(catalogs, man_targetname, offset, is_asteroid=None,
             #                     targetname)
             #     n = None
             pass
-
+        
         if n is None or n == 0:
             logging.warning('WARNING: No position from Horizons! '+\
                             'Name (%s) correct?' % cat.obj.replace('_', ' '))
             logging.warning('HORIZONS call: %s' % eph.url)
             if display and not message_shown:
                 print ('  no Horizons data for %s '% cat.obj.replace('_', ' '))
-                message_shown = True
-
+                message_shown = True                
         else:
             objects.append({'ident': eph[0]['targetname'].replace(" ", "_"),
                             'obsdate.jd': cat.obstime[0],

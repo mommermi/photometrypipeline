@@ -177,10 +177,10 @@ def derive_zeropoints(ref_cat, catalogs, filtername, minstars_external,
         ### currently it seems like pp_photometry (maybe callhorizons)
         # has not finished properly
 
-        cat.reject_sources_other_than(cat.data['MAG_APER'] != 99)
-        cat.reject_sources_other_than(cat.data['MAGERR_APER'] != 99)
-        cat.reject_sources_with(numpy.isnan(cat.data['MAG_APER']))
-        cat.reject_sources_with(numpy.isnan(cat.data['MAGERR_APER']))
+        cat.reject_sources_other_than(cat.data['MAG_BEST'] != 99)
+        cat.reject_sources_other_than(cat.data['MAGERR_BEST'] != 99)
+        cat.reject_sources_with(numpy.isnan(cat.data['MAG_BEST']))
+        cat.reject_sources_with(numpy.isnan(cat.data['MAGERR_BEST']))
 
         match = ref_cat.match_with(cat,
                                 match_keys_this_catalog=['ra.deg', 'dec.deg'],
@@ -190,8 +190,8 @@ def derive_zeropoints(ref_cat, catalogs, filtername, minstars_external,
                                                       'ident',
                                                       'ra.deg',
                                                       'dec.deg'],
-                                extract_other_catalog=['MAG_APER',
-                                                       'MAGERR_APER'],
+                                extract_other_catalog=['MAG_BEST',
+                                                       'MAGERR_BEST'],
                                 tolerance=old_div(_pp_conf.pos_epsilon,3600.))
 
         # artificially blow up incredibly small ref_cat uncertainties
@@ -305,8 +305,8 @@ def derive_zeropoints(ref_cat, catalogs, filtername, minstars_external,
 
 
         cat.add_fields([filterkey, efilterkey],
-                       [cat['MAG_APER'] + clipping_steps[idx][0],
-                        numpy.sqrt(cat['MAGERR_APER']**2 + \
+                       [cat['MAG_BEST'] + clipping_steps[idx][0],
+                        numpy.sqrt(cat['MAGERR_BEST']**2 + \
                                    clipping_steps[idx][1]**2)],
                        ['F', 'F'])
 
