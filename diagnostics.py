@@ -839,7 +839,11 @@ def add_results(data, imagestretch='linear'):
                                          'log': LogStretch()}[imagestretch])
                 # extract aperture radius
                 if _pp_conf.photmode == 'APER':
-                    aprad = float(hdulist[0].header['APRAD'])
+                    try:# 12/20/17 COC: added try/except clause
+                        aprad = float(hdulist[0].header['APRAD'])
+                    except KeyError as msg:
+                        print('Unable to locate aperture radius, no circle will be drawn.')
+                        aprad = None
 
                 # create plot
                 #plotsize = 7. # inches
@@ -856,7 +860,7 @@ def add_results(data, imagestretch='linear'):
                              color='white')
 
                 # place aperture
-                if _pp_conf.photmode == 'APER':
+                if _pp_conf.photmode == 'APER' and aprad != None:# 12/20/17 COC: added clause to handle missing aprad case (no aprad)
                     targetpos = plt.Circle((boxsize/2, boxsize/2), 
                                            aprad, ec='red', fc='none',
                                            linewidth=1)
@@ -877,6 +881,12 @@ def add_results(data, imagestretch='linear'):
                             target.translate(_pp_conf.target2filename) + '_' + \
                             fitsfilename[:fitsfilename.find('.fit')] + \
                             '_thumb.png'
+
+                # 11/17/17 COC: outputting x,y pixel coordinates to file (commit 12/27/2017)
+                coordfilename = thumbfilename.split('_thumb.png')[0] + '_coords.lst'
+                with open(coordfilename,'w') as f:
+                    f.writelines(str(exp_x) + ',' + str(exp_y))
+
                 plt.savefig(thumbfilename, format='png',
                             bbox_inches='tight', 
                             pad_inches=0)

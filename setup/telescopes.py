@@ -19,7 +19,11 @@ Photometry Pipeline Configuation File
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see
 # <http://www.gnu.org/licenses/>.
-
+#
+# Initials:
+# COC: Colin Orion Chandler - orion@nau.edu
+# AMC: Anthony Michael Curtis
+# 
 ##### telescope/instrument configurations
 
 # VATT, VATT4k
@@ -96,6 +100,8 @@ dctlmi_param = {
     'observatory_code'     : 'G37',         # MPC observatory code
     'secpix'               : (0.12, 0.12 ), # pixel size (arcsec)
                                             # before binning
+    'asteroid_e_pix'       : 20,#number of pixel offset for matching asteroids (will multiply by secpix); default = 5 9/30/17 COC; added this line 12/19/17 COC
+
     'ext_coeff'            : 0.05,          # typical extinction coefficient
 
 
@@ -105,7 +111,7 @@ dctlmi_param = {
     'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
-    'binning'              : ('CCDSUM#blank0', 'CCDSUM#blank1'), 
+    'binning'              : ('ADELX_01','ADELY_01'),#('CCDSUM_blank0', 'CCDSUM_blank1'), #12/27/17 COC: changed bin keywords
                            # binning in x/y, '_blankN' denotes that both axes
                            # are listed in one keyword, sep. by blanks
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y
@@ -122,7 +128,7 @@ dctlmi_param = {
                                          # pp_prepare
     'object'               : 'OBJECT',  # object name keyword 
     'filter'               : 'FILTERS',  # filter keyword
-    'filter_translations'  : {'V': 'V', 'R': 'R', 'B': 'B', 'VR': None,
+    'filter_translations'  : {'V': 'V', 'R': 'R', 'B': 'B', 'VR': 'r',#changed VR from None to 'r' 12/19/17 COC
                               'I': 'I', 'SDSS-U' : 'u', 'SDSS-G' : 'g',
                               'SDSS-R' : 'r', 'SDSS-I' : 'i', 
                               'SDSS-Z' : 'z', 'OH': None, 'CN': None,
@@ -136,30 +142,29 @@ dctlmi_param = {
 
     # source extractor settings
     'source_minarea'       : 9, # default sextractor source minimum N_pixels
-    'source_snr': 3, # default sextractor source snr for registration
+    'source_snr'           : 3, # default sextractor source snr for registration#this is 10 in DECam 12/19/17 COC
     'aprad_default'        : 4, # default aperture radius in px 
-    'aprad_range'          : [2, 10], # [minimum, maximum] aperture radius (px)
+    'aprad_range'          : [2, 25], # [minimum, maximum] aperture radius (px) #12/19/17 COC: from 2,10 to 2,25 (decam is 5,30 BTW)
     'sex-config-file'      : rootpath+'/setup/dctlmi.sex',
     'mask_file'            : {},
     #                        mask files as a function of x,y binning
 
     # registration settings (Scamp)
     'scamp-config-file'    : rootpath+'/setup/dctlmi.scamp', 
-    'reg_max_mag'          : 19,  
-    'reg_search_radius'    : 0.2, # deg       
+    'reg_max_mag'          : 20,#changed to 20 12/19/17 COC
+    'reg_search_radius'    : 0.8, # deg       #changed from 0.5 to 0.8 12/19/17 COC
     'source_tolerance': 'high', 
 
     # swarp settings
-    'copy_keywords'        : ('OBSERVAT,INSTRUME,EXPTIME,OBJECT,' +
-                              'DATE-OBS,RA,DEC,AIRMASS,TEL_KEYW,CCDSUM,' +
-                              'FILTERS,MIDTIMJD'),
+    'copy_keywords'        : ('OBSERVAT,INSTRUME,CCDFLTID,EXPTIME,OBJECT,' +
+                              'DATE-OBS,RA,DEC,SCALE,AIRMASS,TEL_KEYW'),
     #                        keywords to be copied in image
     #                        combination using swarp
     'swarp-config-file'    : rootpath+'/setup/dctlmi.swarp',  
 
     # default catalog settings
-    'astrometry_catalogs'  : ['GAIA'], 
-    'photometry_catalogs'  : ['SDSS-R9', 'PANSTARRS', 'APASS9']
+    'astrometry_catalogs'  : ['GAIA','2MASS','GAIA'],# 12/19/17 COC: was ['GAIA'],
+    'photometry_catalogs'  : ['SDSS-R9','PANSTARRS','APASS9']#12/19/17 COC: was ['PANSTARRS','2MASS']#6/2/17 COC: removed SDSS9 and APASS, see the telescopes.py.bak file
 }
 
 
@@ -2116,6 +2121,83 @@ vltfors2_param = {
     'photometry_catalogs'  : ['SDSS-R9', 'PANSTARRS', 'APASS9']
 }
 
+# DECam, 6/12/17 COC/AMC; updates through 12/27/17 COC
+decam_param = {
+    'telescope_instrument' : 'DECAM', # telescope/instrument name#9/20/17 COC: removed CTIO/ from before DECam
+    'telescope_keyword'    : 'DECam',#'CTIODECAM',  # telescope/instrument keyword; changed to 'DECam' 9/20/17
+    'observatory_code'     : '807',         # MPC observatory code
+    'secpix'               : (0.263, 0.263 ), # pixel size (arcsec)#6/12/17 COC/AMC: verified#changed from .27 to .263 7/14/17 AMC/COC
+                                            # before binning
+    'asteroid_e_pix'       : 20,#number of pixel offset for matching asteroids (will multiply by secpix); default = 5 9/30/17 COC
+    'ext_coeff'            : 0.05,          # typical extinction coefficient; 6/12/17 COC/AMC: unknown
+
+
+    # image orientation preferences
+    'flipx'                : False,#was true,true,90 9/22/17 COC
+    'flipy'                : False,
+    'rotate'               : 0,
+
+    # instrument-specific FITS header keywords
+    'binning'              : ('CCDBIN1', 'CCDBIN2'), #Pixel binning, axis 1, pixel binning, axis 2 #6/12/17 COC/AMC: verified
+                           # binning in x/y, '_blankN' denotes that both axes
+                           # are listed in one keyword, sep. by blanks
+    'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y#6/12/17 COC/AMC: verified
+    'ra'                   : 'RA',  # telescope pointing, RA#6/12/17 COC/AMC: verified
+    'dec'                  : 'DEC', # telescope pointin, Dec #6/12/17 COC/AMC: verified
+    'radec_separator'      : ':',   # RA/Dec hms separator, use 'XXX'#6/12/17 COC/AMC: verified
+                                    # if already in degrees
+    'date_keyword'         : 'DATE-OBS', # obs date/time#6/12/17 COC/AMC: verified
+                                         # keyword; use
+                                         # 'date|time' if
+                                         # separate
+    'obsmidtime_jd'        : 'MIDTIMJD', # obs midtime jd keyword
+                                         # (usually provided by
+                                         # pp_prepare
+    'object'               : 'OBJECT',  # object name keyword #6/12/17 COC/AMC: verified
+    'filter'               : 'FILTER',  # filter keyword#6/12/17 COC/AMC verified
+    'filter_translations'  : { 'VR DECam c0007 6300.0 2600.0': 'V',#'VR'#6/12/17 COC/AMC mapping to none, like DCT etc; disabling rest#changed to V instead of None 7/14/17 AMC/COC
+                               'z DECam SDSS c0004 9260.0 1520.0':'z', #7/14/17 AMC/COC Added filter to test DECam image from NOAO website
+                               'r DECam SDSS c0002 6415.0 1480.0':'r'  #7/19/17 AMC Added known  DECam Filter
+#                              'V': 'V', 'R': 'R', 'B': 'B', 'VR': None,
+#                              'I': 'I', 'SDSS-U' : 'u', 'SDSS-G' : 'g',
+#                              'SDSS-R' : 'r', 'SDSS-I' : 'i', 
+#                              'SDSS-Z' : 'z', 'OH': None, 'CN': None,
+#                              'UC': None, 'NH': None, 'BC': None,
+#                              'C2': None, 'C3': None, 'CO+': None,
+#                              'H2O+': None, 'GC': None, 'RC': None
+                              },
+                             # f1iltername translation dictionary
+    'exptime'              : 'EXPTIME', # exposure time keyword (s)#6/12/17 COC/AMC: verified
+    'airmass'              : 'AIRMASS', # airmass keyword#6/12/17 COC/AMC: verified
+
+
+    # source extractor settings
+    'source_minarea'       : 9, # default sextractor source minimum N_pixels
+    'source_snr'           : 10, # default sextractor source snr for registration#from 3
+    'aprad_default'        : 4, # default aperture radius in px 
+    'aprad_range'          : [5, 30], # [minimum, maximum] aperture radius (px)#9/20/17 COC: changed max from 10 to 30
+    'sex-config-file'      : rootpath+'/setup/decam.sex',#created from generic.sex 6/12/17 COC/AMC
+    'mask_file'            : {},
+    #                        mask files as a function of x,y binning
+
+    # registration settings (Scamp)
+    'scamp-config-file'    : rootpath+'/setup/decam.scamp',#created from generic.scamp 6/12/17 COC/AMC 
+    'reg_max_mag'          : 23,#7/14/17 COC/AMC: changed from 19 to 21; 9/19/17 COC: changed to 25  
+    'reg_search_radius'    : 0.7, # deg #7/14/17 AMC/COC: Changed from 0.5 to 0.3; changing from 0.3 back to 0.5 7/19/17 COC
+    'source_tolerance': 'high', 
+
+    # swarp settings
+    'copy_keywords'        : ('OBSERVAT,INSTRUME,CCDFLTID,EXPTIME,OBJECT,' +
+                              'DATE-OBS,RA,DEC,SCALE,AIRMASS,TEL_KEYW'),
+    #                        keywords to be copied in image
+    #                        combination using swarp
+    'swarp-config-file'    : rootpath+'/setup/decam.swarp',#created from generic.swarp 6/12/17 COC/AMC
+
+    # default catalog settings
+    'astrometry_catalogs'  : ['GAIA','2MASS','GAIA'], #9/20/17 COC: added 2MASS and TYCHO-2#9/21/17 COC: removed 'TYCHO-2'
+    'photometry_catalogs'  : ['SDSS-R9','PANSTARRS','APASS9']#['PANSTARRS','2MASS']#6/2/17 COC: removed SDSS9 and APASS, see the telescopes.py.bak file; changed catalogs to SDSS-R9, PANSTARRS, APASS9 (7/13/17 COC & AMC)
+}
+
 
 ##### access functions for telescope configurations
 
@@ -2129,7 +2211,8 @@ implemented_telescopes = ['VATT4K', 'DCTLMI', 'ARC35ARCTIC',
                           #'SL74SAH',
                           'TNGDOLORES', 'GENERIC', 'KPNO4MOS1', 'FROST',
                           'MEXMAN', 'KPNO4MOS1', 'KPNOMOS3',
-                          'KPNO4NEWF', 'UKIRTWFCAM', 'VLTFORS2']
+                          'KPNO4NEWF', 'UKIRTWFCAM', 'VLTFORS2',
+                          'DECAM']#6/12/17 COC/AMC: added DECAM]
 
 # translate INSTRUME (or others, see _pp_conf.py) header keyword into
 # PP telescope keyword 
@@ -2172,7 +2255,8 @@ instrument_identifiers = {'= "Vatt4k"':        'VATT4K',
                           'WFCAM': 'UKIRTWFCAM',
                           'SIRIUS': 'IRSFSIRIUS',
                           'Goodman Spectro': 'SOARGOODMAN',
-                          'FORS2': 'VLTFORS2'
+                          'FORS2': 'VLTFORS2',
+                          'DECam':             'DECAM'}#6/12/17 COC/AMC: added
 }
 
 # translate telescope keyword into parameter set defined here
@@ -2208,7 +2292,8 @@ telescope_parameters = {'VATT4K' :       vatt4k_param,
                         'KPNO4NEWF': kpno4newf_param,
                         'UKIRTWFCAM': ukirtwfcam_param,
                         'IRSFSIRIUS': irsfsirius_param,
-                        'VLTFORS2': vltfors2_param
+                        'VLTFORS2': vltfors2_param,
+                        'DECAM':         decam_param}#6/12/17 COC/AMC: added
 }
 
 

@@ -54,7 +54,7 @@ logging.basicConfig(filename = _pp_conf.log_filename,
 
 def register(filenames, telescope, sex_snr, source_minarea, aprad,
              mancat, obsparam, source_tolerance, display=False,
-             diagnostics=False):
+             diagnostics=False, keep_wcs=False):#12/27/17 COC: added keep_wcs=False
     """
     registration wrapper
     output: diagnostic properties
@@ -167,9 +167,9 @@ def register(filenames, telescope, sex_snr, source_minarea, aprad,
 
         # download catalog and write to ldac file for SCAMP
         astcat = catalog(refcat, display=True)
-        n_sources = astcat.download_catalog(ra, dec,
-                                            rad+obsparam['reg_search_radius'],
-                                            100000,
+        n_sources = astcat.download_catalog(ra_deg=ra, dec_deg=dec,#12/27/17 COC: explicit keywords
+                                            rad_deg=rad+obsparam['reg_search_radius'],
+                                            max_sources=100000,
                                             max_mag=obsparam['reg_max_mag'],
                                             save_catalog=True)
 
@@ -290,8 +290,9 @@ def register(filenames, telescope, sex_snr, source_minarea, aprad,
                           'CD2_2', 'RADESYS']
         hdu = fits.open(filename, mode='update', verify='silentfix',
                         ignore_missing_end=True)
-        for fake_key in fake_wcs_keys:
-            hdu[0].header[fake_key] = ''
+        if not keep_wcs:# 12/27/17 COC: adding keep_wcs option here
+            for fake_key in fake_wcs_keys:
+                hdu[0].header[fake_key] = ''
 
         # read new header files
         newhead = open(filename[:filename.find('.fit')]+'.head','r').readlines()
@@ -377,6 +378,9 @@ if __name__ == '__main__':
                         default=None)
     parser.add_argument("-cat", help='manually select reference catalog',
                         choices=_pp_conf.allcatalogs, default=None)
+    parser.add_argument("-keep_wcs",#12/27/17 COC: added
+              help='retain original wcs header information',
+              action='store_true',default=False)
     parser.add_argument('images', help='images to process', nargs='+')
 
     args = parser.parse_args()
@@ -384,6 +388,7 @@ if __name__ == '__main__':
     source_minarea = float(args.minarea)
     mancat = args.cat
     source_tolerance = args.source_tolerance
+    keep_wcs = args.keep_wcs#12/27/17 COC: added
     filenames = args.images
 
 
@@ -424,6 +429,5 @@ if __name__ == '__main__':
     registration = register(filenames, telescope, snr,
                             source_minarea, aprad, mancat, obsparam,
                             source_tolerance,
-                            display=True, diagnostics=True)
-
+                            display=True, diagnostics=True, keep_wcs=False)#12/27/17 COC: added keep_wcs=False
 
