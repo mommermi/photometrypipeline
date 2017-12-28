@@ -885,7 +885,7 @@ def add_results(data, imagestretch='linear'):
                 # 11/17/17 COC: outputting x,y pixel coordinates to file (commit 12/27/2017)
                 coordfilename = thumbfilename.split('_thumb.png')[0] + '_coords.lst'
                 with open(coordfilename,'w') as f:
-                f.writelines(str(exp_x) + ',' + str(exp_y))
+                    f.writelines(str(exp_x) + ',' + str(exp_y))
 
                 plt.savefig(thumbfilename, format='png',
                             bbox_inches='tight', 

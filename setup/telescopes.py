@@ -111,7 +111,7 @@ dctlmi_param = {
     'rotate'               : 0, 
 
     # instrument-specific FITS header keywords
-    'binning'              : ('CCDSUM_blank0', 'CCDSUM_blank1'), 
+    'binning'              : ('ADELX_01','ADELY_01'),#('CCDSUM_blank0', 'CCDSUM_blank1'), #12/27/17 COC: changed bin keywords
                            # binning in x/y, '_blankN' denotes that both axes
                            # are listed in one keyword, sep. by blanks
     'extent'               : ('NAXIS1', 'NAXIS2'),   # N_pixels in x/y

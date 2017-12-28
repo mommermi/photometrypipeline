@@ -103,7 +103,7 @@ def run_the_pipeline(filenames, man_targetname, man_filtername,
         header = hdulist[0].header
         for key in _pp_conf.instrument_keys:
             if key in header:
-                instruments.append(header[key])
+                instruments.append(header[key].strip())#9/20/17 COC: printing, adding .strip()
                 break
 
     if len(filenames) == 0:
@@ -183,7 +183,10 @@ def run_the_pipeline(filenames, man_targetname, man_filtername,
     ### prepare fits files for photometry pipeline
     preparation = pp_prepare.prepare(filenames, obsparam,
                                      change_header,
-                                     diagnostics=True, display=True)
+                                     diagnostics=True,
+                                     display=True,
+                                     keep_wcs=keep_wcs#12/27/17 COC: added
+                                     )
 
 
     ### run wcs registration
@@ -193,12 +196,17 @@ def run_the_pipeline(filenames, man_targetname, man_filtername,
     aprad = obsparam['aprad_default']
 
     print('\n----- run image registration\n')
-    registration = pp_register.register(filenames, telescope, snr,
-                                        source_minarea, aprad,
-                                        None, obsparam,
-                                        obsparam['source_tolerance'],
+    registration = pp_register.register(filenames,#9/21/17 COC: changed most from positional to named arguments
+                                        telescope=telescope,
+                                        sex_snr=snr,
+                                        source_minarea=source_minarea,
+                                        aprad=aprad,
+                                        mancat=None,
+                                        obsparam=obsparam,
+                                        source_tolerance=obsparam['source_tolerance'],
                                         display=True,
-                                        diagnostics=True)
+                                        diagnostics=True
+                                        )
 
 
     if len(registration['badfits']) == len(filenames):
@@ -357,7 +365,10 @@ if __name__ == '__main__':
                         default='high')
     parser.add_argument('-solar',
                         help='restrict to solar-color stars',
-                        action="store_true", default=False)    
+                        action="store_true", default=False)
+    parser.add_argument("-keep_wcs",#12/27/17 COC adding here from/for pp_prepare
+              help='retain original wcs header information',
+              action='store_true', default=False)
     parser.add_argument('images', help='images to process or \'all\'',
                         nargs='+')
 
@@ -369,7 +380,7 @@ if __name__ == '__main__':
     source_tolerance = args.source_tolerance
     solar = args.solar
     filenames = args.images
-
+    keep_wcs = args.keep_wcs
 
     ##### if filenames = ['all'], walk through directories and run pipeline
     # each dataset
