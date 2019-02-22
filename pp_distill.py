@@ -458,6 +458,24 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
     logging.info('starting distill with parameters: %s' %
                  (', '.join([('%s: %s' % (var, str(val))) for
                              var, val in list(locals().items())])))
+                             
+    # add flag keyword to header and set it to STARTED
+    filenames_status_flag = []
+    for cat in catalogs:
+        filename = cat.catalogname.replace('ldac', 'fits')
+        filenames_status_flag.append(filename)
+        hdulist = fits.open(filename, mode='update', verify='silentfix',
+                            ignore_missing_end=True)
+        header = hdulist[0].header
+        try:
+            header.set('PP_DISTI', 'STARTED', 'PP: pp_distill status flag',
+                        after='PP_CALIB')
+        except:
+            print(('%s image header incomplete, have the data run ' +
+                            'through pp_calibrate?') % filename)
+            return None
+        finally:
+            hdulist.close()
 
     output = {}
 
@@ -729,6 +747,21 @@ def distill(catalogs, man_targetname, offset, fixed_targets_file, posfile,
     #                               img_y, origin, flags, fwhm],
     # }
     ###
+    
+    
+    # set flag keyword to SUCCESS
+    for filename in filenames_status_flag:
+        hdulist = fits.open(filename, mode='update', verify='silentfix',
+                            ignore_missing_end=True)
+        header = hdulist[0].header
+        try:
+            header.set('PP_DISTI', 'SUCCESS')
+        except:
+            print(('%s image header incomplete, have the data run ' +
+                            'through pp_calibrate?') % filename)
+            return None
+        finally:
+            hdulist.close()
 
     # create diagnostics
     if diagnostics:

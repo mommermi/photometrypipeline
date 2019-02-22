@@ -478,14 +478,26 @@ def calibrate(filenames, minstars, manfilter, manualcatalog,
     # read in ldac data into catalogs
     catalogs, filternames = [], {}
     for filename in filenames:
-        hdulist = fits.open(filename, ignore_missing_end=True)
+        hdulist = fits.open(filename, mode='update', ignore_missing_end=True)
+        
+        # add flag keyword to header and set it to STARTED
+        header = hdulist[0].header
+        try:
+            header.set('PP_CALIB', 'STARTED', 'PP: pp_calibrate status flag',
+                        after='PP_PHOTO')
+        except:
+            print(('%s image header incomplete, have the data run ' +
+                            'through pp_prepare?') % filename)
+            return None
+
         try:
             filtername = hdulist[0].header[obsparam['filter']]
         except KeyError:
             print('Cannot read filter name from file %s' % filename)
             logging.error('Cannot read filter name from file %s' % filename)
             return None
-
+        finally:
+            hdulist.close()
         # translate filtername, if available
         try:
             filtername = obsparam['filter_translations'][filtername]
@@ -655,6 +667,21 @@ def calibrate(filenames, minstars, manfilter, manualcatalog,
 
     logging.info('Done! -----------------------------------------------------')
 
+    # set flag keyword to SUCCESS
+    for filename in filenames:
+        hdulist = fits.open(filename, mode='update', verify='silentfix',
+                            ignore_missing_end=True)
+        header = hdulist[0].header
+        try:
+            header.set('PP_CALIB', 'SUCCESS')
+        except:
+            print(('%s image header incomplete, have the data run ' +
+                            'through pp_photometry?') % filename)
+            return None
+        finally:
+            hdulist.close()
+
+
     return zp_data
 
 
@@ -710,7 +737,7 @@ if __name__ == '__main__':
         telescope = hdulist[0].header['TEL_KEYW']
     except KeyError:
         print('ERROR: cannot find telescope keyword in image header;',
-              'has this image run through pp_prepare?')
+              'has this image run through pp_photometry?')
         sys.exit(0)
     obsparam = _pp_conf.telescope_parameters[telescope]
 

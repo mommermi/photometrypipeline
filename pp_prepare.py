@@ -155,7 +155,10 @@ def prepare(filenames, obsparam, header_update, keep_wcs=False,
         hdulist = fits.open(filename, mode='update', verify='silentfix',
                             ignore_missing_end=True)
         header = hdulist[0].header
-
+        
+        # add flag keyword to header and set it to STARTED
+        header.set('PP_PREPA', 'STARTED', 'PP: pp_prepare status flag')
+        
         # add other headers, if available
         if len(hdulist) > 1:
             for i in range(len(hdulist)):
@@ -431,6 +434,9 @@ def prepare(filenames, obsparam, header_update, keep_wcs=False,
         # overwrite imdata in case something has been modified
         hdulist[0].data = imdata
 
+        # set flag keyword to SUCCESS
+        header.set('PP_PREPA', 'SUCCESS')
+        
         hdulist.flush()
         hdulist.close()
 
