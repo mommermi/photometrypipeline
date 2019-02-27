@@ -480,14 +480,14 @@ def calibrate(filenames, minstars, manfilter, manualcatalog,
     for filename in filenames:
         hdulist = fits.open(filename, mode='update', ignore_missing_end=True)
         
-        # add flag keyword to header and set it to STARTED
+        # add flag keyword to header and set it to FAILED
         header = hdulist[0].header
         try:
-            header.set('PP_CALIB', 'STARTED', 'PP: pp_calibrate status flag',
+            header.set('PP_CALIB', 'FAILED', 'PP: pp_calibrate status flag',
                         after='PP_PHOTO')
-        except:
+        except KeyError:
             print(('%s image header incomplete, have the data run ' +
-                            'through pp_prepare?') % filename)
+                            'through pp_photometry?') % filename)
             return None
 
         try:
@@ -672,14 +672,8 @@ def calibrate(filenames, minstars, manfilter, manualcatalog,
         hdulist = fits.open(filename, mode='update', verify='silentfix',
                             ignore_missing_end=True)
         header = hdulist[0].header
-        try:
-            header.set('PP_CALIB', 'SUCCESS')
-        except:
-            print(('%s image header incomplete, have the data run ' +
-                            'through pp_photometry?') % filename)
-            return None
-        finally:
-            hdulist.close()
+        header.set('PP_CALIB', 'SUCCESS')
+        hdulist.close()
 
 
     return zp_data

@@ -156,8 +156,8 @@ def prepare(filenames, obsparam, header_update, keep_wcs=False,
                             ignore_missing_end=True)
         header = hdulist[0].header
         
-        # add flag keyword to header and set it to STARTED
-        header.set('PP_PREPA', 'STARTED', 'PP: pp_prepare status flag')
+        # add flag keyword to header and set it to FAILED
+        header.set('PP_PREPA', 'FAILED', 'PP: pp_prepare status flag')
         
         # add other headers, if available
         if len(hdulist) > 1:

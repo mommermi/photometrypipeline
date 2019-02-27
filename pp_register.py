@@ -74,15 +74,15 @@ def register(filenames, telescope, sex_snr, source_minarea, aprad,
                         'through pp_prepare?') % filenames[0])
         return None
     
-    # add flag keyword to header and set it to STARTED
+    # add flag keyword to header and set it to FAILED
     for filename in filenames:
         hdulist = fits.open(filename, mode='update', verify='silentfix',
                             ignore_missing_end=True)
         header = hdulist[0].header
         try:
-            header.set('PP_REGIS', 'STARTED', 'PP: pp_register status flag',
+            header.set('PP_REGIS', 'FAILED', 'PP: pp_register status flag',
                         after='PP_PREPA')
-        except:
+        except KeyError:
             print(('%s image header incomplete, have the data run ' +
                             'through pp_prepare?') % filename)
             return None
@@ -427,14 +427,8 @@ def register(filenames, telescope, sex_snr, source_minarea, aprad,
         hdulist = fits.open(filename, mode='update', verify='silentfix',
                             ignore_missing_end=True)
         header = hdulist[0].header
-        try:
-            header.set('PP_REGIS', 'SUCCESS')
-        except:
-            print(('%s image header incomplete, have the data run ' +
-                            'through pp_prepare?') % filename)
-            return None
-        finally:
-            hdulist.close()
+        header.set('PP_REGIS', 'SUCCESS')
+        hdulist.close()
             
     return output
 

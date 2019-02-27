@@ -360,12 +360,12 @@ def photometry(filenames, sex_snr, source_minarea, aprad,
         hdu = fits.open(filename, mode='update',
                         ignore_missing_end=True)
                         
-        # add flag keyword to header and set it to STARTED
+        # add flag keyword to header and set it to FAILED
         try:
             header = hdu[0].header
-            header.set('PP_PHOTO', 'STARTED', 'PP: pp_photometry status flaag',
+            header.set('PP_PHOTO', 'FAILED', 'PP: pp_photometry status flaag',
                        after='PP_REGIS')
-        except:
+        except KeyError:
             print(('%s image header incomplete, have the data run ' +
                    'through pp_register?') % filename)
         
@@ -430,14 +430,8 @@ def photometry(filenames, sex_snr, source_minarea, aprad,
         hdulist = fits.open(filename, mode='update', verify='silentfix',
                             ignore_missing_end=True)
         header = hdulist[0].header
-        try:
-            header.set('PP_PHOTO', 'SUCCESS')
-        except:
-            print(('%s image header incomplete, have the data run ' +
-                            'through pp_register?') % filename)
-            return None
-        finally:
-            hdulist.close()
+        header.set('PP_PHOTO', 'SUCCESS')
+        hdulist.close()
 
     if 'cog' in list(locals().keys()):
         return cog
