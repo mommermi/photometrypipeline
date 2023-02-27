@@ -363,6 +363,16 @@ def photometry(filenames, sex_snr, source_minarea, aprad,
     for filename in filenames:
         hdu = fits.open(filename, mode='update',
                         ignore_missing_end=True)
+                        
+        # add flag keyword to header and set it to FAILED
+        try:
+            header = hdu[0].header
+            header.set('PP_PHOTO', 'FAILED', 'PP: pp_photometry status flaag',
+                       after='PP_REGIS')
+        except KeyError:
+            print(('%s image header incomplete, have the data run ' +
+                   'through pp_register?') % filename)
+        
         hdu[0].header['PHOTMODE'] = (_pp_conf.photmode,
                                      'PP photometry mode')
         hdu.flush()
@@ -419,6 +429,14 @@ def photometry(filenames, sex_snr, source_minarea, aprad,
     pp_extract.extract_multiframe(filenames, photpar)
 
     logging.info('Done! -----------------------------------------------------')
+    
+    # set flag keyword to SUCCESS
+    for filename in filenames:
+        hdulist = fits.open(filename, mode='update', verify='silentfix',
+                            ignore_missing_end=True)
+        header = hdulist[0].header
+        header.set('PP_PHOTO', 'SUCCESS')
+        hdulist.close()
 
     if 'cog' in list(locals().keys()):
         return cog
